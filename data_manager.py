@@ -1,4 +1,6 @@
 import connection
+from datetime import datetime
+
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
@@ -8,6 +10,7 @@ def get_single_line_by_id(story_id, filename):
 
     for story in all_stories:
         if story["id"] == story_id:
+            story["submission_time"] = datetime.fromtimestamp(int(story["submission_time"]))
             return story
 
 
@@ -21,6 +24,7 @@ def get_answers_to_question(question_id, answers_file):
 
     for answer in all_answers:
         if answer["question_id"] == question_id:
+            answer["submission_time"] = datetime.fromtimestamp(int(answer["submission_time"]))
             answers_to_question.append(answer)
 
     return answers_to_question
