@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
-QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"] # connection.get_data_header(QUESTIONS_FILE_PATH)
-ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]  # connection.get_data_header(ANSWERS_FILE_PATH)
+QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
+ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
 @app.route('/')
