@@ -2,9 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{{ title }}</title>
 </head>
 <body>
-
+    <table>
+        {% for question_header in QUESTION_HEADERS %}
+            <tr>
+                <th>{{ question_header | title }}</th>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>{{ question['id'] }}</td>
+            <td>{{ question['submission_time'] }}</td>
+            <td>{{ question['view_number'] }}</td>
+            <td>{{ question['vote_number'] }}</td>
+            <td>{{ question['title'] }}</td>
+            <td style="white-space: pre-line">{{ question['message'] }}</td>
+            <td>{{ question['image'] }}</td>
+        </tr>
+    </table>
+    <p></p>
+    <label>Answers:</label>
+    <table>
+        {% for answer_header in ANSWERS_HEADERS %}
+            <tr>
+                <th>{{ answer_header | title }}</th>
+            </tr>
+        {% for answer in answers %}
+        <tr>
+            <td>{{ answer["id"] }}</td>
+            <td>{{ answer["submission_time"] }}</td>
+            <td>{{ answer["vote_number"] }}</td>
+            <td>{{ answer["question_id"] }}</td>
+            <td style="white-space: pre-line">{{ answer["message"] }}</td>
+            <td>{{ answer["image"] }}</td>
+        </tr>
+    </table>
 </body>
 </html>
