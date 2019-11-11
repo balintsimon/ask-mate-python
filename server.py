@@ -22,6 +22,7 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         return render_template("question.html",
+                               page_title="Answers to question",
                                question=actual_question,
                                answers=answers_to_question,
                                QUESTION_HEADERS=QUESTION_HEADERS,
