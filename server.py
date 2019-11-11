@@ -1,18 +1,19 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, url_for
 import connection
 import data_manager
 
 
 app = Flask(__name__)
 
-QUESTIONS_FILE_PATH = "/sample_data/question.csv"
-ANSWERS_FILE_PATH = "/sample_data/answer.csv"
+QUESTIONS_FILE_PATH = "./sample_data/question.csv"
+ANSWERS_FILE_PATH = "./sample_data/answer.csv"
 QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
+
 @app.route('/')
 def show_questions():
-    return render_template("index.html")
+    return render_template("list.html")
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
@@ -22,11 +23,11 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         return render_template("question.html",
-                               page_title="Answers to question",
+                               page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
                                answers=answers_to_question,
-                               QUESTION_HEADERS=QUESTION_HEADERS,
-                               ANSWERS_HEADERS=ANSWERS_HEADERS)
+                               question_headers=QUESTION_HEADERS,
+                               answer_headers=ANSWERS_HEADERS)
     pass
 
 
