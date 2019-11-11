@@ -20,13 +20,13 @@
             <tbody>
                 {% for question in all_questions %}
                 <tr>
-                    <td>question['id']</td>
-                    <td>question['submission_time']</td>
-                    <td>question['view_number']</td>
-                    <td>question['vote_number']</td>
-                    <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>question['title']</a></td>
-                    <td><pre>question['message']</pre></td>
-                    <td>question['image']</td>
+                    <td>{{ question['id'] }}</td>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>{{ question['title'] }}</a></td>
+                    <td><pre>{{ question['message'] }}</pre></td>
+                    <td>{{ question['image'] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
