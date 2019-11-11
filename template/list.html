@@ -2,9 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome to AskMate!</title>
 </head>
 <body>
-
+    <header>
+    <h1>AskMate</h1>
+    </header>
+    <main>
+        <table>
+            <thead>
+                {% for header in question_header %}
+                <tr>
+                    <th>{{ header }}</th>
+                </tr>
+                {% endfor %}
+            </thead>
+            <tbody>
+                {% for question in all_questons %}
+                <tr>
+                    <td>question['id']</td>
+                    <td>question['submission_time']</td>
+                    <td>question['view_number']</td>
+                    <td>question['vote_number']</td>
+                    <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>question['title']</a></td>
+                    <td><pre>question['message']</pre></td>
+                    <td>question['image']</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+    <footer></footer>
 </body>
 </html>
