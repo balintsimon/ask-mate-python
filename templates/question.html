@@ -6,11 +6,11 @@
 </head>
 <body>
     <table>
-        {% for question_header in QUESTION_HEADERS %}
-            <tr>
-                <th>{{ question_header | title }}</th>
-            </tr>
+    <tr>
+        {% for question_header in question_headers %}
+            <th>{{ question_header | title }}</th>
         {% endfor %}
+    </tr>
         <tr>
             <td>{{ question['id'] }}</td>
             <td>{{ question['submission_time'] }}</td>
@@ -24,19 +24,21 @@
     <p></p>
     <label>Answers:</label>
     <table>
-        {% for answer_header in ANSWERS_HEADERS %}
-            <tr>
+    <tr>
+        {% for answer_header in answer_headers %}
                 <th>{{ answer_header | title }}</th>
-            </tr>
+        {% endfor %}
+    </tr>
         {% for answer in answers %}
-        <tr>
-            <td>{{ answer["id"] }}</td>
-            <td>{{ answer["submission_time"] }}</td>
-            <td>{{ answer["vote_number"] }}</td>
-            <td>{{ answer["question_id"] }}</td>
-            <td style="white-space: pre-line">{{ answer["message"] }}</td>
-            <td>{{ answer["image"] }}</td>
-        </tr>
+            <tr>
+                <td>{{ answer["id"] }}</td>
+                <td>{{ answer["submission_time"] }}</td>
+                <td>{{ answer["vote_number"] }}</td>
+                <td>{{ answer["question_id"] }}</td>
+                <td style="white-space: pre-line">{{ answer["message"] }}</td>
+                <td>{{ answer["image"] }}</td>
+            </tr>
+        {% endfor %}
     </table>
 </body>
 </html>
