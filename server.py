@@ -13,7 +13,7 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-
+    return render_template("list.html")
 
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
