@@ -1,5 +1,4 @@
 import csv
-import data_manager
 
 def read_file(filename):
     all_data = []
@@ -23,4 +22,3 @@ def add_new_data(filename, new_story, list_of_headers):
         fieldnames = list_of_headers
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(new_story)
-
