@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <h1>{{ page_title }}</h1>
+    <form action="{{ '/questions/<question_id>' }}">
+        <p>
+           <label for="question_title">Edit title:</label><br>
+            <input type="text" name="question_title" id="question_title" value="{{ question["title"] }}" required>
+        </p>
+        <p>
+            <label for="question_message">{{ body_edit_title }}</label><br>
+            <textarea name="question_message" id="question_message" rows="8" cols="50" required>{{ question["message"] }}</textarea>
+        </p>
+        <p>
+            <label for="upload-image">Edit image:</label><br>
+            <input type="file" name="upload-image" id="upload-image" title="upload-image" value="{{ question["image"] }}" accept=.jpg,.png/>
+            <input type="text" name="image" id="image" value="{{ question["image"] }}">
+        </p>
+        <p>
+            <button type="submit">{{ button_title }}</button>
+        </p>
+    </form>
+</body>
+</html>
