@@ -19,8 +19,13 @@ def show_questions():
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     return render_template("list.html", all_questions=data, question_header=header)
 
+
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
+    if request.method == 'POST':
+        new_question = dict(request.form)
+        print(new_question)
+        connection.add_new_data(QUESTIONS_FILE_PATH, new_question)
     return render_template('add_question_or_answer.html')
 
 
