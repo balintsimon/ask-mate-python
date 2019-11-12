@@ -42,6 +42,9 @@ def manage_questions(question_id):
                                answer_headers=ANSWERS_HEADERS)
     pass
 
+@app.route('/question/<question_id>/edit')
+def edit_question(question_id):
+    pass
 
 @app.route('/answer/<answer_id>', methods=('GET', 'POST'))
 def manage_answer(answer_id):

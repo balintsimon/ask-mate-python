@@ -1,3 +1,5 @@
+from datetime import datetime
+import calendar
 
 
 def sort_array(array, key, reverse):
@@ -11,3 +13,12 @@ def sort_array(array, key, reverse):
 
     array = sorted(array, key=lambda x: x[key], reverse=reverse)
     return array
+
+
+def convert_unix_time_to_readable(input_time):
+    return datetime.fromtimestamp(int(input_time))
+
+
+def get_unix_time():
+    date_time = datetime.utcnow()
+    return(calendar.timegm(date_time.utctimetuple()))
