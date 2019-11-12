@@ -14,9 +14,14 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH)
+    try:
+        label_to_sortby = request.args.getlist('sorting')[0]
+    except IndexError:
+        label_to_sortby = "submission_time"
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
-    return render_template("list.html", all_questions=data, question_header=header)
+    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -24,10 +29,15 @@ def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
         final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
-        print(final_question)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('add_question_or_answer.html')
+    return render_template('form.html',
+                           page_title=f'Add new question',
+                           header_title='Add new question',
+                           title_field_title='Your title:',
+                           body_edit_title='Your message:',
+                           question={'tite': "", 'message': "", 'image': ""},
+                           button_title="Post")
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
@@ -37,6 +47,7 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         return render_template("question.html",
+                               url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
                                answers=answers_to_question,
@@ -52,7 +63,7 @@ def edit_question(question_id):
 
         edited_question = {"id": question["id"],
                           "submission_time": util.get_unix_time(),
-                          "view_number": quesion["view_number"],
+                          "view_number": question["view_number"],
                           "vote_number": question["vote_number"],
                           "title": request.form.get("title"),
                           "message": request.form.get("message"),
@@ -62,10 +73,14 @@ def edit_question(question_id):
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
-    return render_template("edit-question-or-answer.html",
+    return render_template("form.html",
+                           url_action=url_for("edit_question", question_id=question_id),
                            page_title=f"Edit question ID {question_id}",
+                           header_title=f"Edit question ID {question_id}",
                            question=question,
-                           body_edit_title="Edit question:",
+                           title_field_title="Edit title:",
+                           body_title="Edit question:",
+                           image_title="Edit image:",
                            button_title="Save change")
 
 
