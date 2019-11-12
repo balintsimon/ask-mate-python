@@ -1,5 +1,5 @@
 import csv
-
+import data_manager
 
 def read_file(filename):
     all_data = []
@@ -16,10 +16,10 @@ def get_data_header(filename):
         return data_header.strip('\n').replace('_', ' ').split(',')
 
 
-def add_new_data(filename, new_story):
+def add_new_data(filename, new_story, list_of_headers):
     """Adds new question or answer to the csv file"""
 
     with open(filename, 'a') as csv_file:
-        fieldnames = get_data_header(filename)
+        fieldnames = list_of_headers
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(new_story)
