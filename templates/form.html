@@ -5,19 +5,19 @@
     <title>{{ page_title }}</title>
 </head>
 <body>
-    <h1>{{ page_title }}</h1>
+    <h1>{{ header_title }}</h1>
     <form action="{{ url_action }}">
         <p>
-           <label for="question_title">Edit title:</label><br>
-            <input type="text" name="question_title" id="question_title" value="{{ question["title"] }}" required>
+           <label for="title">{{ title_field_title }}</label><br>
+            <input type="text" name="title" id="title" value="{{ question["title"] }}" required>
         </p>
         <p>
-            <label for="question_message">{{ body_edit_title }}</label><br>
-            <textarea name="question_message" id="question_message" rows="8" cols="50" required>{{ question["message"] }}</textarea>
+            <label for="message">{{ body_edit_title }}</label><br>
+            <textarea name="message" id="message" rows="8" cols="50" required>{{ question["message"] }}</textarea>
         </p>
         <p>
-            <label for="upload-image">Edit image:</label><br>
-            <input type="file" name="upload-image" id="upload-image" title="upload-image" value="{{ question["image"] }}" accept=.jpg,.png/>
+            <label for="image">{{ image_title }}</label><br>
+            <input type="file" name="image" id="image" title="image" value="{{ question["image"] }}" accept=.jpg,.png/>
             <input type="text" name="image" id="image" value="{{ question["image"] }}">
         </p>
         <p>

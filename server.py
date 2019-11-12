@@ -12,10 +12,11 @@ QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
-@app.route('/') #put a submit form into html
+@app.route('/')
 def show_questions():
-    label_to_sortby = request.args.getlist('sorting')[0]
-    if not label_to_sortby:
+    try:
+        label_to_sortby = request.args.getlist('sorting')[0]
+    except IndexError:
         label_to_sortby = "submission_time"
     data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
@@ -77,7 +78,7 @@ def edit_question(question_id):
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
-                           title_title="Edit title:",
+                           title_field_title="Edit title:",
                            body_title="Edit question:",
                            image_title="Edit image:",
                            button_title="Save change")

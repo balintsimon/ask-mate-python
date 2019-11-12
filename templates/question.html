@@ -6,25 +6,13 @@
 </head>
 <body>
     <p><h1>{{ page_title }}</h1></p>
-    <label for="question_title"><h2>Question: {{ question[""] }}</h2></label>
-
-    QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-    <table>
-    <tr>
-        {% for question_header in question_headers %}
-            <th>{{ question_header | title }}</th>
-        {% endfor %}
-    </tr>
-        <tr>
-            <td>{{ question['id'] }}</td>
-            <td>{{ question['submission_time'] }}</td>
-            <td>{{ question['view_number'] }}</td>
-            <td>{{ question['vote_number'] }}</td>
-            <td>{{ question['title'] }}</td>
-            <td style="white-space: pre-line">{{ question['message'] }}</td>
-            <td>{{ question['image'] }}</td>
-        </tr>
-    </table>
+    <label for="question_title"><h2>Question: {{ question["title"] }}</h2></label><br>
+    <p style="white-space: pre-line"><h3>{{ question["message"] }}</h3></p>
+    <p>Image: {{ question["image"] }}</p>
+    <p>Submitted at: {{ question["submission_time"] }}</p>
+    <p>Viewed {{ question["view_number"] }} times.</p>
+    <p>Voted {{ question["vote_number"] }} times.</p>
+    <p></p>
     <form action="{{ "/question/<question_id>/edit" }}" method="post">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
@@ -32,14 +20,6 @@
     <a href="/question/<question_id>/vote_up">Vote Up</a>
     <a href="/question/<question_id>/vote_down">Vote Down</a>
     <p></p>
-    <label>Answers:</label>
-    {% if answer is defined %}
-        <table>
-        <tr>
-            {% for answer_header in answer_headers %}
-                    <th>{{ answer_header | title }}</th>
-            {% endfor %}
-        </tr>
     <label><h2>Answers:</h2></label>
     <table>
     <tr>
