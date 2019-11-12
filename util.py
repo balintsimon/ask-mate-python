@@ -1,7 +1,10 @@
 from datetime import datetime
 import calendar
 import csv
+import connection
 
+
+LIST_START = 0
 
 def sort_array(array, key, reverse):
     """sorts a dictionary by given keyname
@@ -26,7 +29,14 @@ def get_unix_time():
 
 
 def generate_id(filename):
+    """
     with open(filename, 'r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         data_id = sum(1 for row in csv_reader)
         return data_id
+    """
+    actual_stories = connection.read_file(filename)
+    if len(actual_stories) == 1:
+        return LIST_START
+
+    return int(actual_stories[-1]["id"]) + 1

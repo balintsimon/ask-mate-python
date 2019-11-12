@@ -59,7 +59,7 @@ def edit_question(question_id):
                           "image": request.form.get("image", question["image"]),
         }
 
-        connection.update_file(QUESTIONS_FILE_PATH, edited_question)
+        connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("edit-question-or-answer.html",
