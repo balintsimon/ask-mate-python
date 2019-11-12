@@ -15,8 +15,8 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-    data = data_manager.get_csv_file("sample_data/question.csv")
-    header = connection.get_data_header("sample_data/question.csv")
+    data = data_manager.get_csv_file(QUESTIONS_FILE_PATH)
+    header = connection.get_data_header(QUESTIONS_FILE_PATH)
     return render_template("list.html", all_questions=data, question_header=header)
 
 @app.route('/add-questions', methods=['GET', 'POST'])
