@@ -41,7 +41,7 @@
                     <td>{{ question['vote_number'] }}</td>
                     <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>{{ question['title'] }}</a></td>
                     <td><pre>{{ question['message'] }}</pre></td>
-                    <td>{{ question['image'] }}</td>
+                    <td><img src="{{ url_for('static', filename=question['image']) }}" alt="No image" height="128" width="128"></td>
                 </tr>
                 {% endfor %}
             </tbody>
