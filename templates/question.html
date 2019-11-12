@@ -6,7 +6,9 @@
 </head>
 <body>
     <p><h1>{{ page_title }}</h1></p>
-    <label><h2>Question:</h2></label>
+    <label for="question_title"><h2>Question: {{ question[""] }}</h2></label>
+
+    QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     <table>
     <tr>
         {% for question_header in question_headers %}
@@ -27,6 +29,17 @@
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
     <p></p>
+    <a href="/question/<question_id>/vote_up">Vote Up</a>
+    <a href="/question/<question_id>/vote_down">Vote Down</a>
+    <p></p>
+    <label>Answers:</label>
+    {% if answer is defined %}
+        <table>
+        <tr>
+            {% for answer_header in answer_headers %}
+                    <th>{{ answer_header | title }}</th>
+            {% endfor %}
+        </tr>
     <label><h2>Answers:</h2></label>
     <table>
     <tr>

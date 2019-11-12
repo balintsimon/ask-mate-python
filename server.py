@@ -12,11 +12,15 @@ QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
-@app.route('/')
+@app.route('/') #put a submit form into html
 def show_questions():
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH)
+    label_to_sortby = request.args.getlist('sorting')[0]
+    if not label_to_sortby:
+        label_to_sortby = "submission_time"
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
-    return render_template("list.html", all_questions=data, question_header=header)
+    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -66,10 +70,14 @@ def edit_question(question_id):
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
-    return render_template("edit-question-or-answer.html",
+    return render_template("form.html",
+                           url_action=url_for(edit_question(question_id), question_id=question_id),
                            page_title=f"Edit question ID {question_id}",
+                           header_title=f"Edit question ID {question_id}",
                            question=question,
-                           body_edit_title="Edit question:",
+                           title_title="Edit title:",
+                           body_title="Edit question:",
+                           image_title="Edit image:",
                            button_title="Save change")
 
 
