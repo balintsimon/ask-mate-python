@@ -23,8 +23,9 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        final_question = data_manager.fill_out_missing_data(new_question)
+        final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
         print(final_question)
+        connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
     return render_template('add_question_or_answer.html')
 
@@ -58,7 +59,7 @@ def edit_question(question_id):
                           "image": request.form.get("image", question["image"]),
         }
 
-        connection.update_file(QUESTIONS_FILE_PATH, edited_question)
+        connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("edit-question-or-answer.html",

@@ -5,15 +5,12 @@ import util
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
-question_file = "./sample_data/question.csv"
-answer_file = "./sample_data/answer.csv"
 
 def get_single_line_by_id(story_id, filename):
     """Reads single answer or question from file by the given ID. Returns dictionary."""
     all_stories = connection.read_file(filename)
 
     for story in all_stories:
-
         if story["id"] == story_id:
             story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
             return story
@@ -78,9 +75,13 @@ def modify_vote_story(story_id, filename, vote_method):
     return story_to_update
 
 
-def fill_out_missing_data(new_data):
+
+def fill_out_missing_data(new_data, filename):
     """Fills out the missing data in the new question/answer(id, date, view number, vote number)"""
     new_data['submission_time'] = util.get_unix_time()
+    new_data['id'] = util.generate_id(filename)
     new_data['view_number'] = 0
     new_data['vote_number'] = 0
     return new_data
+
+
