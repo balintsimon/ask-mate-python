@@ -1,5 +1,5 @@
 import connection
-from datetime import datetime
+import util
 
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
@@ -10,7 +10,7 @@ def get_single_line_by_id(story_id, filename):
 
     for story in all_stories:
         if story["id"] == story_id:
-            story["submission_time"] = datetime.fromtimestamp(int(story["submission_time"]))
+            story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
             return story
 
 
@@ -19,7 +19,7 @@ def get_all_questions(filename):
     modded_questions = []
 
     for question in all_questions:
-        question["submission_time"] = datetime.fromtimestamp(int(question["submission_time"]))
+        question["submission_time"] = util.convert_unix_time_to_readable(question["submission_time"])
         modded_questions.append(question)
 
     return modded_questions
@@ -35,7 +35,7 @@ def get_answers_to_question(question_id, answers_file):
 
     for answer in all_answers:
         if answer["question_id"] == question_id:
-            answer["submission_time"] = datetime.fromtimestamp(int(answer["submission_time"]))
+            answer["submission_time"] = util.convert_unix_time_to_readable(answer["submission_time"])
             answers_to_question.append(answer)
 
     return answers_to_question

@@ -1,4 +1,4 @@
-
+from datetime import datetime
 
 def sort_array(array, key, reverse):
     """sorts a dictionary by given keyname
@@ -11,3 +11,6 @@ def sort_array(array, key, reverse):
 
     array = sorted(array, key=lambda x: x[key], reverse=reverse)
     return array
+
+def convert_unix_time_to_readable(input_time):
+    return datetime.fromtimestamp(int(input_time))
