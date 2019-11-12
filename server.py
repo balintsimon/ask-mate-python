@@ -59,14 +59,15 @@ def manage_questions(question_id):
 def edit_question(question_id):
     question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
     if request.method == "POST":
+
         edited_question = {"id": question["id"],
-                           "submission_time": util.get_unix_time(),
-                           "view_number": question["view_number"],
-                           "vote_number": question["vote_number"],
-                           "title": request.form.get("title"),
-                           "message": request.form.get("message"),
-                           "image": request.form.get("image", question["image"]),
-                           }
+                          "submission_time": util.get_unix_time(),
+                          "view_number": question["view_number"],
+                          "vote_number": question["vote_number"],
+                          "title": request.form.get("title"),
+                          "message": request.form.get("message"),
+                          "image": request.form.get("image", question["image"]),
+        }
 
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
