@@ -32,8 +32,10 @@ def add_new_question():
         return redirect('/')
     return render_template('edit-question-or-answer.html',
                            page_title=f'Add new question',
+                           header_title='Add new question',
+                           title_field_title='Your title:',
+                           message_title='Your message:',
                            question={'tite': "", 'message': "", 'image': ""},
-                           body_edit_title="Message:",
                            button_title="Post")
 
 
