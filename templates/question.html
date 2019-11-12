@@ -6,6 +6,7 @@
 </head>
 <body>
     <p><h1>{{ page_title }}</h1></p>
+    <label><h2>Question:</h2></label>
     <table>
     <tr>
         {% for question_header in question_headers %}
@@ -26,7 +27,7 @@
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
     <p></p>
-    <label>Answers:</label>
+    <label><h2>Answers:</h2></label>
     <table>
     <tr>
         {% for answer_header in answer_headers %}
@@ -45,5 +46,8 @@
                 </tr>
             {% endfor %}
     </table>
+    <form action="{{ "/" }}">
+        <button type="submit" name="back_to_main" id="back_to_main" value="Go back to main page">Go back to main page</button>
+    </form>
 </body>
 </html>
