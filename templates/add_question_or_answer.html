@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add new question</title>
+    <title>{{ 'Add new question' if question else 'Add new answer' }}</title>
 </head>
 <body>
     <header>
-        <h1>Add your question</h1>
+        <h1>{{ 'Add new question' if question else 'Add new answer' }}</h1>
     </header>
     <main>
+        {% if question %}
         <form method="POST">
             <label title="title">Title:</label>
             <input type="text" name="title" title="question-title" required/><br><br>
@@ -16,8 +17,17 @@
             <textarea title="message" name="message" rows="8" cols="50" required></textarea><br><br><br>
             <label title="add-image">Image:</label>
             <input type="file" title="upload-image" accept=.jpg,.png/><br><br>
-            <button type="submit">Post</button>
+            <button type="submit" title="submit_question">Post</button>
         </form>
+        {% else %}
+        <form method="POST">
+            <label title="answer">Answer:</label>
+            <textarea title="answer" name="message" rows="8" cols="50" required></textarea><br><br><br>
+            <label title="add-image">Image:</label>
+            <input type="file" title="upload-image" accept=.jpg,.png/><br><br>
+            <button type="submit" title="submit_answer">Answer</button>
+        </form>
+        {% endif %}
     </main>
 </body>
 </html>

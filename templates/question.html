@@ -45,10 +45,8 @@
     {% else %}
         <p>There are no answers to this question yet</p>
     {% endif %}
-    <form action={{ '/question/<question_id>/new-answer' }}>
-        <button type="submit" name="add_answer" id="add_answer" value="Answer">Answer</button><br><br>
-    </form>
     <nav>
+        <a href={{ url_for('add_new_answer', question_id=question['id']) }}>Answer</a>
         <a href={{ url_for('show_questions') }}>Go back</a>
     </nav>
 </body>

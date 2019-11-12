@@ -28,21 +28,20 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
+        final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('form.html',
-                           page_title=f'Add new question',
-                           header_title='Add new question',
-                           title_field_title='Your title:',
-                           body_edit_title='Your message:',
-                           question={'tite': "", 'message': "", 'image': ""},
-                           button_title="Post")
+    return render_template('add_question_or_answer.html', question=True)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(question_id):
-    return redirect('/')
+    if request.method == 'POST':
+        new_answer = dict(request.form)
+        final_answer = data_manager.fill_out_missing_answer(new_answer,question_id, ANSWERS_FILE_PATH)
+        connection.add_new_data(ANSWERS_FILE_PATH, final_answer, data_manager.ANSWER_HEADERS)
+        return redirect(f'/questions/{question_id}')
+    return render_template('add_question_or_answer.html')
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])

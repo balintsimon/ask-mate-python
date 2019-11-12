@@ -80,11 +80,19 @@ def get_answers_to_question(question_id, answers_file):
 #     return story_to_update
 
 
-def fill_out_missing_data(new_data, filename):
-    """Fills out the missing data in the new question/answer(id, date, view number, vote number)"""
+def fill_out_missing_question(new_data, filename):
+    """Fills out the missing question data in the new question/answer(id, date, view number, vote number)"""
     new_data['submission_time'] = util.get_unix_time()
     new_data['id'] = util.generate_id(filename)
     new_data['view_number'] = 0
     new_data['vote_number'] = 0
     return new_data
 
+
+def fill_out_missing_answer(new_data, question_id, filename):
+    """Fills out the missing answer data in the new question/answer(id, date, view number, vote number)"""
+    new_data['submission_time'] = util.get_unix_time()
+    new_data['id'] = util.generate_id(filename)
+    new_data['vote_number'] = 0
+    new_data['question_id'] = question_id
+    return new_data
