@@ -47,6 +47,7 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         return render_template("question.html",
+                               url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
                                answers=answers_to_question,
@@ -73,7 +74,7 @@ def edit_question(question_id):
         return redirect("/")
 
     return render_template("form.html",
-                           url_action=url_for(edit_question(question_id), question_id=question_id),
+                           url_action=url_for("edit_question", question_id=question_id),
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
@@ -88,6 +89,19 @@ def manage_answer(answer_id):
     if request.method == "POST":
         pass
     pass
+
+@app.route('/answer/<int:answer_id>/<vote_method>', method='POST')
+def vote_answer(answer_id, vote_method):
+    filename = ANSWERS_FILE_PATH
+    update_story = data_manager.modify_vote_story(story_id=answer_id, filename, vote_method)
+    connection.update_file(filename,update_story)
+
+
+@app.route('/question/<question_id>/<vote_method>', method='POST')
+def vote_question(question_id,vote_method):
+    filename = QUESTIONS_FILE_PATH
+    update_story = data_manager.modify_vote_story(story_id=question_id, filename, vote_method)
+    connection.update_file(filename, update_story)
 
 
 if __name__ == '__main__':
