@@ -24,10 +24,14 @@ def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
         final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
-        print(final_question)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('add_question_or_answer.html')
+    return render_template('edit-question-or-answer.html',
+                           page_title=f'Add new question',
+                           question={'tite': "", 'message': "", 'image': ""},
+                           body_edit_title="Message:",
+                           button_title="Post")
+
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
@@ -52,7 +56,7 @@ def edit_question(question_id):
 
         edited_question = {"id": question["id"],
                           "submission_time": util.get_unix_time(),
-                          "view_number": quesion["view_number"],
+                          "view_number": question["view_number"],
                           "vote_number": question["vote_number"],
                           "title": request.form.get("title"),
                           "message": request.form.get("message"),
