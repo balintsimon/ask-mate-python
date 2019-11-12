@@ -31,14 +31,13 @@ def add_new_question():
         final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('edit-question-or-answer.html',
+    return render_template('form.html',
                            page_title=f'Add new question',
                            header_title='Add new question',
                            title_field_title='Your title:',
-                           message_title='Your message:',
+                           body_edit_title='Your message:',
                            question={'tite': "", 'message': "", 'image': ""},
                            button_title="Post")
-
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
