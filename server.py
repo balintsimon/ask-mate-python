@@ -12,11 +12,15 @@ QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
-@app.route('/')
+@app.route('/') #put a submit form into html
 def show_questions():
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH)
+    label_to_sortby = request.args.getlist('sorting')[0]
+    if not label_to_sortby:
+        label_to_sortby = "submission_time"
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
-    return render_template("list.html", all_questions=data, question_header=header)
+    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -24,6 +28,7 @@ def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
         final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
+        print(final_question)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
     return render_template('add_question_or_answer.html')
