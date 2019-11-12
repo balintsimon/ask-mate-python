@@ -39,6 +39,8 @@ def get_all_questions(filename):
 
     for question in all_questions:
         question["submission_time"] = util.convert_unix_time_to_readable(question["submission_time"])
+        question["view_number"] = int(question["view_number"])
+        question["vote_number"] = int(question["vote_number"])
         modded_questions.append(question)
 
     return modded_questions
