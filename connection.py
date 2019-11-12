@@ -25,14 +25,15 @@ def add_new_data(filename, new_story):
         writer.writerow(new_story)
 
 
-def update_file(filename, upate_story):
+def update_file(filename, update_story):
+    existing_submits = read_file(filename)
 
     with open(filename, 'w') as csv_file:
         fieldnames = get_data_header(filename)
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
         writer.writeheader()
-        for row in existing_stories:
-            if new_story["id"] == row["id"]:
-                row = new_story
+        for submit in existing_submits:
+            if update_story["id"] == submit["id"]:
+                submit = update_story
             writer.writerow(row)

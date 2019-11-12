@@ -58,7 +58,7 @@ def edit_question(question_id):
                           "image": request.form.get("image", question["image"]),
         }
 
-        data_handler.write_story_to_file(new_story)
+        connection.update_file(QUESTIONS_FILE_PATH, edited_question)
         return redirect("/")
 
     return render_template("edit-question-or-answer.html",
