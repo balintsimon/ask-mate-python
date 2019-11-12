@@ -8,7 +8,9 @@
     <p><h1>{{ page_title }}</h1></p>
     <label for="question_title"><h2>Question: {{ question["title"] }}</h2></label><br>
     <p style="white-space: pre-line"><h3>{{ question["message"] }}</h3></p>
-    <p>Image: {{ question["image"] }}</p>
+    {% if question['image'] %}
+    <img src="{{ url_for('static', filename=question['image']) }}" alt="No image" height="600" width="520">
+    {% endif %}
     <p>Submitted at: {{ question["submission_time"] }}</p>
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
