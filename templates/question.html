@@ -5,16 +5,14 @@
     <title>{{ page_title }}</title>
 </head>
 <body>
-    <p><h1>{{ page_title }}</h1></p>
-    <label for="question_title"><h2>Question: {{ question["title"] }}</h2></label><br>
-    <p style="white-space: pre-line"><h3>{{ question["message"] }}</h3></p>
+    <h1>{{ question['title'] }}</h1>
+    <p>{{ question["message"] }}</p>
     {% if question['image'] %}
     <img src="{{ url_for('static', filename=question['image']) }}" alt="No image" height="600" width="520">
     {% endif %}
-    <p>Submitted at: {{ question["submission_time"] }}</p>
+    <p>{{ question["submission_time"] }}</p>
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
-    <p></p>
     <form action="{{ url_action }}" method="post">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
@@ -22,27 +20,36 @@
     <a href="/question/<question_id>/vote_up">Vote Up</a>
     <a href="/question/<question_id>/vote_down">Vote Down</a>
     <p></p>
-    <label><h2>Answers:</h2></label>
+    <h3><label>Answers:</label></h3>
+    {% if answers %}
     <table>
-    <tr>
-        {% for answer_header in answer_headers %}
-                <th>{{ answer_header | title }}</th>
-        {% endfor %}
-    </tr>
-
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Votes</th>
+                <th>Message</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for answer in answers %}
                 <tr>
-                    <td>{{ answer["id"] }}</td>
                     <td>{{ answer["submission_time"] }}</td>
                     <td>{{ answer["vote_number"] }}</td>
-                    <td>{{ answer["question_id"] }}</td>
-                    <td style="white-space: pre-line">{{ answer["message"] }}</td>
-                    <td>{{ answer["image"] }}</td>
+                    <td>{{ answer["message"] }}</td>
+                    <td><img src="{{ answer["image"] }}" alt="No image"></td>
                 </tr>
             {% endfor %}
+        </tbody>
     </table>
-    <form action="{{ "/" }}">
-        <button type="submit" name="back_to_main" id="back_to_main" value="Go back to main page">Go back to main page</button>
+    {% else %}
+        <p>There are no answers to this question yet</p>
+    {% endif %}
+    <form action={{ '/question/<question_id>/new-answer' }}>
+        <button type="submit" name="add_answer" id="add_answer" value="Answer">Answer</button><br><br>
     </form>
+    <nav>
+        <a href={{ url_for('show_questions') }}>Go back</a>
+    </nav>
 </body>
 </html>
