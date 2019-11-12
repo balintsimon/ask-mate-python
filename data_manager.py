@@ -7,6 +7,7 @@ ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "messag
 
 
 def get_single_line_by_id(story_id, filename):
+    """Reads single answer or question from file by the given ID. Returns dictionary."""
     all_stories = connection.read_file(filename)
 
     for story in all_stories:
@@ -16,6 +17,7 @@ def get_single_line_by_id(story_id, filename):
 
 
 def get_all_questions(filename):
+    """Reads file, formats time format to readable and returns it as a list."""
     all_questions = connection.read_file(filename)
     modded_questions = []
 
@@ -31,6 +33,7 @@ def get_csv_file(filename):
 
 
 def get_answers_to_question(question_id, answers_file):
+    """Reads 'answer_file' to find any answers that have the 'question_id'."""
     all_answers = connection.read_file(answers_file)
     answers_to_question = []
 
