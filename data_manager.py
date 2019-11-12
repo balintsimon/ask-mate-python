@@ -1,7 +1,6 @@
 import connection
 import util
 
-
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
@@ -16,13 +15,15 @@ def get_single_line_by_id(story_id, filename):
             return story
 
 
-
 """decorator function, sorts data by given key and order"""
+
+
 def sort_dict(func):
     def wrapper(*args, reverse=True, key="submission_time"):
         data = func(*args)
         array = sorted(data, key=lambda x: x[key], reverse=reverse)
         return array
+
     return wrapper
 
 
@@ -62,18 +63,19 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(story_id, filename, vote_method):
-    story = get_single_line_by_id(story_id,filename)
+    story = get_single_line_by_id(story_id, filename)
     vote_number = int(story["vote_number"])
-    if vote_method == "up":
+    if vote_number == 0 and vote_method != "vote_up":
+        pass
+    elif vote_method == "vote_up":
         vote_number += 1
-    elif vote_number == "down":
+    elif vote_method == "vote_down":
         vote_number -= 1
 
     story["vote_number"] = int(vote_number)
     story_to_update = story
 
     return story_to_update
-
 
 
 def fill_out_missing_data(new_data, filename):
@@ -83,5 +85,4 @@ def fill_out_missing_data(new_data, filename):
     new_data['view_number'] = 0
     new_data['vote_number'] = 0
     return new_data
-
 

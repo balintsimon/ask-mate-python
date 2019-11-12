@@ -75,6 +75,19 @@ def manage_answer(answer_id):
         pass
     pass
 
+@app.route('/answer/<int:answer_id>/<vote_method>', method='POST')
+def vote_answer(answer_id, vote_method):
+    filename = ANSWERS_FILE_PATH
+    update_story = data_manager.modify_vote_story(story_id=answer_id, filename, vote_method)
+    connection.update_file(filename,update_story)
+
+
+@app.route('/question/<question_id>/<vote_method>', method='POST')
+def vote_question(question_id,vote_method):
+    filename = QUESTIONS_FILE_PATH
+    update_story = data_manager.modify_vote_story(story_id=question_id, filename, vote_method)
+    connection.update_file(filename, update_story)
+
 
 if __name__ == '__main__':
     app.run(
