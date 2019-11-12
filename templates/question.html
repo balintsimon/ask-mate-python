@@ -5,6 +5,8 @@
     <title>{{ page_title }}</title>
 </head>
 <body>
+    <p><h1>{{ page_title }}</h1></p>
+    <label><h2>Question:</h2></label>
     <table>
     <tr>
         {% for question_header in question_headers %}
@@ -21,6 +23,9 @@
             <td>{{ question['image'] }}</td>
         </tr>
     </table>
+    <form action="{{ "/question/<question_id>/edit" }}" method="post">
+    <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
+    </form>
     <p></p>
     <a href="/question/<question_id>/vote_up">Vote Up</a>
     <a href="/question/<question_id>/vote_down">Vote Down</a>
@@ -33,21 +38,27 @@
                     <th>{{ answer_header | title }}</th>
             {% endfor %}
         </tr>
+    <label><h2>Answers:</h2></label>
+    <table>
+    <tr>
+        {% for answer_header in answer_headers %}
+                <th>{{ answer_header | title }}</th>
+        {% endfor %}
+    </tr>
 
-                {% for answer in answers %}
-                    <tr>
-                        <td>{{ answer["id"] }}</td>
-                        <td>{{ answer["submission_time"] }}</td>
-                        <td>{{ answer["vote_number"] }}</td>
-                        <td>{{ answer["question_id"] }}</td>
-                        <td style="white-space: pre-line">{{ answer["message"] }}</td>
-                        <td>{{ answer["image"] }}</td>
-                    </tr>
-                {% endfor %}
-        </table>
-    {% elif answer is undefined %}
-        <p>There are no answers yet.</p>
-    {% endif %}
-
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer["id"] }}</td>
+                    <td>{{ answer["submission_time"] }}</td>
+                    <td>{{ answer["vote_number"] }}</td>
+                    <td>{{ answer["question_id"] }}</td>
+                    <td style="white-space: pre-line">{{ answer["message"] }}</td>
+                    <td>{{ answer["image"] }}</td>
+                </tr>
+            {% endfor %}
+    </table>
+    <form action="{{ "/" }}">
+        <button type="submit" name="back_to_main" id="back_to_main" value="Go back to main page">Go back to main page</button>
+    </form>
 </body>
 </html>

@@ -1,6 +1,4 @@
 from flask import Flask, render_template, redirect, request, url_for
-import connection
-import data_manager
 import data_manager
 import connection
 
@@ -15,12 +13,18 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-    data = data_manager.get_csv_file(QUESTIONS_FILE_PATH)
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     return render_template("list.html", all_questions=data, question_header=header)
 
+
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
+    if request.method == 'POST':
+        new_question = dict(request.form)
+        final_question = data_manager.fill_out_missing_data(new_question)
+        print(final_question)
+        return redirect('/')
     return render_template('add_question_or_answer.html')
 
 
@@ -28,9 +32,6 @@ def add_new_question():
 def manage_questions(question_id):
     actual_question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
-
-    if len(answers_to_question) == 0:
-        answers_to_question = None
 
     if request.method == "GET":
         return render_template("question.html",
@@ -40,6 +41,17 @@ def manage_questions(question_id):
                                question_headers=QUESTION_HEADERS,
                                answer_headers=ANSWERS_HEADERS)
     pass
+
+
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+def edit_question(question_id):
+    question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
+    if request.method == "POST":
+        pass
+
+    return render_template("edit_question.html",
+                           page_title=f"Edit question ID {question_id}",
+                           question=question)
 
 
 @app.route('/answer/<answer_id>', methods=('GET', 'POST'))
