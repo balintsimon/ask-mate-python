@@ -1,5 +1,6 @@
 from datetime import datetime
 import calendar
+import csv
 
 
 def sort_array(array, key, reverse):
@@ -22,3 +23,10 @@ def convert_unix_time_to_readable(input_time):
 def get_unix_time():
     date_time = datetime.utcnow()
     return(calendar.timegm(date_time.utctimetuple()))
+
+
+def generate_id(filename):
+    with open(filename, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        data_id = sum(1 for row in csv_reader)
+        return data_id
