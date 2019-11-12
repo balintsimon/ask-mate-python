@@ -32,6 +32,8 @@ def add_new_question():
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
     return render_template('form.html',
+                           url_action="",
+                           action_method="post",
                            page_title=f'Add new question',
                            header_title='Add new question',
                            title_field_title='Your title:',
@@ -80,6 +82,7 @@ def edit_question(question_id):
 
     return render_template("form.html",
                            url_action=url_for("edit_question", question_id=question_id),
+                           action_method="get",
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
