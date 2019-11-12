@@ -1,6 +1,6 @@
 import connection
-from datetime import datetime
 import util
+
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
@@ -64,7 +64,7 @@ def get_answers_to_question(question_id, answers_file):
     return answers_to_question
 
 
-def vote(story_id, filename, vote_method):
+def modify_vote_story(story_id, filename, vote_method):
     story = get_single_line_by_id(story_id,filename)
     vote_number = int(story["vote_number"])
     if vote_method == "up":
@@ -72,8 +72,10 @@ def vote(story_id, filename, vote_method):
     elif vote_number == "down":
         vote_number -= 1
 
-    pass
+    story["vote_number"] = int(vote_number)
+    story_to_update = story
 
+    return story_to_update
 
 
 def fill_out_missing_data(new_data):
