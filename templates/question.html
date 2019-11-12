@@ -23,28 +23,23 @@
     </table>
     <p></p>
     <label>Answers:</label>
-    {% if answer is defined %}
-        <table>
-        <tr>
-            {% for answer_header in answer_headers %}
-                    <th>{{ answer_header | title }}</th>
+    <table>
+    <tr>
+        {% for answer_header in answer_headers %}
+                <th>{{ answer_header | title }}</th>
+        {% endfor %}
+    </tr>
+
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer["id"] }}</td>
+                    <td>{{ answer["submission_time"] }}</td>
+                    <td>{{ answer["vote_number"] }}</td>
+                    <td>{{ answer["question_id"] }}</td>
+                    <td style="white-space: pre-line">{{ answer["message"] }}</td>
+                    <td>{{ answer["image"] }}</td>
+                </tr>
             {% endfor %}
-        </tr>
-
-                {% for answer in answers %}
-                    <tr>
-                        <td>{{ answer["id"] }}</td>
-                        <td>{{ answer["submission_time"] }}</td>
-                        <td>{{ answer["vote_number"] }}</td>
-                        <td>{{ answer["question_id"] }}</td>
-                        <td style="white-space: pre-line">{{ answer["message"] }}</td>
-                        <td>{{ answer["image"] }}</td>
-                    </tr>
-                {% endfor %}
-        </table>
-    {% elif answer is undefined %}
-        <p>There are no answers yet.</p>
-    {% endif %}
-
+    </table>
 </body>
 </html>

@@ -14,6 +14,17 @@ def get_single_line_by_id(story_id, filename):
             return story
 
 
+def get_all_questions(filename):
+    all_questions = connection.read_file(filename)
+    modded_questions = []
+
+    for question in all_questions:
+        question["submission_time"] = datetime.fromtimestamp(int(question["submission_time"]))
+        modded_questions.append(question)
+
+    return modded_questions
+
+
 def get_csv_file(filename):
     return connection.read_file(filename)
 
