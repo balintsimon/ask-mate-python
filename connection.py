@@ -23,3 +23,16 @@ def add_new_data(filename, new_story):
         fieldnames = get_data_header(filename)
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writerow(new_story)
+
+
+def update_file(filename, upate_story):
+
+    with open(filename, 'w') as csv_file:
+        fieldnames = get_data_header(filename)
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for row in existing_stories:
+            if new_story["id"] == row["id"]:
+                row = new_story
+            writer.writerow(row)

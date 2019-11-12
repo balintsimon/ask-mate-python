@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, request, url_for
 import data_manager
 import connection
+import util
 
 
 app = Flask(__name__)
@@ -47,11 +48,24 @@ def manage_questions(question_id):
 def edit_question(question_id):
     question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
     if request.method == "POST":
-        pass
 
-    return render_template("edit_question.html",
+        edited_question = {"id": question["id"],
+                          "submission_time": util.get_unix_time(),
+                          "view_number": quesion["view_number"],
+                          "vote_number": question["vote_number"],
+                          "title": request.form.get("title"),
+                          "message": request.form.get("message"),
+                          "image": request.form.get("image", question["image"]),
+        }
+
+        data_handler.write_story_to_file(new_story)
+        return redirect("/")
+
+    return render_template("edit-question-or-answer.html",
                            page_title=f"Edit question ID {question_id}",
-                           question=question)
+                           question=question,
+                           body_edit_title="Edit question:",
+                           button_title="Save change")
 
 
 @app.route('/answer/<answer_id>', methods=('GET', 'POST'))

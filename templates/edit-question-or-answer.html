@@ -12,7 +12,7 @@
             <input type="text" name="question_title" id="question_title" value="{{ question["title"] }}" required>
         </p>
         <p>
-            <label for="question_message">Edit question:</label><br>
+            <label for="question_message">{{ body_edit_title }}</label><br>
             <textarea name="question_message" id="question_message" rows="8" cols="50" required>{{ question["message"] }}</textarea>
         </p>
         <p>
@@ -21,7 +21,7 @@
             <input type="text" name="image" id="image" value="{{ question["image"] }}">
         </p>
         <p>
-            <button type="submit">Save change</button>
+            <button type="submit">{{ button_title }}</button>
         </p>
     </form>
 </body>
