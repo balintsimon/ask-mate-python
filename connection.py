@@ -25,15 +25,20 @@ def add_new_data(filename, new_story, list_of_headers):
         writer.writerow(new_story)
 
 
-def update_file(filename, update_story):
+def update_file(filename, new_dataset, adding=True):
     existing_submits = read_file(filename)
+    open_option = "a" if adding is True else "w"
 
-    with open(filename, 'w') as csv_file:
+    with open(filename, open_option) as csv_file:
         fieldnames = get_data_header(filename)
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
-        writer.writeheader()
-        for submit in existing_submits:
-            if update_story["id"] == submit["id"]:
-                submit = update_story
-            writer.writerow(row)
+        if adding is True:
+            writer.writerow(new_dataset)
+
+        else:
+            writer.writeheader()
+            for submit in existing_submits:
+                if new_dataset["id"] == submit["id"]:
+                    submit = new_dataset
+                writer.writerow(submit)
