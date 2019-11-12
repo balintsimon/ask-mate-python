@@ -61,10 +61,14 @@ def edit_question(question_id):
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
-    return render_template("edit-question-or-answer.html",
+    return render_template("form.html",
+                           url_action=url_for(edit_question(question_id), question_id=question_id),
                            page_title=f"Edit question ID {question_id}",
+                           header_title=f"Edit question ID {question_id}",
                            question=question,
-                           body_edit_title="Edit question:",
+                           title_title="Edit title:",
+                           body_title="Edit question:",
+                           image_title="Edit image:",
                            button_title="Save change")
 
 

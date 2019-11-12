@@ -6,7 +6,9 @@
 </head>
 <body>
     <p><h1>{{ page_title }}</h1></p>
-    <label><h2>Question:</h2></label>
+    <label for="question_title"><h2>Question: {{ question[""] }}</h2></label>
+
+    QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
     <table>
     <tr>
         {% for question_header in question_headers %}
