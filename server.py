@@ -71,7 +71,7 @@ def edit_question(question_id):
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
-                           title_title="Edit title:",
+                           title_field_title="Edit title:",
                            body_title="Edit question:",
                            image_title="Edit image:",
                            button_title="Save change")
