@@ -13,7 +13,7 @@
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
     <p></p>
-    <form action="{{ "/question/<question_id>/edit" }}" method="post">
+    <form action="{{ url_action }}" method="post">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
     <p></p>
