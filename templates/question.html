@@ -5,6 +5,7 @@
     <title>{{ page_title }}</title>
 </head>
 <body>
+    <p><h1>{{ page_title }}</h1></p>
     <table>
     <tr>
         {% for question_header in question_headers %}
@@ -21,6 +22,9 @@
             <td>{{ question['image'] }}</td>
         </tr>
     </table>
+    <form action="{{ "/question/<question_id>/edit" }}" method="post">
+    <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
+    </form>
     <p></p>
     <label>Answers:</label>
     <table>
