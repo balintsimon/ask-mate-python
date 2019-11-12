@@ -1,6 +1,4 @@
 from flask import Flask, render_template, redirect, request, url_for
-import connection
-import data_manager
 import data_manager
 import connection
 
@@ -24,8 +22,9 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        print(new_question)
-        connection.add_new_data(QUESTIONS_FILE_PATH, new_question)
+        final_question = data_manager.fill_out_missing_data(new_question)
+        print(final_question)
+        return redirect('/')
     return render_template('add_question_or_answer.html')
 
 
