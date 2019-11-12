@@ -29,10 +29,15 @@ def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
         final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
-        print(final_question)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('add_question_or_answer.html')
+    return render_template('form.html',
+                           page_title=f'Add new question',
+                           header_title='Add new question',
+                           title_field_title='Your title:',
+                           body_edit_title='Your message:',
+                           question={'tite': "", 'message': "", 'image': ""},
+                           button_title="Post")
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
