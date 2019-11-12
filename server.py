@@ -42,6 +42,7 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         return render_template("question.html",
+                               url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
                                answers=answers_to_question,
@@ -57,7 +58,7 @@ def edit_question(question_id):
 
         edited_question = {"id": question["id"],
                           "submission_time": util.get_unix_time(),
-                          "view_number": quesion["view_number"],
+                          "view_number": question["view_number"],
                           "vote_number": question["vote_number"],
                           "title": request.form.get("title"),
                           "message": request.form.get("message"),
@@ -68,7 +69,7 @@ def edit_question(question_id):
         return redirect("/")
 
     return render_template("form.html",
-                           url_action=url_for(edit_question(question_id), question_id=question_id),
+                           url_action=url_for("edit_question", question_id=question_id),
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
