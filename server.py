@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect, request, url_for
 import connection
 import data_manager
+import data_manager
+import connection
 
 
 app = Flask(__name__)
@@ -13,7 +15,9 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-    return render_template("list.html")
+    data = data_manager.get_csv_file("sample_data/question.csv")
+    header = connection.get_data_header("sample_data/question.csv")
+    return render_template("list.html", all_questions=data, question_header=header)
 
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
