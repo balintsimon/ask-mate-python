@@ -19,8 +19,24 @@ def get_single_line_by_id(story_id, filename):
             return story
 
 
+
+"""decorator function, sorts data by given key and order"""
+def sort_dict(func):
+    def wrapper(*args, reverse=True, key="submission_time"):
+        data = func(*args)
+        array = sorted(data, key=lambda x: x[key], reverse=reverse)
+        return array
+    return wrapper
+
+
+@sort_dict
 def get_all_questions(filename):
-    """Reads file, formats time format to readable and returns it as a list."""
+    """ returns a dictionary, has sorting decorator function.
+    ARGS:
+        filename (string),
+        reverse=False (boolean): decorator keyname parameter with default value,
+        key="submission_time" (string): decorator keyname paramtere with default value,
+    """
     all_questions = connection.read_file(filename)
     modded_questions = []
 
