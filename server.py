@@ -15,7 +15,7 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
-    data = data_manager.get_csv_file(QUESTIONS_FILE_PATH)
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     return render_template("list.html", all_questions=data, question_header=header)
 

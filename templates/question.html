@@ -29,16 +29,17 @@
                 <th>{{ answer_header | title }}</th>
         {% endfor %}
     </tr>
-        {% for answer in answers %}
-            <tr>
-                <td>{{ answer["id"] }}</td>
-                <td>{{ answer["submission_time"] }}</td>
-                <td>{{ answer["vote_number"] }}</td>
-                <td>{{ answer["question_id"] }}</td>
-                <td style="white-space: pre-line">{{ answer["message"] }}</td>
-                <td>{{ answer["image"] }}</td>
-            </tr>
-        {% endfor %}
+
+            {% for answer in answers %}
+                <tr>
+                    <td>{{ answer["id"] }}</td>
+                    <td>{{ answer["submission_time"] }}</td>
+                    <td>{{ answer["vote_number"] }}</td>
+                    <td>{{ answer["question_id"] }}</td>
+                    <td style="white-space: pre-line">{{ answer["message"] }}</td>
+                    <td>{{ answer["image"] }}</td>
+                </tr>
+            {% endfor %}
     </table>
 </body>
 </html>
