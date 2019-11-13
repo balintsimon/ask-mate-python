@@ -3,7 +3,6 @@ import data_manager
 import connection
 import util
 
-
 app = Flask(__name__)
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
@@ -64,15 +63,14 @@ def manage_questions(question_id):
 def edit_question(question_id):
     question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
     if request.method == "POST":
-
         edited_question = {"id": question["id"],
-                          "submission_time": util.get_unix_time(),
-                          "view_number": question["view_number"],
-                          "vote_number": question["vote_number"],
-                          "title": request.form.get("title"),
-                          "message": request.form.get("message"),
-                          "image": request.form.get("image", question["image"]),
-        }
+                           "submission_time": util.get_unix_time(),
+                           "view_number": question["view_number"],
+                           "vote_number": question["vote_number"],
+                           "title": request.form.get("title"),
+                           "message": request.form.get("message"),
+                           "image": request.form.get("image", question["image"]),
+                           }
 
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
@@ -95,19 +93,19 @@ def manage_answer(answer_id):
         pass
     pass
 
-# @app.route('/answer/<int:answer_id>/<vote_method>', method='POST')
-# def vote_answer(answer_id, vote_method):
-#     filename = ANSWERS_FILE_PATH
-#     update_story = data_manager.modify_vote_story(story_id=answer_id, filename, vote_method)
-#     connection.update_file(filename,update_story)
-#
-#
-# @app.route('/question/<question_id>/<vote_method>', method='POST')
-# def vote_question(question_id,vote_method):
-#     filename = QUESTIONS_FILE_PATH
-#     update_story = data_manager.modify_vote_story(story_id=question_id, filename, vote_method)
-#     connection.update_file(filename, update_story)
-#
+
+@app.route('/question/<question_id>/<vote_method>', methods=['GET', 'POST'])
+def vote_questions(vote_method, question_id):
+    filename = QUESTIONS_FILE_PATH
+
+    # question = data_manager.get_single_line_by_id(question_id, filename)
+    modified_story = data_manager.modify_vote_story(filename, vote_method, story_id=question_id)
+    connection.update_file(filename, new_dataset=modified_story, adding=False)
+
+    return redirect(url_for("show_questions"))
+
+
+
 
 @app.route('/answer/<answer_id>/delete')
 def delete_answer(answer_id):
