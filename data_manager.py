@@ -85,6 +85,21 @@ def modify_vote_story(filename, vote_method, story_id):
     return vote_to_modify
 
 
+def modify_view_number(filename, story_id):
+    all_stories = connection.read_file(filename)
+
+    for story in all_stories:
+        if story["id"] == story_id:
+            view_to_modify = story
+
+    view_number = int(view_to_modify["view_number"])
+    view_number += 1
+
+    view_to_modify["view_number"] = str(view_number)
+
+    return view_to_modify
+
+
 def fill_out_missing_question(new_data, filename):
     """Fills out the missing question data in the new question/answer(id, date, view number, vote number)"""
     new_data['submission_time'] = util.get_unix_time()
@@ -111,7 +126,3 @@ def delete_records(answer_file=None, question_file=None, id=None):
 def delete_answer(answer_file, id):
     connection.delete_answers(answer_file, a_id=id)
 
-
-'''filename = "./sample_data/question.csv"
-print(get_one_question_line(0, filename))
-print(modify_vote_story(filename, "vote-up", 0))'''

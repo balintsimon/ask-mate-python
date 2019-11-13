@@ -11,7 +11,6 @@ QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
-
 @app.route('/')
 def show_questions():
     LABEL = 0
@@ -65,6 +64,9 @@ def manage_questions(question_id):
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     if request.method == "GET":
+        '''add to view count'''
+        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+        connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
         return render_template("question-child.html",
                                url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
