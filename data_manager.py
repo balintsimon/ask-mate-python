@@ -65,8 +65,13 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(filename, vote_method, story_id):
-    question = get_single_line_by_id(story_id, filename)  # it gives back an empty object
-    vote_number = question["vote_number"]
+    all_stories = connection.read_file(filename)
+
+    for story in all_stories:
+        if story["id"] == story_id:
+            vote_to_modify = story
+
+    vote_number = int(vote_to_modify["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":
         pass
@@ -75,9 +80,9 @@ def modify_vote_story(filename, vote_method, story_id):
     elif vote_method == "vote_down":
         vote_number -= 1
 
-    question["vote_number"] = vote_number
+    vote_to_modify["vote_number"] = str(vote_number)
 
-    return question
+    return vote_to_modify
 
 
 def fill_out_missing_question(new_data, filename):

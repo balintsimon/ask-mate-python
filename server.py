@@ -16,14 +16,29 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/')
 def show_questions():
+    LABEL = 0
+    ORDER = 1
     try:
-        label_to_sortby = request.args.getlist('sorting')[0]
-    except IndexError:
+        label_to_sortby = request.args.getlist('sorting')[LABEL]
+    except:
         label_to_sortby = "submission_time"
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
+    try:
+        order = request.args.getlist('sorting')[ORDER]
+        order = bool(order == "True")
+    except:
+        order = True
+
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
+    return render_template("list.html",
+                           all_questions=data,
+                           question_header=header,
+                           file_labels=labels,
+                           order={True: "Descending", False: "Ascending"},
+                           userpick_label=label_to_sortby,
+                           userpick_order=order,
+                           )
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -54,7 +69,7 @@ def manage_questions(question_id):
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     if request.method == "GET":
-        return render_template("question.html",
+        return render_template("question-child.html",
                                url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
@@ -103,14 +118,19 @@ def manage_answer(answer_id):
 @app.route('/question/<question_id>/<vote_method>', methods=['GET', 'POST'])
 def vote_questions(vote_method, question_id):
     filename = QUESTIONS_FILE_PATH
-
-    # question = data_manager.get_single_line_by_id(question_id, filename)
-    modified_story = data_manager.modify_vote_story(filename, vote_method, story_id=question_id)
+    modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
-    return redirect(url_for("show_questions"))
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
+@app.route('/answer/<question_id>/<answer_id>/<vote_method>', methods=['GET', 'POST'])
+def vote_answers(vote_method, answer_id, question_id):
+    filename = ANSWERS_FILE_PATH
+    modified_story = data_manager.modify_vote_story(filename, vote_method, answer_id)
+    connection.update_file(filename, new_dataset=modified_story, adding=False)
+
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/delete')
