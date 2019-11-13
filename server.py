@@ -45,10 +45,10 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        file = request.files['image']
+        # file = request.files['image']
         # file.save(os.path.join(app.config['UPLOAD_FOLDER'], new_question['image']))
-        # final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
-        # connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
+        final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
+        connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
     return render_template('add_question_or_answer.html', question=True)
 
