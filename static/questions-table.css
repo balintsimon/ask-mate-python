@@ -1,0 +1,48 @@
+.table-container{
+    border-collapse: collapse;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.table-container thead th{
+    background-color: #0B2329;
+    padding: 5px;
+    font-family: 'Permanent Marker', cursive;
+}
+
+.table-container tbody tr:nth-of-type(even){
+    background-color: #1C3B4A;
+    font-size: large;
+    font-family: 'Architects Daughter', cursive;
+}
+
+.table-container tbody tr:nth-of-type(odd){
+    background-color: #285369;
+    font-size: large;
+    font-family: 'Architects Daughter', cursive;
+}
+
+.table-container tbody tr td pre{
+    font-size: large;
+    font-family: 'Architects Daughter', cursive;
+}
+
+.table-container tbody tr:hover{
+    background-color: #327594;
+}
+
+.table-container tbody tr td{
+    padding: 21px 20px;
+}
+
+.table-container a{
+    font-size: large;
+    color: silver;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.table-container a:hover{
+    color: black;
+}

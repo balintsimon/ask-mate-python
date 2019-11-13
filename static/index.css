@@ -1,0 +1,60 @@
+*{
+    margin: 0;
+}
+body{
+    width: 100%;
+    background-color: #0B2329;
+}
+
+.img-container{
+    background-image: url(images/indexheader.jpg);
+    height: 240px;
+    background-position-y: top;
+    background-position-x: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.inner-container h1{
+    text-align: left;
+    padding-top: 50px;
+    padding-left: 200px;
+    color: white;
+    font-family: 'Shadows Into Light', cursive;
+    font-size: 100px;
+}
+
+.inner-container nav{
+    text-align: center;
+    padding-top: 100px;
+}
+
+.navigator-container{
+  display: flex;
+    background-color: #0B2329;
+    padding-top: 10px;
+    padding-bottom: 7px;
+    border-bottom: silver 4px solid;
+}
+
+.navigator-container nav a{
+    text-align: left;
+    margin-right: 900px;
+    margin-left: 250px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 25px;
+    background-clip: content-box;
+}
+
+.navigator-container form label{
+    color: white;
+}
+
+.navigator-container nav a:hover{
+    background-clip: content-box;
+    opacity: 0.7;
+}

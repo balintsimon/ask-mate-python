@@ -3,33 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to AskMate!</title>
-    <style>
-        td {border-bottom: 1px solid black;}
-    </style>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-    <h1>AskMate</h1>
-    <nav>
-        <a href={{ url_for('add_new_question') }}>Ask a question</a>
-    </nav>
+        <div class="img-container">
+            <div class="inner-container">
+                <h1>AskMate</h1>
+            </div>
+        </div>
     </header>
-    <form action="/" method="GET">
-        <label for="sorting">sort by:</label>
-        <select name="sorting" id="sorting">
-            {% for label in file_labels %}
-                <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <select name="sorting">
-            {%for bool in order %}
-                <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Sort</button>
-    </form>
+    <div class="navigator-container">
+        <nav>
+            <a href={{ url_for('add_new_question') }}>Ask a question</a>
+        </nav>
+        <form action="/" method="GET">
+            <label for="sorting"></label>
+            <select name="sorting" id="sorting">
+                {% for label in file_labels %}
+                    <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <select name="sorting">
+                {%for bool in order %}
+                    <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Sort</button>
+        </form>
+    </div>
     <main>
-        <table>
+        <table class="table-container">
             <thead>
                 <tr>
                 {% for header in question_header %}
@@ -52,6 +59,6 @@
             </tbody>
         </table>
     </main>
-    <footer></footer>
+    <footer class="footer-container"></footer>
 </body>
 </html>
