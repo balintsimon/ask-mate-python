@@ -13,14 +13,29 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
+    LABEL = 0
+    ORDER = 1
     try:
-        label_to_sortby = request.args.getlist('sorting')[0]
-    except IndexError:
+        label_to_sortby = request.args.getlist('sorting')[LABEL]
+    except:
         label_to_sortby = "submission_time"
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
+    try:
+        order = request.args.getlist('sorting')[ORDER]
+        order = bool(order == "True")
+    except:
+        order = True
+
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
+    return render_template("list.html",
+                           all_questions=data,
+                           question_header=header,
+                           file_labels=labels,
+                           order={True: "Descending", False: "Ascending"},
+                           userpick_label=label_to_sortby,
+                           userpick_order=order,
+                           )
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
