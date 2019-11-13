@@ -116,7 +116,7 @@ def vote_questions(vote_method, question_id):
     modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
-    return redirect(url_for("show_questions"))
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
 
