@@ -139,6 +139,12 @@ def delete_answer(answer_id):
     return redirect('/')
 
 
+@app.route('/question/<question_id>/delete')
+def delete_question(question_id):
+    data_manager.delete_records(answer_file=ANSWERS_FILE_PATH, question_file=QUESTIONS_FILE_PATH, id=question_id)
+    return redirect('/')
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

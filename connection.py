@@ -45,3 +45,25 @@ def update_file(filename, new_dataset, adding=True):
                 if new_dataset["id"] == submit["id"]:
                     submit = new_dataset
                 writer.writerow(submit)
+
+def delete_question(filename, q_id):
+    """rewrites the entire csv excluding the given ids"""
+    content = read_file(filename)
+
+    with open(filename, "w+") as f:
+        writer = csv.DictWriter(f, fieldnames=QUESTION_HEADERS, delimiter=',')
+        writer.writeheader()
+        for question in content:
+            if question['id'] != q_id:
+                writer.writerow(question)
+
+
+def delete_answers(filename, q_id):
+    content = read_file(filename)
+
+    with open(filename, "w+") as f:
+        writer = csv.DictWriter(f, fieldnames=ANSWER_HEADERS, delimiter=',')
+        writer.writeheader()
+        for answer in content:
+            if answer['question_id'] != q_id:
+                writer.writerow(answer)

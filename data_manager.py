@@ -102,6 +102,12 @@ def fill_out_missing_answer(new_data, question_id, filename):
     new_data['question_id'] = question_id
     return new_data
 
+
+def delete_records(answer_file=None, question_file=None, id=None):
+    connection.delete_answers(answer_file, id)
+    connection.delete_question(question_file, id)
+
+
 '''filename = "./sample_data/question.csv"
 print(get_one_question_line(0, filename))
 print(modify_vote_story(filename, "vote-up", 0))'''

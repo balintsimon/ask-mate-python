@@ -19,6 +19,7 @@
     <form action="{{ url_action }}" method="get">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
+    <a href="/question/{{ question['id'] }}/delete"><button>Delete</button></a>
 
     <p></p>
     <h3><label>Answers:</label></h3>
