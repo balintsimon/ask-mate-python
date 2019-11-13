@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <title>{{ page_title }}</title>
 </head>
-<body>
+<a>
     <p><h1>{{ page_title }}</h1></p>
-    <label for="question_title"><h2>Question: {{ question["title"] }}</h2></label><br>
+    <p></p>
+    <label for="question_title"><h2>Question: {{ question["title"] }}</h2></label>
     <p style="white-space: pre-line"><h3>{{ question["message"] }}</h3></p>
     {% if question['image'] %}
     <img src="{{ url_for('static', filename=question['image']) }}" alt="No image" height="600" width="520">
     {% endif %}
+    <a href='/question/<int:question_id>/vote_up'><button id="vote_up" value="vote_up">Vote UP</button></a>
+    <a href='/question/<int:question_id>/vote_down'><button id="vote_up" value="vote_up">Vote UP</button></a>
     <p>Submitted at: {{ question["submission_time"] }}</p>
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
@@ -18,9 +21,7 @@
     <form action="{{ url_action }}" method="post">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
-    <p></p>
-    <a href="/question/<question_id>/vote_up">Vote Up</a>
-    <a href="/question/<question_id>/vote_down">Vote Down</a>
+
     <p></p>
     <label><h2>Answers:</h2></label>
     <table>
