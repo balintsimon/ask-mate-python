@@ -129,7 +129,7 @@ def vote_answers(vote_method, answer_id, question_id):
     modified_story = data_manager.modify_vote_story(filename, vote_method, answer_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
-    return redirect('/')
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<question_id>/<answer_id>/delete')
