@@ -64,7 +64,7 @@ def manage_questions(question_id):
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     if request.method == "GET":
-        return render_template("question.html",
+        return render_template("question-child.html",
                                url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
                                question=actual_question,
