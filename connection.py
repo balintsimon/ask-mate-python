@@ -58,12 +58,16 @@ def delete_question(filename, q_id):
                 writer.writerow(question)
 
 
-def delete_answers(filename, q_id):
+def delete_answers(filename, q_id=None, a_id=None):
     content = read_file(filename)
 
     with open(filename, "w+") as f:
         writer = csv.DictWriter(f, fieldnames=ANSWER_HEADERS, delimiter=',')
         writer.writeheader()
         for answer in content:
-            if answer['question_id'] != q_id:
-                writer.writerow(answer)
+            if q_id:
+                if answer['question_id'] != q_id:
+                    writer.writerow(answer)
+            if a_id:
+                if answer['id'] != a_id:
+                    writer.writerow(answer)
