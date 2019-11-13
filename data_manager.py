@@ -65,17 +65,17 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(filename, vote_method, story_id):
-    question = get_single_line_by_id(story_id, filename)  # it gives back an empty object
-    vote_number = question["vote_number"]
+    question = get_single_line_by_id(str(story_id), filename)  # it gives back an empty object
+    vote_number = int(question["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":
         pass
-    elif vote_method == "vote_up":
+    if vote_method == "vote_up":
         vote_number += 1
     elif vote_method == "vote_down":
         vote_number -= 1
 
-    question["vote_number"] = vote_number
+    question["vote_number"] = str(vote_number)
 
     return question
 
@@ -89,6 +89,6 @@ def fill_out_missing_data(new_data, filename):
     return new_data
 
 
-'''filename = "./sample_data/question.csv"
-print(get_one_question_line(0, filename))
-print(modify_vote_story(filename, "vote-up", 0))'''
+filename = "./sample_data/question.csv"
+#print(get_single_line_by_id(0, filename))
+print(modify_vote_story(filename, "vote_up", 0))

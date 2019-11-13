@@ -100,9 +100,7 @@ def manage_answer(answer_id):
 @app.route('/question/<question_id>/<vote_method>', methods=['GET', 'POST'])
 def vote_questions(vote_method, question_id):
     filename = QUESTIONS_FILE_PATH
-
-    # question = data_manager.get_single_line_by_id(question_id, filename)
-    modified_story = data_manager.modify_vote_story(filename, vote_method, story_id=question_id)
+    modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
     return redirect(url_for("show_questions"))
