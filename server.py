@@ -11,7 +11,6 @@ QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
 ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 
-
 @app.route('/')
 def show_questions():
     LABEL = 0
@@ -65,6 +64,9 @@ def manage_questions(question_id):
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     if request.method == "GET":
+        '''add to view count'''
+        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+        connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
         return render_template("question-child.html",
                                url_action=url_for("edit_question", question_id=question_id),
                                page_title=f"Answers to question ID {question_id}",
@@ -129,10 +131,10 @@ def vote_answers(vote_method, answer_id, question_id):
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
-@app.route('/answer/<answer_id>/delete')
-def delete_answer(answer_id):
+@app.route('/answer/<question_id>/<answer_id>/delete')
+def delete_answer(question_id, answer_id):
     data_manager.delete_answer(ANSWERS_FILE_PATH, answer_id)
-    return redirect('/')
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete')

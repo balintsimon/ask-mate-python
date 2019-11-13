@@ -1,8 +1,14 @@
 {% extends "question.html" %}
 {% block head %}
     <style>
+        div p { text-align: center}
+        .block {border: 2px solid grey; overflow: hidden;}
+        .column { width: 230px; float: left; background: lightgrey; margin: 5px;}
+        .questioncontent {overflow: hidden; margin: 5px; white-space: pre-line;}
+        .imgblock {width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto; padding: 15px;}
+
         .message {margin-bottom: 15px; border: 1px solid black;}
-        .image {float:left; margin-right: 10px; }
+        .image {float:left; margin-right: 10px;}
         .user {float:left; font-weight:bold; color:#009; margin-bottom: 5px; margin-left: 5px; }
         .content { margin-left: 30px;font-style:italic; color:#; }
         .date { padding-left: 15px; padding-right: 15px; float: left;}
@@ -17,7 +23,26 @@
 {% block header %}{% endblock %}
 
 
-{%block comment %}
+{% block question %}
+    <h1>{{ question['title'] }}</h1>
+    <div class="block">
+        <div class="column">
+            <img class=imgblock
+                 src="{{ url_for('static', filename=question['image']) }}"
+                 onerror="this.src='/static/images/basic.png'"
+                 alt="No image">
+            <p>{{ question["submission_time"] }}</p>
+            <p>Voted: {{ question["vote_number"] }}</p>
+            <p>Viewed: {{ question["view_number"] }}</p>
+        </div>
+        <div class="questioncontent">{{ question["message"] }}</div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block comment %}
     <div>
         <div class="message">
             <div class="head">{{ answer["submission_time"] }}
@@ -30,7 +55,7 @@
             </div>
             <div style="clear:both;"></div>
             <div class="content">{{ answer["message"] }}</div>
-            <div class="delbtn"><a href="{{ url_for('delete_answer', answer_id=answer['id']) }}">Delete</a></div>
+            <div class="delbtn"><a href="{{ url_for('delete_answer', question_id=question["id"],  answer_id=answer['id']) }}">Delete</a></div>
             <div style="clear:both;"></div>
         </div>
     </div>
