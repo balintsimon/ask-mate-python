@@ -38,7 +38,7 @@ def add_new_question():
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
-        final_answer = data_manager.fill_out_missing_answer(new_answer,question_id, ANSWERS_FILE_PATH)
+        final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
         connection.add_new_data(ANSWERS_FILE_PATH, final_answer, data_manager.ANSWER_HEADERS)
         return redirect(f'/questions/{question_id}')
     return render_template('add_question_or_answer.html')
@@ -79,6 +79,7 @@ def edit_question(question_id):
 
     return render_template("form.html",
                            url_action=url_for("edit_question", question_id=question_id),
+                           action_method="get",
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
@@ -107,6 +108,12 @@ def manage_answer(answer_id):
 #     update_story = data_manager.modify_vote_story(story_id=question_id, filename, vote_method)
 #     connection.update_file(filename, update_story)
 #
+
+@app.route('/answer/<answer_id>/delete')
+def delete_answer(answer_id):
+    data_manager.get_current_answer(answer_id, ANSWERS_FILE_PATH)
+    return redirect('/')
+
 
 if __name__ == '__main__':
     app.run(
