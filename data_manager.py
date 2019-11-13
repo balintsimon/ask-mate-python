@@ -85,20 +85,20 @@ def modify_vote_story(filename, vote_method, story_id):
     return vote_to_modify
 
 
-def modify_view_number(filename, story_id, viewed=False):
-    if viewed:
-        all_stories = connection.read_file(filename)
+def modify_view_number(filename, story_id):
 
-        for story in all_stories:
-            if story["id"] == story_id:
-                view_to_modify = story
+    all_stories = connection.read_file(filename)
 
-        view_number = int(view_to_modify["view_number"])
-        view_number += 1
+    for story in all_stories:
+        if story["id"] == story_id:
+            view_to_modify = story
 
-        view_to_modify["view_number"] = str(view_number)
+    view_number = int(view_to_modify["view_number"])
+    view_number += 1
 
-        return view_to_modify
+    view_to_modify["view_number"] = str(view_number)
+
+    return view_to_modify
 
 
 def fill_out_missing_question(new_data, filename):
