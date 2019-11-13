@@ -55,6 +55,7 @@ def add_new_answer(question_id):
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
         connection.add_new_data(ANSWERS_FILE_PATH, final_answer, data_manager.ANSWER_HEADERS)
         return redirect(f'/questions/{question_id}')
+
     return render_template('add_question_or_answer.html')
 
 
@@ -65,7 +66,7 @@ def manage_questions(question_id):
 
     if request.method == "GET":
         '''add to view count'''
-        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id, viewed=True)
         connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
         return render_template("question-child.html",
                                url_action=url_for("edit_question", question_id=question_id),
@@ -113,22 +114,22 @@ def manage_answer(answer_id):
     pass
 
 
-@app.route('/question/<question_id>/<vote_method>', methods=['GET', 'POST'])
+@app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
     filename = QUESTIONS_FILE_PATH
     modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
-    return redirect(url_for("manage_questions", question_id=question_id))
+    return redirect('/')
 
 
-@app.route('/answer/<question_id>/<answer_id>/<vote_method>', methods=['GET', 'POST'])
+@app.route('/answer/<question_id>/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id, question_id):
     filename = ANSWERS_FILE_PATH
     modified_story = data_manager.modify_vote_story(filename, vote_method, answer_id)
     connection.update_file(filename, new_dataset=modified_story, adding=False)
 
-    return redirect(url_for("manage_questions", question_id=question_id))
+    return redirect('/')
 
 
 @app.route('/answer/<question_id>/<answer_id>/delete')
