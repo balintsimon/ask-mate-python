@@ -104,8 +104,12 @@ def fill_out_missing_answer(new_data, question_id, filename):
 
 
 def delete_records(answer_file=None, question_file=None, id=None):
-    connection.delete_answers(answer_file, id)
+    connection.delete_answers(answer_file, q_id=id)
     connection.delete_question(question_file, id)
+
+
+def delete_answer(answer_file, id):
+    connection.delete_answers(answer_file, a_id=id)
 
 
 '''filename = "./sample_data/question.csv"

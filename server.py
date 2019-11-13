@@ -131,7 +131,7 @@ def vote_answers(vote_method, answer_id, question_id):
 
 @app.route('/answer/<answer_id>/delete')
 def delete_answer(answer_id):
-    data_manager.get_current_answer(answer_id, ANSWERS_FILE_PATH)
+    data_manager.delete_answer(ANSWERS_FILE_PATH, answer_id)
     return redirect('/')
 
 
