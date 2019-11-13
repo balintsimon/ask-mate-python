@@ -38,6 +38,15 @@
                     <td>{{ answer["vote_number"] }}</td>
                     <td style="white-space: pre-line">{{ answer["message"] }}</td>
                     <td><img src="{{ answer["image"] }}" alt="No image"></td>
+                    <td>
+                        <a href={{ url_for('show_questions') }}>
+                       <img src="/static/images/arrow2.png" alt="up-arrow" height="25" width="25">
+                        </a>
+                        {{ answer['vote_number'] }}
+                        <a href={{ url_for('show_questions') }}>
+                       <img src="/static/images/arrow.png" alt="up-arrow" height="25" width="25">
+                        </a>
+                    </td>
                     <td><a href="{{ url_for('delete_answer', answer_id=answer['id']) }}">Delete</a></td>
                 </tr>
             {% endfor %}
