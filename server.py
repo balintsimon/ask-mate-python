@@ -133,10 +133,10 @@ def vote_answers(vote_method, answer_id, question_id):
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
-@app.route('/answer/<answer_id>/delete')
-def delete_answer(answer_id):
+@app.route('/answer/<question_id>/<answer_id>/delete')
+def delete_answer(question_id, answer_id):
     data_manager.delete_answer(ANSWERS_FILE_PATH, answer_id)
-    return redirect('/')
+    return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete')
