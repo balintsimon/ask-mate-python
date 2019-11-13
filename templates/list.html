@@ -18,7 +18,12 @@
         <label for="sorting">sort by:</label>
         <select name="sorting" id="sorting">
             {% for label in file_labels %}
-                <option value="{{ label }}">{{ label }}</option>
+                <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <select name="sorting">
+            {%for bool in order %}
+                <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
             {% endfor %}
         </select>
         <button type="submit">Sort</button>
@@ -28,7 +33,7 @@
             <thead>
                 <tr>
                 {% for header in question_header %}
-                    <th>{{ header }}</th>
+                    <th>{{ header | title}}</th>
                 {% endfor %}
                 </tr>
             </thead>
@@ -40,7 +45,7 @@
                     <td>{{ question['view_number'] }}</td>
                     <td>{{ question['vote_number'] }}</td>
                     <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>{{ question['title'] }}</a></td>
-                    <td><pre>{{ question['message'] }}</pre></td>
+                    <td style="white-space: pre-line">{{ question['message'] }}</td>
                     <td><img src="{{ url_for('static', filename=question['image']) }}" alt="No image" height="128" width="128"></td>
                 </tr>
                 {% endfor %}

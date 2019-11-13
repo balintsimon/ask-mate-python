@@ -1,5 +1,8 @@
 import csv
 
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+
 
 def read_file(filename):
     all_data = []
@@ -30,7 +33,7 @@ def update_file(filename, new_dataset, adding=True):
     open_option = "a" if adding is True else "w"
 
     with open(filename, open_option) as csv_file:
-        fieldnames = get_data_header(filename)
+        fieldnames = QUESTION_HEADERS if "question" in filename else ANSWER_HEADERS
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 
         if adding is True:

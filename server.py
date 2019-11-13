@@ -13,37 +13,49 @@ ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
 
 @app.route('/')
 def show_questions():
+    LABEL = 0
+    ORDER = 1
     try:
-        label_to_sortby = request.args.getlist('sorting')[0]
-    except IndexError:
+        label_to_sortby = request.args.getlist('sorting')[LABEL]
+    except:
         label_to_sortby = "submission_time"
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, key=label_to_sortby, reverse=True)
+    try:
+        order = request.args.getlist('sorting')[ORDER]
+        order = bool(order == "True")
+    except:
+        order = True
+
+    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
     header = connection.get_data_header(QUESTIONS_FILE_PATH)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html", all_questions=data, question_header=header, file_labels=labels)
+    return render_template("list.html",
+                           all_questions=data,
+                           question_header=header,
+                           file_labels=labels,
+                           order={True: "Descending", False: "Ascending"},
+                           userpick_label=label_to_sortby,
+                           userpick_order=order,
+                           )
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        final_question = data_manager.fill_out_missing_data(new_question, QUESTIONS_FILE_PATH)
+        final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
         connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
         return redirect('/')
-    return render_template('form.html',
-                           url_action="",
-                           action_method="post",
-                           page_title=f'Add new question',
-                           header_title='Add new question',
-                           title_field_title='Your title:',
-                           body_edit_title='Your message:',
-                           question={'title': "", 'message': "", 'image': ""},
-                           button_title="Post")
+    return render_template('add_question_or_answer.html', question=True)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer(question_id):
-    return redirect('/')
+    if request.method == 'POST':
+        new_answer = dict(request.form)
+        final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
+        connection.add_new_data(ANSWERS_FILE_PATH, final_answer, data_manager.ANSWER_HEADERS)
+        return redirect(f'/questions/{question_id}')
+    return render_template('add_question_or_answer.html')
 
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
@@ -75,12 +87,13 @@ def edit_question(question_id):
                            "image": request.form.get("image", question["image"]),
                            }
 
+        print(edited_question)
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("form.html",
                            url_action=url_for("edit_question", question_id=question_id),
-                           action_method="get",
+                           action_method="post",
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
@@ -106,6 +119,12 @@ def vote_questions(vote_method, question_id):
     return redirect(url_for("show_questions"))
 
 
+
+
+@app.route('/answer/<answer_id>/delete')
+def delete_answer(answer_id):
+    data_manager.get_current_answer(answer_id, ANSWERS_FILE_PATH)
+    return redirect('/')
 
 
 if __name__ == '__main__':
