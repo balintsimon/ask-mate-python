@@ -72,12 +72,13 @@ def edit_question(question_id):
                            "image": request.form.get("image", question["image"]),
                            }
 
+        print(edited_question)
         connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("form.html",
                            url_action=url_for("edit_question", question_id=question_id),
-                           action_method="get",
+                           action_method="post",
                            page_title=f"Edit question ID {question_id}",
                            header_title=f"Edit question ID {question_id}",
                            question=question,
