@@ -69,9 +69,9 @@ def modify_vote_story(filename, vote_method, story_id):
 
     for story in all_stories:
         if story["id"] == story_id:
-            question = story
+            vote_to_modify = story
 
-    vote_number = int(question["vote_number"])
+    vote_number = int(vote_to_modify["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":
         pass
@@ -80,9 +80,9 @@ def modify_vote_story(filename, vote_method, story_id):
     elif vote_method == "vote_down":
         vote_number -= 1
 
-    question["vote_number"] = str(vote_number)
+    vote_to_modify["vote_number"] = str(vote_number)
 
-    return question
+    return vote_to_modify
 
 
 def fill_out_missing_question(new_data, filename):

@@ -14,7 +14,7 @@
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
     <p> <a href='/question/{{ question["id"] }}/vote_up'><button id="vote_up" value="vote_up">Vote UP</button></a>
-    <a href='/question/{{ question["id"] }}/vote_down'><button id="vote_up" value="vote_up">Vote UP</button></a></p>
+    <a href='/question/{{ question["id"] }}/vote_down'><button id="vote_down" value="vote_down">Vote DOWN</button></a></p>
     <form action="{{ url_action }}" method="get">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
@@ -38,6 +38,8 @@
                     <td>{{ answer["vote_number"] }}</td>
                     <td style="white-space: pre-line">{{ answer["message"] }}</td>
                     <td><img src="{{ answer["image"] }}" alt="No image"></td>
+                    <td> <a href='/answer/{{ question["id"] }}/{{ answer["id"] }}/vote_up'><button id="vote_up" value="vote_up">Vote UP</button></a>
+                    <a href='/answer/{{ question["id"] }}/{{ answer["id"] }}/vote_down'><button id="vote_down" value="vote_down">Vote DOWN</button></a></td>
                     <td><a href="{{ url_for('delete_answer', answer_id=answer['id']) }}">Delete</a></td>
                 </tr>
             {% endfor %}
