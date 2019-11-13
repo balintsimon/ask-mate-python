@@ -65,7 +65,12 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(filename, vote_method, story_id):
-    question = get_single_line_by_id(str(story_id), filename)  # it gives back an empty object
+    all_stories = connection.read_file(filename)
+
+    for story in all_stories:
+        if story["id"] == story_id:
+            question = story
+
     vote_number = int(question["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":

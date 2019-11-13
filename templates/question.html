@@ -13,8 +13,8 @@
     <p>{{ question["submission_time"] }}</p>
     <p>Viewed {{ question["view_number"] }} times.</p>
     <p>Voted {{ question["vote_number"] }} times.</p>
-    <p> <a href='/question/<int:question_id>/vote_up'><button id="vote_up" value="vote_up">Vote UP</button></a>
-    <a href='/question/<int:question_id>/vote_down'><button id="vote_up" value="vote_up">Vote UP</button></a></p>
+    <p> <a href='/question/{{ question["id"] }}/vote_up'><button id="vote_up" value="vote_up">Vote UP</button></a>
+    <a href='/question/{{ question["id"] }}/vote_down'><button id="vote_up" value="vote_up">Vote UP</button></a></p>
     <form action="{{ url_action }}" method="get">
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
