@@ -55,7 +55,7 @@
             <div style="clear:both;"></div>
             <div class="content">{{ answer["message"] }}</div>
             {% if answer['image'] %}
-            <div class="image"><img src="{{ answer["image"] }}"></div>
+            <div class="image"><img src="{{ url_for('static', filename=('images/' + answer['image'])) }}"></div>
             {% endif %}
             <div class="delbtn"><a href="{{ url_for('delete_answer', question_id=question["id"],  answer_id=answer['id']) }}">Delete</a></div>
             <div style="clear:both;"></div>
@@ -67,12 +67,13 @@
     <h2>Add new answer</h2>
     <div class="block">
         <pre>
-        <form action="/question/{{ question["id"] }}/new-answer" method="POST">
+        <form action="/question/{{ question['id'] }}/new-answer" method="POST" enctype="multipart/form-data">
             <label title="answer">Answer:</label>
             <textarea title="answer" name="message" rows="8" cols="50" required></textarea>
 
-            <label title="add-image">Image:</label>
-            <input type="file" title="image" name="image" accept=".jpg,.png"/><br><br>
+            <label for="image" title="add-image">Image:</label>
+            <input type="file" title="image" name="image" id="image" accept=".jpg,.png"/>
+            <br><br>
 
             <button type="submit" title="submit_answer">Answer</button>
         </form>
