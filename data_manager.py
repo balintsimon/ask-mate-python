@@ -71,12 +71,7 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(filename, vote_method, story_id):
-    all_stories = connection.read_file(filename)
-
-    for story in all_stories:
-        if story["id"] == story_id:
-            vote_to_modify = story
-
+    vote_to_modify = get_single_line_by_key(story_id, filename, "id")
     vote_number = int(vote_to_modify["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":
@@ -88,7 +83,7 @@ def modify_vote_story(filename, vote_method, story_id):
 
     vote_to_modify["vote_number"] = str(vote_number)
 
-    return vote_to_modify
+    connection.update_file(filename, new_dataset=vote_to_modify, adding=False)
 
 
 def modify_view_number(filename, story_id):

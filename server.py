@@ -59,23 +59,22 @@ def add_new_answer(question_id):
     return render_template('add_question_or_answer.html')
 
 
-@app.route('/questions/<question_id>', methods=['GET', 'POST'])
+@app.route('/questions/<question_id>')
 def manage_questions(question_id):
     actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
-    if request.method == "GET":
-        '''add to view count'''
-        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
-        connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
-        return render_template("question-child.html",
-                               url_action=url_for("edit_question", question_id=question_id),
-                               page_title=f"Answers to question ID {question_id}",
-                               question=actual_question,
-                               answers=answers_to_question,
-                               question_headers=QUESTION_HEADERS,
-                               answer_headers=ANSWERS_HEADERS)
-    pass
+    '''add to view count'''
+    story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+    connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
+    return render_template("question-child.html",
+                           url_action=url_for("edit_question", question_id=question_id),
+                           page_title=f"Answers to question ID {question_id}",
+                           question=actual_question,
+                           answers=answers_to_question,
+                           question_headers=QUESTION_HEADERS,
+                           answer_headers=ANSWERS_HEADERS)
+
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -116,19 +115,13 @@ def manage_answer(answer_id):
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
-    filename = QUESTIONS_FILE_PATH
-    modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
-    connection.update_file(filename, new_dataset=modified_story, adding=False)
-
+    data_manager.modify_vote_story(QUESTIONS_FILE_PATH, vote_method, question_id)
     return redirect('/')
 
 
 @app.route('/answer/<question_id>/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id, question_id):
-    filename = ANSWERS_FILE_PATH
-    modified_story = data_manager.modify_vote_story(filename, vote_method, answer_id)
-    connection.update_file(filename, new_dataset=modified_story, adding=False)
-
+    data_manager.modify_vote_story(ANSWERS_FILE_PATH, vote_method, answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
