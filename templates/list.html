@@ -43,14 +43,15 @@
             <thead>
                 <tr>
                 {% for header in question_header %}
-                    <th>{{ header | title}}</th>
+                    {% if header != "id" %}
+                        <th>{{ header | title}}</th>
+                    {% endif %}
                 {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% for question in all_questions %}
                 <tr>
-                    <td>{{ question['id'] }}</td>
                     <td>{{ question['submission_time'] }}</td>
                     <td>{{ question['view_number'] }}</td>
                     <td>{{ question['vote_number'] }}</td>
