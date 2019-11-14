@@ -1,9 +1,15 @@
 from flask import Flask, render_template, redirect, request, url_for
+from werkzeug.utils import secure_filename
+import os
 import data_manager
 import connection
 import util
 
 app = Flask(__name__)
+
+app.config["IMAGE_UPLOADS"] = "./static/images/"
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
+app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
@@ -96,6 +102,7 @@ def edit_question(question_id):
         return redirect("/")
 
     return render_template("form.html",
+                           question_id=question_id,
                            url_action=url_for("edit_question", question_id=question_id),
                            action_method="post",
                            page_title=f"Edit question ID {question_id}",
@@ -142,6 +149,28 @@ def delete_answer(question_id, answer_id):
 def delete_question(question_id):
     data_manager.delete_records(answer_file=ANSWERS_FILE_PATH, question_file=QUESTIONS_FILE_PATH, id=question_id)
     return redirect('/')
+
+
+@app.route('/upload-image', methods=['GET', 'POST'])
+def upload_image():
+    if request.method == "POST":
+        if request.files:
+            image = request.files["image"]
+
+            if image.filename == "":
+                return redirect(request.referrer)
+
+            if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+                id = request.form.get("question_id")
+                # function to append image_name to the csv
+                print("Image saved")
+                return redirect(request.referrer)
+
+            else:
+                print("not allowed image")
+                return redirect(request.referrer)
 
 
 if __name__ == '__main__':

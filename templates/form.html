@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/images.css">
     <title>{{ page_title }}</title>
 </head>
 <body>
@@ -15,14 +16,22 @@
             <label for="message">{{ body_edit_title }}</label><br>
             <textarea name="message" id="message" rows="8" cols="50" required>{{ question["message"] }}</textarea>
         </p>
+        <img class="imgthumb" src="{{ url_for('static', filename=('images/' + question['image'])) }}">
         <p>
-            <label for="image">{{ image_title }}</label><br>
-            <input type="file" name="image" id="image" title="image" value="{{ question["image"] }}" accept=.jpg,.png/>
-            <input type="text" name="image" id="image" value="{{ question["image"] }}">
+
+        <label for="image">{{ image_title }}</label><br>
+        <input type="text" name="image" id="image" value="{{ question['image'] }}">
+
         </p>
         <p>
             <button type="submit">{{ button_title }}</button>
         </p>
     </form>
+    <form action="/upload-image" method="POST" enctype="multipart/form-data">
+            <label for="image">{{ image_title }}</label><br>
+            <input type="file" name="image" id="image" title="image" value="{{ question['image'] }}" accept=.jpg,.png/>
+            <input type="hidden" value="{{ question_id }}" id="question_id" name="question_id">
+            <button type="submit">Upload</button>
+        </form>
 </body>
 </html>

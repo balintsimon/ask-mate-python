@@ -127,3 +127,18 @@ def delete_records(answer_file=None, question_file=None, id=None):
 def delete_answer(answer_file, id):
     connection.delete_answers(answer_file, a_id=id)
 
+
+def allowed_image(filename, extensions):
+    if not "." in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() in extensions:
+        return True
+    else:
+        return False
+
+
+def upload_image_path(filename, question_id, image_name):
+    content = connection.read_file(filename)
