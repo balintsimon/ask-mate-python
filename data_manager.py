@@ -5,13 +5,19 @@ QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "titl
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
-def get_single_line_by_id(story_id, filename):
+def get_single_line_by_id_and_convert_time(story_id, filename):
     """Reads single answer or question from file by the given ID. Returns dictionary."""
+    story = get_single_line_by_key(story_id, filename, "id")
+    story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
+    return story
+
+
+def get_single_line_by_key(value_to_find, filename, key):
+    """Reads single answer or question from file by the given ID and cell name. Returns dictionary."""
     all_stories = connection.read_file(filename)
 
     for story in all_stories:
-        if story["id"] == story_id:
-            story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
+        if story[key] == value_to_find:
             return story
 
 
@@ -65,12 +71,7 @@ def get_answers_to_question(question_id, answers_file):
 
 
 def modify_vote_story(filename, vote_method, story_id):
-    all_stories = connection.read_file(filename)
-
-    for story in all_stories:
-        if story["id"] == story_id:
-            vote_to_modify = story
-
+    vote_to_modify = get_single_line_by_key(story_id, filename, "id")
     vote_number = int(vote_to_modify["vote_number"])
 
     if vote_number == 0 and vote_method != "vote_up":
@@ -82,23 +83,17 @@ def modify_vote_story(filename, vote_method, story_id):
 
     vote_to_modify["vote_number"] = str(vote_number)
 
-    return vote_to_modify
+    connection.write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
 
 
 def modify_view_number(filename, story_id):
-
-    all_stories = connection.read_file(filename)
-
-    for story in all_stories:
-        if story["id"] == story_id:
-            view_to_modify = story
-
+    view_to_modify = get_single_line_by_key(story_id, filename, "id")
     view_number = int(view_to_modify["view_number"])
     view_number += 1
 
     view_to_modify["view_number"] = str(view_number)
 
-    return view_to_modify
+    connection.write_changes_to_csv_file(filename, view_to_modify, adding=False)
 
 
 def fill_out_missing_question(new_data, filename):

@@ -13,8 +13,8 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
-QUESTION_HEADERS = connection.get_data_header(QUESTIONS_FILE_PATH)
-ANSWERS_HEADERS = connection.get_data_header(ANSWERS_FILE_PATH)
+QUESTION_HEADERS = connection.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
+ANSWERS_HEADERS = connection.get_data_header_with_convert_format(ANSWERS_FILE_PATH)
 
 
 @app.route('/')
@@ -32,7 +32,7 @@ def show_questions():
         order = True
 
     data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
-    header = connection.get_data_header(QUESTIONS_FILE_PATH)
+    header = connection.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
                            all_questions=data,
@@ -49,7 +49,7 @@ def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
         final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
-        connection.add_new_data(QUESTIONS_FILE_PATH, final_question, data_manager.QUESTION_HEADERS)
+        connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, final_question, adding=True)
         return redirect('/')
     return render_template('add_question_or_answer.html', question=True)
 
@@ -59,34 +59,32 @@ def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
-        connection.add_new_data(ANSWERS_FILE_PATH, final_answer, data_manager.ANSWER_HEADERS)
+        connection.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
         return redirect(f'/questions/{question_id}')
 
     return render_template('add_question_or_answer.html')
 
 
-@app.route('/questions/<question_id>', methods=['GET', 'POST'])
+@app.route('/questions/<question_id>')
 def manage_questions(question_id):
-    actual_question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
+    data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+
+    actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
-    if request.method == "GET":
-        '''add to view count'''
-        story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
-        connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
-        return render_template("question-child.html",
-                               url_action=url_for("edit_question", question_id=question_id),
-                               page_title=f"Answers to question ID {question_id}",
-                               question=actual_question,
-                               answers=answers_to_question,
-                               question_headers=QUESTION_HEADERS,
-                               answer_headers=ANSWERS_HEADERS)
-    pass
+    return render_template("question-child.html",
+                           url_action=url_for("edit_question", question_id=question_id),
+                           page_title=f"Answers to question: \"{ actual_question['title'] }\"",
+                           question=actual_question,
+                           answers=answers_to_question,
+                           question_headers=QUESTION_HEADERS,
+                           answer_headers=ANSWERS_HEADERS)
+
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
+    question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     if request.method == "POST":
         edited_question = {"id": question["id"],
                            "submission_time": util.get_unix_time(),
@@ -98,7 +96,7 @@ def edit_question(question_id):
                            }
 
         print(edited_question)
-        connection.update_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
+        connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("form.html",
@@ -123,19 +121,13 @@ def manage_answer(answer_id):
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
-    filename = QUESTIONS_FILE_PATH
-    modified_story = data_manager.modify_vote_story(filename, vote_method, question_id)
-    connection.update_file(filename, new_dataset=modified_story, adding=False)
-
+    data_manager.modify_vote_story(QUESTIONS_FILE_PATH, vote_method, question_id)
     return redirect('/')
 
 
 @app.route('/answer/<question_id>/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id, question_id):
-    filename = ANSWERS_FILE_PATH
-    modified_story = data_manager.modify_vote_story(filename, vote_method, answer_id)
-    connection.update_file(filename, new_dataset=modified_story, adding=False)
-
+    data_manager.modify_vote_story(ANSWERS_FILE_PATH, vote_method, answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
 

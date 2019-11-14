@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -43,14 +44,15 @@
             <thead>
                 <tr>
                 {% for header in question_header %}
-                    <th>{{ header | title}}</th>
+                    {% if header != "id" %}
+                        <th>{{ header | title}}</th>
+                    {% endif %}
                 {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% for question in all_questions %}
                 <tr>
-                    <td>{{ question['id'] }}</td>
                     <td>{{ question['submission_time'] }}</td>
                     <td>{{ question['view_number'] }}</td>
                     <td>{{ question['vote_number'] }}</td>

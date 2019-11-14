@@ -13,22 +13,14 @@ def read_file(filename):
         return all_data
 
 
-def get_data_header(filename):
+def get_data_header_with_convert_format(filename):
     with open(filename, 'r') as csv_file:
         data_header = csv_file.readline()
         return data_header.strip('\n').replace('_', ' ').split(',')
 
 
-def add_new_data(filename, new_story, list_of_headers):
-    """Adds new question or answer to the csv file"""
-
-    with open(filename, 'a') as csv_file:
-        fieldnames = list_of_headers
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writerow(new_story)
-
-
-def update_file(filename, new_dataset, adding=True):
+def write_changes_to_csv_file(filename, new_dataset, adding=True):
+    """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)
     open_option = "a" if adding is True else "w"
 
