@@ -19,21 +19,24 @@
     <div class="navigator-container">
         <nav>
             <a href={{ url_for('add_new_question') }}>Ask a question</a>
+
+        <div class="navigator-float">
+            <form action="/" method="GET">
+                <label for="sorting"></label>
+                <select name="sorting" id="sorting">
+                    {% for label in file_labels %}
+                        <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="sorting">
+                    {%for bool in order %}
+                        <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+        </div>
         </nav>
-        <form action="/" method="GET">
-            <label for="sorting"></label>
-            <select name="sorting" id="sorting">
-                {% for label in file_labels %}
-                    <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <select name="sorting">
-                {%for bool in order %}
-                    <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Sort</button>
-        </form>
     </div>
     <main>
         <table class="table-container">

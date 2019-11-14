@@ -31,17 +31,17 @@ body{
 }
 
 .navigator-container{
-  display: flex;
+    overflow: auto;
     background-color: #0B2329;
     padding-top: 10px;
-    padding-bottom: 7px;
+    padding-bottom: 5px;
     border-bottom: silver 4px solid;
 }
 
 .navigator-container nav a{
     text-align: left;
-    margin-right: 900px;
-    margin-left: 250px;
+    margin-right: 10px;
+    margin-left: 10px;
     color: white;
     text-decoration: none;
     font-weight: bold;
@@ -57,4 +57,9 @@ body{
 .navigator-container nav a:hover{
     background-clip: content-box;
     opacity: 0.7;
+}
+.navigator-float {
+    float: right;
+    margin-top: auto;
+    margin-right: 10px;
 }
