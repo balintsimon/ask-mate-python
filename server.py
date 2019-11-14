@@ -61,7 +61,7 @@ def add_new_answer(question_id):
 
 @app.route('/questions/<question_id>', methods=['GET', 'POST'])
 def manage_questions(question_id):
-    actual_question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
+    actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     if request.method == "GET":
@@ -80,7 +80,7 @@ def manage_questions(question_id):
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_single_line_by_id(question_id, QUESTIONS_FILE_PATH)
+    question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     if request.method == "POST":
         edited_question = {"id": question["id"],
                            "submission_time": util.get_unix_time(),

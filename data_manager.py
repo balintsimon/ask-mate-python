@@ -5,13 +5,19 @@ QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "titl
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
-def get_single_line_by_id(story_id, filename):
+def get_single_line_by_id_and_convert_time(story_id, filename):
     """Reads single answer or question from file by the given ID. Returns dictionary."""
+    story = get_single_line_by_key(story_id, filename, "id")
+    story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
+    return story
+
+
+def get_single_line_by_key(value_to_find, filename, key):
+    """Reads single answer or question from file by the given ID and cell name. Returns dictionary."""
     all_stories = connection.read_file(filename)
 
     for story in all_stories:
-        if story["id"] == story_id:
-            story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
+        if story[key] == value_to_find:
             return story
 
 
