@@ -67,6 +67,10 @@ def add_new_answer(question_id):
 
 @app.route('/questions/<question_id>')
 def manage_questions(question_id):
+    if request.args.getlist('addinganswer'):
+        addinganswer = True
+    else:
+        addinganswer = False
     data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
 
     actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
@@ -77,6 +81,7 @@ def manage_questions(question_id):
                            page_title=f"Answers to question: \"{ actual_question['title'] }\"",
                            question=actual_question,
                            answers=answers_to_question,
+                           addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
                            answer_headers=ANSWERS_HEADERS)
 

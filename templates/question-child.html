@@ -5,7 +5,7 @@
         .block {border: 2px solid grey; overflow: hidden;}
         .column { width: 230px; float: left; background: lightgrey; margin: 5px;}
         .questioncontent {overflow: hidden; margin: 5px; white-space: pre-line;}
-        .imgblock {width: 200px; height: auto; display: block; margin-left: auto; margin-right: auto; padding: 15px;}
+        .imgblock {width: 150px; height: auto; display: block; margin-left: auto; margin-right: auto; padding: 15px;}
 
         .message {margin-bottom: 15px; border: 1px solid black;}
         .image {float:left; margin-right: 10px;}
@@ -46,7 +46,6 @@
     <div>
         <div class="message">
             <div class="head">{{ answer["submission_time"] }}
-                <div class="image"><img src="{{ answer["image"] }}" alt="No image"></div>
                 <div class="user">Username</div>
                 <div class="date">Posted:</div>
                 <div class="button"><a href='/answer/{{ question["id"] }}/{{ answer["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a></div>
@@ -55,8 +54,28 @@
             </div>
             <div style="clear:both;"></div>
             <div class="content">{{ answer["message"] }}</div>
+            {% if answer['image'] %}
+            <div class="image"><img src="{{ answer["image"] }}"></div>
+            {% endif %}
             <div class="delbtn"><a href="{{ url_for('delete_answer', question_id=question["id"],  answer_id=answer['id']) }}">Delete</a></div>
             <div style="clear:both;"></div>
         </div>
+    </div>
+{% endblock %}
+
+{% block givinganswer %}
+    <h2>Add new answer</h2>
+    <div class="block">
+        <pre>
+        <form action="/question/{{ question["id"] }}/new-answer" method="POST">
+            <label title="answer">Answer:</label>
+            <textarea title="answer" name="message" rows="8" cols="50" required></textarea>
+
+            <label title="add-image">Image:</label>
+            <input type="file" title="image" name="image" accept=".jpg,.png"/><br><br>
+
+            <button type="submit" title="submit_answer">Answer</button>
+        </form>
+        </pre>
     </div>
 {% endblock %}
