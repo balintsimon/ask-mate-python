@@ -54,7 +54,7 @@ def add_new_question():
     return render_template('add_question_or_answer.html', question=True)
 
 
-@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST']) #### del the D from the end
+@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST']) #### del the D from the end
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)

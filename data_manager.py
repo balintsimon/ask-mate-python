@@ -116,7 +116,8 @@ def fill_out_missing_answer(new_data, question_id, filename):
 
 def delete_records(answer_file=None, question_file=None, id=None):
     line_to_delete = get_single_line_by_key(id, question_file, "id")
-    connection.delete_file(line_to_delete["image"])
+    if line_to_delete["image"] is not "":
+        connection.delete_file(line_to_delete["image"])
     connection.delete_answers(answer_file, q_id=id)
     connection.delete_question(question_file, id)
 
