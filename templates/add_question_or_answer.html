@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ 'Add new question' if question else 'Add new answer' }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/form.css">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -11,21 +13,35 @@
     <main>
         {% if question %}
         <form method="POST">
-            <label title="title">Title:</label>
-            <input type="text" name="title" title="question-title" required/><br><br>
-            <label title="message">Message:</label>
-            <textarea title="message" name="message" rows="8" cols="50" required></textarea><br><br><br>
-            <label title="add-image">Image:</label>
-            <input type="file" title="upload-image" name="image" accept=.jpg,.png/><br><br>
-            <button type="submit" title="submit_question">Post</button>
+            <div class="form-container">
+                <div class="text-container">
+                    <input type="text" name="title" title="question-title" autocomplete="off" required/>
+                    <label for="title" class="label-title">
+                        <span class="title-span">Title</span>
+                    </label>
+                </div>
+                <div class="textarea-container">
+                    <label title="message">Message:</label>
+                    <textarea title="message" name="message" rows="8" cols="50" required></textarea>
+                </div>
+                <div class="image-container">
+                    <label title="add-image">Image:</label>
+                    <input type="file" title="upload-image" name="image" accept=.jpg,.png/>
+                </div>
+                    <button type="submit" title="submit_question">Post</button>
+            </div>
         </form>
         {% else %}
         <form method="POST">
-            <label title="answer">Answer:</label>
-            <textarea title="answer" name="message" rows="8" cols="50" required></textarea><br><br><br>
-            <label title="add-image">Image:</label>
-            <input type="file" title="image" name="image" accept=".jpg,.png"/><br><br>
-            <button type="submit" title="submit_answer">Answer</button>
+            <div class="textarea-container">
+                <label title="answer">Answer:</label>
+                <textarea title="answer" name="message" rows="8" cols="50" required></textarea>
+            </div>
+            <div class="image-container">
+                <label title="add-image">Image:</label>
+                <input type="file" title="image" name="image" accept=".jpg,.png"/>
+            </div>
+                <button type="submit" title="submit_answer">Answer</button>
         </form>
         {% endif %}
     </main>
