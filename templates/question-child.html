@@ -28,7 +28,7 @@
     <div class="block">
         <div class="column">
             <img class=imgblock
-                 src="{{ url_for('static', filename=question['image']) }}"
+                 src="{{ url_for('static', filename=('images/' + question['image'])) }}"
                  onerror="this.src='/static/images/basic.png'"
                  alt="No image">
             <p>{{ question["submission_time"] }}</p>
