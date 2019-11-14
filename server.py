@@ -155,8 +155,8 @@ def upload_image():
             if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
                 filename = secure_filename(image.filename)
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                id = request.form.get("question_id")
-                # function to append image_name to the csv
+                question_id = request.form.get("question_id")
+                data_manager.upload_image_path(QUESTIONS_FILE_PATH, question_id, filename)
                 print("Image saved")
                 return redirect(request.referrer)
 
