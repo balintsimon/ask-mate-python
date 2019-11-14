@@ -7,6 +7,9 @@
 </head>
 <body>
     {% block question %} {% endblock %}
+    {% if addinganswer %}
+
+    {% else %}
     <nav>
         <a href='/question/{{ question["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a>
         <a href='/question/{{ question["id"] }}/vote_down'><img src="/static/images/downvote.png" height="20" width="20"></a>
@@ -15,7 +18,7 @@
     <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
     </form>
     <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
-
+    {% endif %}
     <p></p>
     <h3><label>Answers:</label></h3>
     {% if answers %}
@@ -26,8 +29,15 @@
     {% else %}
         <p>There are no answers to this question yet</p>
     {% endif %}
+
+    {% if addinganswer %}
+        {% block givinganswer %}{% endblock %}
+    {% else %}
+        <form action="/questions/{{ question['id'] }}" method="GET">
+        <button type="submit" name="addinganswer">Add Answer</button>
+        </form>
+    {% endif %}
     <nav>
-        <a href={{ url_for('add_new_answer', question_id=question['id']) }}>Answer</a>
         <a href={{ url_for('show_questions') }}>Go back</a>
     </nav>
 

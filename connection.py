@@ -1,3 +1,4 @@
+import os
 import csv
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
@@ -13,22 +14,14 @@ def read_file(filename):
         return all_data
 
 
-def get_data_header(filename):
+def get_data_header_with_convert_format(filename):
     with open(filename, 'r') as csv_file:
         data_header = csv_file.readline()
         return data_header.strip('\n').replace('_', ' ').split(',')
 
 
-def add_new_data(filename, new_story, list_of_headers):
-    """Adds new question or answer to the csv file"""
-
-    with open(filename, 'a') as csv_file:
-        fieldnames = list_of_headers
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writerow(new_story)
-
-
-def update_file(filename, new_dataset, adding=True):
+def write_changes_to_csv_file(filename, new_dataset, adding=True):
+    """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)
     open_option = "a" if adding is True else "w"
 
@@ -71,3 +64,11 @@ def delete_answers(filename, q_id=None, a_id=None):
             if a_id:
                 if answer['id'] != a_id:
                     writer.writerow(answer)
+
+
+def delete_file(filename):
+    if os.path.exists(f"./static/images/{filename}"):
+        os.remove(f"./static/images/{filename}")
+    else:
+        print("The file does not exist")
+        pass

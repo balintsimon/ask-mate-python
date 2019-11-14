@@ -83,7 +83,7 @@ def modify_vote_story(filename, vote_method, story_id):
 
     vote_to_modify["vote_number"] = str(vote_number)
 
-    connection.update_file(filename, new_dataset=vote_to_modify, adding=False)
+    connection.write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
 
 
 def modify_view_number(filename, story_id):
@@ -93,7 +93,7 @@ def modify_view_number(filename, story_id):
 
     view_to_modify["view_number"] = str(view_number)
 
-    connection.update_file(filename, view_to_modify, adding=False)
+    connection.write_changes_to_csv_file(filename, view_to_modify, adding=False)
 
 
 def fill_out_missing_question(new_data, filename):
@@ -115,6 +115,8 @@ def fill_out_missing_answer(new_data, question_id, filename):
 
 
 def delete_records(answer_file=None, question_file=None, id=None):
+    line_to_delete = get_single_line_by_key(id, question_file, "id")
+    connection.delete_file(line_to_delete["image"])
     connection.delete_answers(answer_file, q_id=id)
     connection.delete_question(question_file, id)
 
@@ -122,3 +124,21 @@ def delete_records(answer_file=None, question_file=None, id=None):
 def delete_answer(answer_file, id):
     connection.delete_answers(answer_file, a_id=id)
 
+
+def allowed_image(filename, extensions):
+    if not "." in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() in extensions:
+        return True
+    else:
+        return False
+
+
+def upload_image_path(filename, question_id, image_name):
+    content = get_single_line_by_key(question_id, filename, "id")
+
+    content["image"] = image_name
+    connection.write_changes_to_csv_file(filename, content, adding=False)
