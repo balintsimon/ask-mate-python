@@ -68,7 +68,7 @@ def manage_questions(question_id):
 
     return render_template("question-child.html",
                            url_action=url_for("edit_question", question_id=question_id),
-                           page_title=f"Answers to question ID {question_id}",
+                           page_title=f"Answers to question: \"{ actual_question['title'] }\"",
                            question=actual_question,
                            answers=answers_to_question,
                            question_headers=QUESTION_HEADERS,
