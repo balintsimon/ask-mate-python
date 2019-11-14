@@ -136,4 +136,7 @@ def allowed_image(filename, extensions):
 
 
 def upload_image_path(filename, question_id, image_name):
-    content = connection.read_file(filename)
+    content = get_single_line_by_key(question_id, filename, "id")
+
+    content["image"] = image_name
+    connection.write_changes_to_csv_file(filename, content, adding=False)
