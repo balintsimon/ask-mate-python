@@ -61,12 +61,11 @@ def add_new_answer(question_id):
 
 @app.route('/questions/<question_id>')
 def manage_questions(question_id):
+    data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+
     actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
     answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
-    '''add to view count'''
-    story_with_mod_view = data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
-    connection.update_file(QUESTIONS_FILE_PATH, story_with_mod_view, adding=False)
     return render_template("question-child.html",
                            url_action=url_for("edit_question", question_id=question_id),
                            page_title=f"Answers to question ID {question_id}",
