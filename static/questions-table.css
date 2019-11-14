@@ -14,18 +14,18 @@
 .table-container tbody tr:nth-of-type(even){
     background-color: #1C3B4A;
     font-size: large;
-    font-family: 'Architects Daughter', cursive;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .table-container tbody tr:nth-of-type(odd){
     background-color: #285369;
     font-size: large;
-    font-family: 'Architects Daughter', cursive;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .table-container tbody tr td pre{
     font-size: large;
-    font-family: 'Architects Daughter', cursive;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .table-container tbody tr:hover{
@@ -38,9 +38,9 @@
 
 .table-container a{
     font-size: large;
-    color: silver;
+    color: white;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .table-container a:hover{
