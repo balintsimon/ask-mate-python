@@ -1,3 +1,4 @@
+import os
 import csv
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
@@ -63,3 +64,11 @@ def delete_answers(filename, q_id=None, a_id=None):
             if a_id:
                 if answer['id'] != a_id:
                     writer.writerow(answer)
+
+
+def delete_file(filename):
+    if os.path.exists(f"./static/images/{filename}"):
+        os.remove(f"./static/images/{filename}")
+    else:
+        print("The file does not exist")
+        pass
