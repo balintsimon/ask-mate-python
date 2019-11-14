@@ -83,7 +83,7 @@ def modify_vote_story(filename, vote_method, story_id):
 
     vote_to_modify["vote_number"] = str(vote_number)
 
-    connection.update_file(filename, new_dataset=vote_to_modify, adding=False)
+    connection.write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
 
 
 def modify_view_number(filename, story_id):
@@ -93,7 +93,7 @@ def modify_view_number(filename, story_id):
 
     view_to_modify["view_number"] = str(view_number)
 
-    connection.update_file(filename, view_to_modify, adding=False)
+    connection.write_changes_to_csv_file(filename, view_to_modify, adding=False)
 
 
 def fill_out_missing_question(new_data, filename):
