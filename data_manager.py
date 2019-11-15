@@ -21,10 +21,8 @@ def get_single_line_by_key(value_to_find, filename, key):
             return story
 
 
-"""decorator function, sorts data by given key and order"""
-
-
 def sort_dict(func):
+    """decorator function, sorts data by given key and order"""
     def wrapper(*args, reverse=True, key="submission_time"):
         data = func(*args)
         array = sorted(data, key=lambda x: x[key], reverse=reverse)
@@ -39,7 +37,7 @@ def get_all_questions(filename):
     ARGS:
         filename (string),
         reverse=False (boolean): decorator keyname parameter with default value,
-        key="submission_time" (string): decorator keyname paramtere with default value,
+        key="submission_time" (string): decorator keyname parameter with default value,
     """
     all_questions = connection.read_file(filename)
     modded_questions = []
@@ -115,9 +113,11 @@ def fill_out_missing_answer(new_data, question_id, filename):
 
 
 def delete_records(answer_file=None, question_file=None, id=None):
+    """ delete question by its ID from question_file and the answers attached to that ID from answer_file"""
     line_to_delete = get_single_line_by_key(id, question_file, "id")
     if line_to_delete["image"] is not "":
         connection.delete_file(line_to_delete["image"])
+
     connection.delete_answers(answer_file, q_id=id)
     connection.delete_question(question_file, id)
 
@@ -127,6 +127,7 @@ def delete_answer(answer_file, id):
 
 
 def allowed_image(filename, extensions):
+    """checks if filename falls within the restrictions"""
     if not "." in filename:
         return False
 
@@ -139,6 +140,12 @@ def allowed_image(filename, extensions):
 
 
 def upload_image_path(filename, question_id, image_name):
+    """ appends the image_name to the 'imgage' column at the question_id" in given file
+    ARGS:
+        filename(string)
+        question_id(string): this is the ID that the image_name appends to
+        image_name(string): validation is not happening here
+    """
     content = get_single_line_by_key(question_id, filename, "id")
 
     content["image"] = image_name
