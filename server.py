@@ -46,15 +46,16 @@ def show_questions():
 
 @app.route('/add-questions', methods=['GET', 'POST'])
 def add_new_question():
-    if request.method == 'POST':
-        new_question = dict(request.form)
-        final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
-        connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, final_question, adding=True)
-        return redirect('/')
-    return render_template('add_question_or_answer.html', question=True)
+    if request.method == 'GET':
+        return render_template('add_question_or_answer.html', question=True)
+
+    new_question = dict(request.form)
+    final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
+    connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, final_question, adding=True)
+    return redirect('/')
 
 
-@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST']) #### del the D from the end
+@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST'])  #### del the D from the end
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
@@ -74,17 +75,14 @@ def manage_questions(question_id):
     data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
 
     actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
-    answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
 
     return render_template("question-child.html",
                            url_action=url_for("edit_question", question_id=question_id),
-                           page_title=f"Answers to question: \"{ actual_question['title'] }\"",
+                           page_title=f"Answers to question: \"{actual_question['title']}\"",
                            question=actual_question,
-                           answers=answers_to_question,
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
                            answer_headers=ANSWERS_HEADERS)
-
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -148,58 +146,39 @@ def delete_question(question_id):
     return redirect('/')
 
 
-@app.route('/upload-image', methods=['GET', 'POST'])
+@app.route('/upload-image', methods=['POST'])
 def upload_image():
-    if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
+    if not request.files:
+        return
 
-            if image.filename == "":
-                return redirect(request.referrer)
+    image = request.files["image"]
+    if image.filename == "":
+        return redirect(request.referrer)
 
-            if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                question_id = request.form.get("question_id")
-                data_manager.upload_image_path(QUESTIONS_FILE_PATH, question_id, filename)
-                print("Image saved")
-                return redirect(request.referrer)
+    if not data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
+        return redirect(request.referrer)
 
-            else:
-                print("not allowed image")
-                return redirect(request.referrer)
+    filename = secure_filename(image.filename)
+    image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+    question_id = request.form.get("question_id")
+    data_manager.upload_image_path(QUESTIONS_FILE_PATH, question_id, filename)
+    print("Image saved")
+    return redirect(request.referrer)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_newstuff_withimage(question_id):
     if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
-
-            if image.filename != "":
-
-                #return redirect(request.referrer) # error
-
-                if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
-                    filename = secure_filename(image.filename)
-                    image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-
-                    print("Image saved")
-
-                else:
-                    print("not allowed image")
-                    return redirect(request.referrer)
-
+        filename = util.handle_file_upload(request.files, app.config["IMAGE_UPLOADS"])
         new_answer = dict(request.form)
-        if image.filename:
-            new_answer.update({"image": filename}) # ugly solution, a band-aid
+        if filename:
+            new_answer.update({"image": filename})  # ugly solution, a band-aid
 
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
         connection.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
         return redirect(url_for("manage_questions", question_id=question_id))
 
         # return redirect(f'/questions/{question_id}')
-
 
 
 if __name__ == '__main__':

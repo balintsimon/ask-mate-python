@@ -1,10 +1,14 @@
+import os
 from datetime import datetime
 import calendar
 import csv
+
+from werkzeug.utils import secure_filename
+
 import connection
 
-
 LIST_START = 0
+
 
 def sort_array(array, key, reverse):
     """sorts a dictionary by given keyname
@@ -25,7 +29,7 @@ def convert_unix_time_to_readable(input_time):
 
 def get_unix_time():
     date_time = datetime.utcnow()
-    return(calendar.timegm(date_time.utctimetuple()))
+    return (calendar.timegm(date_time.utctimetuple()))
 
 
 def generate_id(filename):
@@ -40,3 +44,30 @@ def generate_id(filename):
         return LIST_START
 
     return int(actual_stories[-1]["id"]) + 1
+
+
+def handle_file_upload(files, path):
+    if files:
+        image = files["image"]
+
+        if image.filename != "":
+            # return redirect(referrer) # error
+
+            if allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
+                filename = secure_filename(image.filename)
+                image.save(os.path.join(path, filename))
+                print("Image saved")
+                return filename
+            else:
+                print("not allowed image")
+
+    return False
+
+
+def allowed_image(filename, extensions):
+    if "." not in filename:
+        return False
+
+    ext = filename.rsplit(".", 1)[1]
+    return ext.upper() in extensions
+

@@ -9,6 +9,8 @@ def get_single_line_by_id_and_convert_time(story_id, filename):
     """Reads single answer or question from file by the given ID. Returns dictionary."""
     story = get_single_line_by_key(story_id, filename, "id")
     story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
+    story['answers'] = get_answers_to_question(question_id, ANSWERS_FILE_PATH)
+
     return story
 
 
@@ -125,17 +127,6 @@ def delete_records(answer_file=None, question_file=None, id=None):
 def delete_answer(answer_file, id):
     connection.delete_answers(answer_file, a_id=id)
 
-
-def allowed_image(filename, extensions):
-    if not "." in filename:
-        return False
-
-    ext = filename.rsplit(".", 1)[1]
-
-    if ext.upper() in extensions:
-        return True
-    else:
-        return False
 
 
 def upload_image_path(filename, question_id, image_name):
