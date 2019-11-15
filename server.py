@@ -54,7 +54,7 @@ def add_new_question():
     return render_template('add_question_or_answer.html', question=True)
 
 
-@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST']) #### del the D from the end
+@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST']) #### del the D from the end
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
@@ -176,26 +176,27 @@ def add_newstuff_withimage(question_id):
         if request.files:
             image = request.files["image"]
 
-            if image.filename == "":
-                return redirect(request.referrer)
+            if image.filename != "":
 
-            if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+                #return redirect(request.referrer) # error
 
-                print("Image saved")
+                if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
+                    filename = secure_filename(image.filename)
+                    image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
 
-            else:
-                print("not allowed image")
-                return redirect(request.referrer)
+                    print("Image saved")
 
+                else:
+                    print("not allowed image")
+                    return redirect(request.referrer)
 
         new_answer = dict(request.form)
-        new_answer.update({"image": filename}) # ugly solution, a band-aid
+        if image.filename:
+            new_answer.update({"image": filename}) # ugly solution, a band-aid
 
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
         connection.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
-        return redirect('/')
+        return redirect(url_for("manage_questions", question_id=question_id))
 
         # return redirect(f'/questions/{question_id}')
 
