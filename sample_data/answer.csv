@@ -1,3 +1,9 @@
 id,submission_time,vote_number,question_id,message,image
 0,1493398154,4,0,You need to use brackets: my_list = [],
 1,1493088154,35,0,Look it up in the Python docs,
+2,1573804434,2,3,"Yes, really.
+
+Codecool is about asking.",
+3,1573804448,11,3,You know that there are no stupid questions...,
+4,1573804458,0,3,(Maybe that's not completely true...),
+5,1573804552,0,4,"You could, but why would you?",
