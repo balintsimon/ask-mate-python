@@ -31,7 +31,8 @@ def show_questions():
     except:
         order = True
 
-    data = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
+    data = data_manager.get_all_questions(reverse=order, key=label_to_sortby)
+    # = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
     header = connection.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",

@@ -30,9 +30,17 @@ def sort_dict(func):
 
     return wrapper
 
+@sort_dict
+@connection.connection_handler
+def get_all_questions(cursor):
+   cursor.execute("""
+                    SELECT * from question""")
+   data = cursor.fetchall()
+   return data
+
 
 @sort_dict
-def get_all_questions(filename):
+def get_all_questions2(filename):
     """ returns a dictionary, has sorting decorator function.
     ARGS:
         filename (string),
