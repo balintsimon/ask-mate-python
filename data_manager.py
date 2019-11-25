@@ -1,5 +1,10 @@
+import csv
+import os
+import psycopg2
+import psycopg2.extras
 import connection
 import util
+from datetime import datetime
 
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
@@ -14,7 +19,7 @@ def get_single_line_by_id_and_convert_time(story_id, filename):
 
 def get_single_line_by_key(value_to_find, filename, key):
     """Reads single answer or question from file by the given ID and cell name. Returns dictionary."""
-    all_stories = connection.read_file(filename)
+    all_stories = read_file(filename)
 
     for story in all_stories:
         if story[key] == value_to_find:
@@ -47,7 +52,7 @@ def get_all_questions2(filename):
         reverse=False (boolean): decorator keyname parameter with default value,
         key="submission_time" (string): decorator keyname parameter with default value,
     """
-    all_questions = connection.read_file(filename)
+    all_questions = read_file(filename)
     modded_questions = []
 
     for question in all_questions:
@@ -60,12 +65,12 @@ def get_all_questions2(filename):
 
 
 def get_csv_file(filename):
-    return connection.read_file(filename)
+    return read_file(filename)
 
 
 def get_answers_to_question(question_id, answers_file):
     """Reads 'answer_file' to find any answers that have the 'question_id'."""
-    all_answers = connection.read_file(answers_file)
+    all_answers = read_file(answers_file)
     answers_to_question = []
 
     for answer in all_answers:
@@ -89,7 +94,7 @@ def modify_vote_story(filename, vote_method, story_id):
 
     vote_to_modify["vote_number"] = str(vote_number)
 
-    connection.write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
+    write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
 
 
 def modify_view_number(filename, story_id):
@@ -99,7 +104,7 @@ def modify_view_number(filename, story_id):
 
     view_to_modify["view_number"] = str(view_number)
 
-    connection.write_changes_to_csv_file(filename, view_to_modify, adding=False)
+    write_changes_to_csv_file(filename, view_to_modify, adding=False)
 
 
 def fill_out_missing_question(new_data, filename):
@@ -124,14 +129,14 @@ def delete_records(answer_file=None, question_file=None, id=None):
     """ delete question by its ID from question_file and the answers attached to that ID from answer_file"""
     line_to_delete = get_single_line_by_key(id, question_file, "id")
     if line_to_delete["image"] is not "":
-        connection.delete_file(line_to_delete["image"])
+        delete_file(line_to_delete["image"])
 
-    connection.delete_answers(answer_file, q_id=id)
-    connection.delete_question(question_file, id)
+    delete_answers(answer_file, q_id=id)
+    delete_question(question_file, id)
 
 
 def delete_answer(answer_file, id):
-    connection.delete_answers(answer_file, a_id=id)
+    delete_answers(answer_file, a_id=id)
 
 
 def allowed_image(filename, extensions):
@@ -157,4 +162,90 @@ def upload_image_path(filename, question_id, image_name):
     content = get_single_line_by_key(question_id, filename, "id")
 
     content["image"] = image_name
-    connection.write_changes_to_csv_file(filename, content, adding=False)
+    write_changes_to_csv_file(filename, content, adding=False)
+
+@connection.connection_handler
+def write_question(cursor, title, message):
+    dt = datetime.now()
+    print(dt)
+    cursor.execute("""
+                INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
+                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s); 
+                """,
+                   {"time": dt,
+                    "view_number": 0,
+                    "vote_number": 0,
+                    "title": title,
+                    "message": message,
+                    "image": ""
+                    })
+
+
+def write_changes_to_csv_file(filename, new_dataset, adding=True):
+    """Adds new or update existing question or answer to the csv file"""
+    existing_submits = read_file(filename)
+    open_option = "a" if adding is True else "w"
+
+    with open(filename, open_option) as csv_file:
+        fieldnames = QUESTION_HEADERS if "question" in filename else ANSWER_HEADERS
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        if adding is True:
+            writer.writerow(new_dataset)
+
+        else:
+            writer.writeheader()
+            for submit in existing_submits:
+                if new_dataset["id"] == submit["id"]:
+                    submit = new_dataset
+                writer.writerow(submit)
+
+
+def delete_question(filename, q_id):
+    """rewrites the entire csv excluding the given ids"""
+    content = read_file(filename)
+
+    with open(filename, "w+") as f:
+        writer = csv.DictWriter(f, fieldnames=QUESTION_HEADERS, delimiter=',')
+        writer.writeheader()
+        for question in content:
+            if question['id'] != q_id:
+                writer.writerow(question)
+
+
+def delete_answers(filename, q_id=None, a_id=None):
+    content = read_file(filename)
+
+    with open(filename, "w+") as f:
+        writer = csv.DictWriter(f, fieldnames=ANSWER_HEADERS, delimiter=',')
+        writer.writeheader()
+        for answer in content:
+            if q_id:
+                if answer['question_id'] != q_id:
+                    writer.writerow(answer)
+            if a_id:
+                if answer['id'] != a_id:
+                    writer.writerow(answer)
+
+
+def delete_file(filename):
+    if os.path.exists(f"./static/images/{filename}"):
+        os.remove(f"./static/images/{filename}")
+    else:
+        print("The file does not exist")
+        pass
+
+
+def get_data_header_with_convert_format(filename):
+    with open(filename, 'r') as csv_file:
+        data_header = csv_file.readline()
+        return data_header.strip('\n').replace('_', ' ').split(',')
+
+
+def read_file(filename):
+    all_data = []
+    with open(filename, 'r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        for line in csv_reader:
+            all_data.append(dict(line))
+        return all_data

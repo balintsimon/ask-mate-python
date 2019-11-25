@@ -13,8 +13,8 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
-QUESTION_HEADERS = connection.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
-ANSWERS_HEADERS = connection.get_data_header_with_convert_format(ANSWERS_FILE_PATH)
+QUESTION_HEADERS = data_manager.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
+ANSWERS_HEADERS = data_manager.get_data_header_with_convert_format(ANSWERS_FILE_PATH)
 
 
 @app.route('/')
@@ -32,8 +32,7 @@ def show_questions():
         order = True
 
     data = data_manager.get_all_questions(reverse=order, key=label_to_sortby)
-    # = data_manager.get_all_questions(QUESTIONS_FILE_PATH, reverse=order, key=label_to_sortby)
-    header = connection.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
+    header = ["submission time", "view number", "vote number", "title", "message"]
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
                            all_questions=data,
@@ -49,8 +48,7 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        final_question = data_manager.fill_out_missing_question(new_question, QUESTIONS_FILE_PATH)
-        connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, final_question, adding=True)
+        data_manager.write_question(new_question.get("title"), new_question.get("message"))
         return redirect('/')
     return render_template('add_question_or_answer.html', question=True)
 
@@ -60,7 +58,7 @@ def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
-        connection.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
+        data_manager.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
         return redirect(f'/questions/{question_id}')
 
     return render_template('add_question_or_answer.html')
@@ -102,7 +100,7 @@ def edit_question(question_id):
                            }
 
         print(edited_question)
-        connection.write_changes_to_csv_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
+        data_manager.write_changes_to_csv_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
         return redirect("/")
 
     return render_template("form.html",
@@ -196,7 +194,7 @@ def add_newstuff_withimage(question_id):
             new_answer.update({"image": filename}) # ugly solution, a band-aid
 
         final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
-        connection.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
+        data_manager.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
         return redirect(url_for("manage_questions", question_id=question_id))
 
         # return redirect(f'/questions/{question_id}')

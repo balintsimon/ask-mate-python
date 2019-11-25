@@ -58,7 +58,6 @@
                     <td>{{ question['vote_number'] }}</td>
                     <td><a href={{ url_for('manage_questions', question_id = question['id']) }}>{{ question['title'] }}</a></td>
                     <td style="white-space: pre-line">{{ question['message'] }}</td>
-                    <td><img src="{{ url_for('static', filename=('images/' + question['image'])) }}" alt="No image" height="128" width="128"></td>
                 </tr>
                 {% endfor %}
             </tbody>

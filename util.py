@@ -2,7 +2,7 @@ from datetime import datetime
 import calendar
 import csv
 import connection
-
+import data_manager
 
 LIST_START = 0
 
@@ -35,7 +35,7 @@ def generate_id(filename):
         data_id = sum(1 for row in csv_reader)
         return data_id
     """
-    actual_stories = connection.read_file(filename)
+    actual_stories = data_manager.read_file(filename)
     if len(actual_stories) == 1:
         return LIST_START
 
