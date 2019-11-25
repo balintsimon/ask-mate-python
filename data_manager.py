@@ -165,9 +165,8 @@ def upload_image_path(filename, question_id, image_name):
     write_changes_to_csv_file(filename, content, adding=False)
 
 @connection.connection_handler
-def write_question(cursor, title, message):
+def write_new_question_to_database(cursor, title, message):
     dt = datetime.now()
-    print(dt)
     cursor.execute("""
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
                 VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s); 
@@ -179,6 +178,22 @@ def write_question(cursor, title, message):
                     "message": message,
                     "image": ""
                     })
+
+
+@connection.connection_handler
+def write_new_answer_to_database(cursor, question_id, answer):
+    dt = datetime.now()
+    cursor.execute("""
+                    INSERT INTO answer (id, submission_time, vote_number, question_id, message, image)
+                    VALUES (%(time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
+                    """,
+                        {
+                            "time": dt,
+                            "vote_number": 0,
+                            "question_id": question_id,
+                            "message": answer["message"],
+                            "image": answer["image"]
+                        })
 
 
 def write_changes_to_csv_file(filename, new_dataset, adding=True):

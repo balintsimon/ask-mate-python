@@ -48,7 +48,7 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        data_manager.write_question(new_question.get("title"), new_question.get("message"))
+        data_manager.write_new_question_to_database(new_question.get("title"), new_question.get("message"))
         return redirect('/')
     return render_template('add_question_or_answer.html', question=True)
 
@@ -57,8 +57,7 @@ def add_new_question():
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
-        final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
-        data_manager.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
+        data_manager.write_new_answer_to_database(question_id, new_answer)
         return redirect(f'/questions/{question_id}')
 
     return render_template('add_question_or_answer.html')
@@ -174,15 +173,10 @@ def add_newstuff_withimage(question_id):
     if request.method == "POST":
         if request.files:
             image = request.files["image"]
-
             if image.filename != "":
-
-                #return redirect(request.referrer) # error
-
                 if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
                     filename = secure_filename(image.filename)
                     image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-
                     print("Image saved")
 
                 else:
@@ -192,13 +186,11 @@ def add_newstuff_withimage(question_id):
         new_answer = dict(request.form)
         if image.filename:
             new_answer.update({"image": filename}) # ugly solution, a band-aid
+        else:
+            new_answer.update({"image": ""})
 
-        final_answer = data_manager.fill_out_missing_answer(new_answer, question_id, ANSWERS_FILE_PATH)
-        data_manager.write_changes_to_csv_file(ANSWERS_FILE_PATH, final_answer, adding=True)
+        data_manager.write_new_answer_to_database(question_id, new_answer)
         return redirect(url_for("manage_questions", question_id=question_id))
-
-        # return redirect(f'/questions/{question_id}')
-
 
 
 if __name__ == '__main__':
