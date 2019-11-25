@@ -69,20 +69,17 @@ def manage_questions(question_id):
         addinganswer = True
     else:
         addinganswer = False
-    data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
 
-    actual_question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
-    answers_to_question = data_manager.get_answers_to_question(question_id, ANSWERS_FILE_PATH)
+    data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+    current_question = data_manager.get_question_by_id(question_id)
+    answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
     return render_template("question-child.html",
-                           url_action=url_for("edit_question", question_id=question_id),
-                           page_title=f"Answers to question: \"{ actual_question['title'] }\"",
-                           question=actual_question,
+                           question=current_question,
                            answers=answers_to_question,
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
                            answer_headers=ANSWERS_HEADERS)
-
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])

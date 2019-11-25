@@ -1,7 +1,7 @@
 import csv
 import os
+import connection
 import psycopg2
-import psycopg2.extras
 import connection
 import util
 from datetime import datetime
@@ -194,6 +194,30 @@ def write_new_answer_to_database(cursor, question_id, answer):
                             "message": answer["message"],
                             "image": answer["image"]
                         })
+
+
+@connection.connection_handler
+def get_question_by_id(cursor, question_id):
+    cursor.execute("""
+                    SELECT * FROM question
+                    WHERE id = %(question_id)s;
+                    """,
+                   {'question_id':question_id})
+
+    question = cursor.fetchone()
+    return question
+
+
+@connection.connection_handler
+def get_answers_by_question_id(cursor, question_id):
+    cursor.execute("""
+                    SELECT * FROM answer
+                    WHERE question_id = %(question_id)s
+                    """,
+                   {'question_id':question_id})
+
+    answers = cursor.fetchall()
+    return answers
 
 
 def write_changes_to_csv_file(filename, new_dataset, adding=True):

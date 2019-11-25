@@ -28,16 +28,15 @@
     <div class="block">
         <div class="column">
             <img class=imgblock
-                 src="{{ url_for('static', filename=('images/' + question['image'])) }}"
-                 onerror="this.src='/static/images/basic.png'"
+                 src="{{ url_for('static', filename=(question['image'])) if question['image'] else '/static/images/basic.png' }}"
                  alt="No image">
-            <p>{{ question["submission_time"] }}</p>
-            <p>Voted: {{ question["vote_number"] }}</p>
-            <p>Viewed: {{ question["view_number"] }}</p>
+            <p>{{ question['submission_time'] }}</p>
+            <p>Voted: {{ question['vote_number'] }}</p>
+            <p>Viewed: {{ question['view_number'] }}</p>
         </div>
-        <div class="questioncontent">{{ question["message"] }}</div>
+        <div class="questioncontent">{{ question['message'] }}</div>
     </div>
-
++
 
 {% endblock %}
 
@@ -55,7 +54,7 @@
             <div style="clear:both;"></div>
             <div class="content">{{ answer["message"] }}</div>
             {% if answer['image'] %}
-            <div class="image"><img src="{{ url_for('static', filename=('images/' + answer['image'])) }}"></div>
+            <div class="image"><img src="{{ url_for('static', filename=(answer['image'])) }}" width="100" height="100"></div>
             {% endif %}
             <div class="delbtn"><a href="{{ url_for('delete_answer', question_id=question["id"],  answer_id=answer['id']) }}">Delete</a></div>
             <div style="clear:both;"></div>
