@@ -3,6 +3,7 @@
     text-align: center;
     color: white;
     overflow: hidden;
+    width: 100%;
 }
 
 .table-container thead th{

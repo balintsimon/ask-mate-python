@@ -236,6 +236,18 @@ def update_question(cursor, question_id, updated_question):
                     'question_id':question_id})
 
 
+@connection.connection_handler
+def search_question(cursor, search_phrase):
+    cursor.execute("""
+                    SELECT * FROM question
+                    WHERE LOWER(title) LIKE %(search_phrase)s OR LOWER(message) LIKE %(search_phrase)s
+                    """,
+                   {'search_phrase':'%' + search_phrase + '%'})
+
+    search_result = cursor.fetchall()
+    return search_result
+
+
 def write_changes_to_csv_file(filename, new_dataset, adding=True):
     """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)

@@ -172,6 +172,34 @@ def add_newstuff_withimage(question_id):
         return redirect(url_for("manage_questions", question_id=question_id))
 
 
+@app.route('/search')
+def search_question():
+    LABEL = 0
+    ORDER = 1
+    try:
+        label_to_sortby = request.args.getlist('sorting')[LABEL]
+    except:
+        label_to_sortby = "submission_time"
+    try:
+        order = request.args.getlist('sorting')[ORDER]
+        order = bool(order == "True")
+    except:
+        order = True
+
+    header = ["submission time", "view number", "vote number", "title", "message"]
+    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+    search_phrase = request.args.get('q')
+    search_results = data_manager.search_question(search_phrase.lower())
+    return render_template("list.html",
+                           all_questions=search_results,
+                           question_header=header,
+                           file_labels=labels,
+                           order={True: "Descending", False: "Ascending"},
+                           userpick_label=label_to_sortby,
+                           userpick_order=order,
+                           )
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
