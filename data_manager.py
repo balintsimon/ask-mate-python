@@ -267,9 +267,10 @@ def update_answer(cursor, answer_id, update_answer):
     message = update_answer['message']
     cursor.execute("""
                     UPDATE answer
-                    SET submission_time = %(time)s, message = %(message)s
+                    SET submission_time = %(time)s, message = %(message)s, image=%(new_image)s
                     WHERE id = %(answer_id)s;
                     """,
                    {'time': dt,
                     'message': message,
+                    'new_image': update_answer['image'],
                     'answer_id': answer_id});

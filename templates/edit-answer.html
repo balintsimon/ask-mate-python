@@ -17,6 +17,10 @@
                     <label for="message" title="message">Message:</label>
                     <textarea title="message" name="message" rows="8" cols="50" required>{{ answer['message'] if answer }}</textarea>
                 </div>
+                <div class="image-container">
+                    <label title="add-image">Image:</label>
+                    <input type="file" title="upload-image" name="image" accept=.jpg,.png/>
+                </div>
                     <button type="submit" title="submit_answer">{{ 'Update' if question else 'Post' }}</button>
             </div>
         </form>
