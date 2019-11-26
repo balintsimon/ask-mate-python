@@ -175,7 +175,7 @@ def add_newstuff_withimage(question_id):
             new_answer.update({"image": ""})
 
         data_manager.write_new_answer_to_database(question_id, new_answer)
-        return redirect(url_for("manage_questions", question_id=question_id))
+        return redirect(url_for("manage_questions", question_id=question_id, modify_view=False))
 
 
 if __name__ == '__main__':
