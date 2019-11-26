@@ -20,11 +20,13 @@
     <div class="navigator-container">
         <nav>
             <a href={{ url_for('add_new_question') }}>Ask a question</a>
-            <form action="/search" method="get">
-                <input type="text" name="q" id="search-bar" placeholder="Find question">
-                <label for="search-bar"></label>
-                <button type="submit">Search</button>
-            </form>
+            <div class="search-bar">
+                <form action="/search" method="get">
+                    <input type="text" name="q" id="search-bar" autocomplete="off" placeholder="Find question">
+                    <label for="search-bar"></label>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
         <div class="navigator-float">
             <form action="/" method="GET">
                 <label for="sorting"></label>
