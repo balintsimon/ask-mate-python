@@ -10,13 +10,6 @@ QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "titl
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
-def get_single_line_by_id_and_convert_time(story_id, filename):
-    """Reads single answer or question from file by the given ID. Returns dictionary."""
-    story = get_single_line_by_key(story_id, filename, "id")
-    story["submission_time"] = util.convert_unix_time_to_readable(story["submission_time"])
-    return story
-
-
 def get_single_line_by_key(value_to_find, filename, key):
     """Reads single answer or question from file by the given ID and cell name. Returns dictionary."""
     all_stories = read_file(filename)
@@ -45,43 +38,6 @@ def get_all_questions(cursor):
    return data
 
 
-@sort_dict
-def get_all_questions2(filename):
-    """ returns a dictionary, has sorting decorator function.
-    ARGS:
-        filename (string),
-        reverse=False (boolean): decorator keyname parameter with default value,
-        key="submission_time" (string): decorator keyname parameter with default value,
-    """
-    all_questions = read_file(filename)
-    modded_questions = []
-
-    for question in all_questions:
-        question["submission_time"] = util.convert_unix_time_to_readable(question["submission_time"])
-        question["view_number"] = int(question["view_number"])
-        question["vote_number"] = int(question["vote_number"])
-        modded_questions.append(question)
-
-    return modded_questions
-
-
-def get_csv_file(filename):
-    return read_file(filename)
-
-
-def get_answers_to_question(question_id, answers_file):
-    """Reads 'answer_file' to find any answers that have the 'question_id'."""
-    all_answers = read_file(answers_file)
-    answers_to_question = []
-
-    for answer in all_answers:
-        if answer["question_id"] == question_id:
-            answer["submission_time"] = util.convert_unix_time_to_readable(answer["submission_time"])
-            answers_to_question.append(answer)
-
-    return answers_to_question
-
-
 @connection.connection_handler
 def modify_view_number(cursor, question_id):
     cursor.execute("""
@@ -89,24 +45,6 @@ def modify_view_number(cursor, question_id):
                     SET view_number = view_number + 1
                     WHERE id = %(question_id)s
                     """, {'question_id': question_id});
-
-
-def fill_out_missing_question(new_data, filename):
-    """Fills out the missing question data in the new question/answer(id, date, view number, vote number)"""
-    new_data['submission_time'] = util.get_unix_time()
-    new_data['id'] = util.generate_id(filename)
-    new_data['view_number'] = 0
-    new_data['vote_number'] = 0
-    return new_data
-
-
-def fill_out_missing_answer(new_data, question_id, filename):
-    """Fills out the missing answer data in the new question/answer(id, date, view number, vote number)"""
-    new_data['submission_time'] = util.get_unix_time()
-    new_data['id'] = util.generate_id(filename)
-    new_data['vote_number'] = 0
-    new_data['question_id'] = question_id
-    return new_data
 
 
 def delete_records(answer_file=None, question_file=None, id=None):
