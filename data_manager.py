@@ -183,16 +183,18 @@ def write_new_question_to_database(cursor, title, message):
 @connection.connection_handler
 def write_new_answer_to_database(cursor, question_id, answer):
     dt = datetime.now()
+    new_answer = answer["message"]
+    new_image = answer["image"]
     cursor.execute("""
-                    INSERT INTO answer (id, submission_time, vote_number, question_id, message, image)
+                    INSERT INTO answer (submission_time, vote_number, question_id, message, image)
                     VALUES (%(time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
                     """,
                         {
                             "time": dt,
                             "vote_number": 0,
                             "question_id": question_id,
-                            "message": answer["message"],
-                            "image": answer["image"]
+                            "message": new_answer,
+                            "image": new_image
                         })
 
 
