@@ -14,7 +14,7 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-ANSWERS_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 @app.route('/')
 def show_questions():
@@ -78,7 +78,7 @@ def manage_questions(question_id, modify_view):
                            answers=answers_to_question,
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
-                           answer_headers=ANSWERS_HEADERS)
+                           answer_headers=ANSWER_HEADERS)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -93,11 +93,18 @@ def edit_question(question_id):
                            question=current_question)
 
 
-@app.route('/answer/<answer_id>', methods=('GET', 'POST'))
-def manage_answer(answer_id):
+@app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(question_id, answer_id):
     if request.method == "POST":
-        pass
-    pass
+        update_answer = dict(request.form)
+        print(update_answer)
+        data_manager.update_answer(answer_id, update_answer)
+        return redirect(f'/questions/{question_id}')
+
+    current_answer = data_manager.get_answer_by_answer_id(answer_id)
+    return render_template("edit-answer.html",
+                           answer_id=answer_id,
+                           answer=current_answer)
 
 
 @app.route('/question/<question_id>/<vote_method>')

@@ -98,7 +98,7 @@ def allowed_image(filename, extensions):
     else:
         return False
 
-
+'''
 def upload_image_path(filename, question_id, image_name):
     """ appends the image_name to the 'imgage' column at the question_id" in given file
     ARGS:
@@ -110,7 +110,7 @@ def upload_image_path(filename, question_id, image_name):
 
     content["image"] = image_name
     write_changes_to_csv_file(filename, content, adding=False)
-
+'''
 
 @connection.connection_handler
 def write_new_question_to_database(cursor, title, message):
@@ -217,11 +217,11 @@ def vote_answer(cursor, direction, answer_id):
 
 
         
-
+'''
 def write_changes_to_csv_file(filename, new_dataset, adding=True):
     """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)
-    open_option = "a" if adding is True else "w"
+    open_option = "a" if adding is True elsanswer_ide "w"
 
     with open(filename, open_option) as csv_file:
         fieldnames = QUESTION_HEADERS if "question" in filename else ANSWER_HEADERS
@@ -236,7 +236,7 @@ def write_changes_to_csv_file(filename, new_dataset, adding=True):
                 if new_dataset["id"] == submit["id"]:
                     submit = new_dataset
                 writer.writerow(submit)
-
+'''
 
 def read_file(filename):
     all_data = []
@@ -245,3 +245,28 @@ def read_file(filename):
         for line in csv_reader:
             all_data.append(dict(line))
         return all_data
+
+
+@connection.connection_handler
+def get_answer_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+                     SELECT * from answer
+                     WHERE id = %(answer_id)s""",
+                   {'answer_id': answer_id}
+                   )
+    data = cursor.fetchone()
+    return data
+
+
+@connection.connection_handler
+def update_answer(cursor, answer_id, update_answer):
+    dt = datetime.now()
+    message = update_answer['message']
+    cursor.execute("""
+                    UPDATE answer
+                    SET submission_time = %(time)s, message = %(message)s
+                    WHERE id = %(answer_id)s;
+                    """,
+                   {'time': dt,
+                    'message': message,
+                    'answer_id': answer_id});
