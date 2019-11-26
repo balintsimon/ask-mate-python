@@ -62,14 +62,41 @@ def add_new_answer(question_id):
     return render_template('add_question_or_answer.html')
 
 
-@app.route('/questions/<question_id>/<modify_view>')
-def manage_questions(question_id, modify_view):
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+@app.route('/answer/<question_id>/<answer_id>/new-comment', methods=['GET', 'POST'])
+def write_new_comment(question_id, answer_id=None):
+    if request.method == 'POST':
+        comment = request.form.to_dict()
+        comment.update({"question_id": question_id})
+        print(comment)
+        data_manager.write_new_comment_to_database(comment)
+        return url_for("manage_questions", question_id=question_id)
+    if answer_id:
+        id_type = "answer_id"
+        id = answer_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=answer_id)
+        labelaction = "Add new comment for the answer"
+    else:
+        id_type = "question_id"
+        id = question_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=None)
+        labelaction = "Add new comment for the question"
+    return render_template("comment.html",
+                           id_type=id_type,
+                           id=id,
+                           sending_route=route,
+                           labelaction=labelaction,
+                           method="POST")
+
+
+@app.route('/questions/<question_id>')
+def manage_questions(question_id):
     if request.args.getlist('addinganswer'):
         addinganswer = True
     else:
         addinganswer = False
 
-    data_manager.modify_view_number(question_id, modify_view)
+    data_manager.modify_view_number(question_id)
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
@@ -105,34 +132,6 @@ def edit_answer(question_id, answer_id):
     return render_template("edit-answer.html",
                            answer_id=answer_id,
                            answer=current_answer)
-
-
-@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
-@app.route('/answer/<question_id>/<answer_id>/new-comment', methods=['GET', 'POST'])
-def write_new_comment(question_id, answer_id=None):
-    if request.method == 'POST':
-        comment = request.form.to_dict()
-        comment.update({"question_id": question_id})
-        print(comment)
-        data_manager.write_new_comment_to_database(comment)
-        return url_for("manage_questions", question_id=question_id)
-
-    if answer_id:
-        id_type = "answer_id"
-        id = answer_id
-        route = url_for('write_new_comment', question_id=question_id, answer_id=answer_id)
-        labelaction = "Add new comment for the answer"
-    else:
-        id_type = "question_id"
-        id = question_id
-        route = url_for('write_new_comment', question_id=question_id, answer_id=None)
-        labelaction = "Add new comment for the question"
-    return render_template("comment.html",
-                           id_type=id_type,
-                           id=id,
-                           sending_route=route,
-                           labelaction=labelaction,
-                           method="POST")
 
 
 @app.route('/question/<question_id>/<vote_method>')
@@ -203,7 +202,7 @@ def add_newstuff_withimage(question_id):
             new_answer.update({"image": ""})
 
         data_manager.write_new_answer_to_database(question_id, new_answer)
-        return redirect(url_for("manage_questions", question_id=question_id))
+        return redirect(url_for("manage_questions", question_id=question_id, modify_view=False))
 
 
 if __name__ == '__main__':
