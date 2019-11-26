@@ -13,9 +13,8 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
-QUESTION_HEADERS = data_manager.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
-ANSWERS_HEADERS = data_manager.get_data_header_with_convert_format(ANSWERS_FILE_PATH)
-
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 @app.route('/')
 def show_questions():

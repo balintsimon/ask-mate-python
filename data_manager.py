@@ -110,6 +110,7 @@ def upload_image_path(filename, question_id, image_name):
     content["image"] = image_name
     write_changes_to_csv_file(filename, content, adding=False)
 
+
 @connection.connection_handler
 def write_new_question_to_database(cursor, title, message):
     dt = datetime.now()
@@ -234,20 +235,6 @@ def write_changes_to_csv_file(filename, new_dataset, adding=True):
                 if new_dataset["id"] == submit["id"]:
                     submit = new_dataset
                 writer.writerow(submit)
-
-
-def delete_file(filename):
-    if os.path.exists(f"./static/images/{filename}"):
-        os.remove(f"./static/images/{filename}")
-    else:
-        print("The file does not exist")
-        pass
-
-
-def get_data_header_with_convert_format(filename):
-    with open(filename, 'r') as csv_file:
-        data_header = csv_file.readline()
-        return data_header.strip('\n').replace('_', ' ').split(',')
 
 
 def read_file(filename):
