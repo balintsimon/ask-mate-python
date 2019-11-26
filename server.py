@@ -103,7 +103,7 @@ def manage_answer(answer_id):
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
-    data_manager.modify_vote_story(QUESTIONS_FILE_PATH, vote_method, question_id)
+    data_manager.vote_question(vote_method, question_id)
     return redirect('/')
 
 

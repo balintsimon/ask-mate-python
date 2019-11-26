@@ -35,6 +35,7 @@ def sort_dict(func):
 
     return wrapper
 
+
 @sort_dict
 @connection.connection_handler
 def get_all_questions(cursor):
@@ -233,7 +234,22 @@ def update_question(cursor, question_id, updated_question):
                    {'time':dt,
                     'title':updated_question['title'],
                     'message':updated_question['message'],
-                    'question_id':question_id})
+                    'question_id':question_id});
+
+@connection.connection_handler
+def vote_question(cursor, direction, question_id):
+    if direction == "vote_up":
+        cursor.execute("""
+                        UPDATE question
+                        SET vote_number = vote_number + 1
+                        WHERE id = %(question_id)s
+                        """, {'question_id': question_id});
+    else:
+        cursor.execute("""
+                        UPDATE question
+                        SET vote_number = vote_number - 1
+                        WHERE id = %(question_id)s and vote_number > 0
+                        """, {'question_id': question_id});
 
 
 def write_changes_to_csv_file(filename, new_dataset, adding=True):
