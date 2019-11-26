@@ -113,7 +113,7 @@ def upload_image_path(filename, question_id, image_name):
 
 @connection.connection_handler
 def write_new_question_to_database(cursor, title, message):
-    dt = datetime.now()
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
                 VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s); 
@@ -129,7 +129,7 @@ def write_new_question_to_database(cursor, title, message):
 
 @connection.connection_handler
 def write_new_answer_to_database(cursor, question_id, answer):
-    dt = datetime.now()
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_answer = answer["message"]
     new_image = answer["image"]
     cursor.execute("""
@@ -171,7 +171,7 @@ def get_answers_by_question_id(cursor, question_id):
 
 @connection.connection_handler
 def update_question(cursor, question_id, updated_question):
-    dt = datetime.now()
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                     UPDATE question
                     SET submission_time = %(time)s, title = %(title)s, message = %(message)s
@@ -259,7 +259,7 @@ def get_answer_by_answer_id(cursor, answer_id):
 
 @connection.connection_handler
 def update_answer(cursor, answer_id, update_answer):
-    dt = datetime.now()
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = update_answer['message']
     cursor.execute("""
                     UPDATE answer
