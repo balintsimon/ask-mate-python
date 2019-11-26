@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ labelaction }}</title>
+</head>
+<body>
+    <form action="{{ sending_route}}" method="{{ method }}">
+        <div>
+            <pre>
+                <input type="hidden" name="{{ id_type }}" value="{{ id }}">
+                <label for="msg">{{ labelaction }}</label>
+                <textarea name="message" id="msg">{{ message if message else "" }}</textarea>
+            </pre>
+        </div>
+        <button type="submit">Send</button>
+    </form>
+</body>

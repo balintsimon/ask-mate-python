@@ -13,9 +13,8 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 QUESTIONS_FILE_PATH = "./sample_data/question.csv"
 ANSWERS_FILE_PATH = "./sample_data/answer.csv"
-QUESTION_HEADERS = data_manager.get_data_header_with_convert_format(QUESTIONS_FILE_PATH)
-ANSWERS_HEADERS = data_manager.get_data_header_with_convert_format(ANSWERS_FILE_PATH)
-
+QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
+ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 @app.route('/')
 def show_questions():
@@ -63,6 +62,34 @@ def add_new_answer(question_id):
     return render_template('add_question_or_answer.html')
 
 
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+@app.route('/answer/<question_id>/<answer_id>/new-comment', methods=['GET', 'POST'])
+def write_new_comment(question_id, answer_id=None):
+    if request.method == 'POST':
+        comment = request.form.to_dict()
+        comment.update({"question_id": question_id})
+        print(comment)
+        data_manager.write_new_comment_to_database(comment)
+        return redirect(url_for("manage_questions", question_id=question_id))
+
+    if answer_id:
+        id_type = "answer_id"
+        id = answer_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=answer_id)
+        labelaction = "Add new comment for the answer"
+    else:
+        id_type = "question_id"
+        id = question_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=None)
+        labelaction = "Add new comment for the question"
+    return render_template("comment.html",
+                           id_type=id_type,
+                           id=id,
+                           sending_route=route,
+                           labelaction=labelaction,
+                           method="POST")
+
+
 @app.route('/questions/<question_id>')
 def manage_questions(question_id):
     if request.args.getlist('addinganswer'):
@@ -70,7 +97,7 @@ def manage_questions(question_id):
     else:
         addinganswer = False
 
-    data_manager.modify_view_number(QUESTIONS_FILE_PATH, question_id)
+    data_manager.modify_view_number(question_id)
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
@@ -79,7 +106,7 @@ def manage_questions(question_id):
                            answers=answers_to_question,
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
-                           answer_headers=ANSWERS_HEADERS)
+                           answer_headers=ANSWER_HEADERS)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -94,34 +121,41 @@ def edit_question(question_id):
                            question=current_question)
 
 
-@app.route('/answer/<answer_id>', methods=('GET', 'POST'))
-def manage_answer(answer_id):
+@app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(question_id, answer_id):
     if request.method == "POST":
-        pass
-    pass
+        update_answer = dict(request.form)
+        print(update_answer)
+        data_manager.update_answer(answer_id, update_answer)
+        return redirect(f'/questions/{question_id}')
+
+    current_answer = data_manager.get_answer_by_answer_id(answer_id)
+    return render_template("edit-answer.html",
+                           answer_id=answer_id,
+                           answer=current_answer)
 
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
-    data_manager.modify_vote_story(QUESTIONS_FILE_PATH, vote_method, question_id)
+    data_manager.vote_question(vote_method, question_id)
     return redirect('/')
 
 
 @app.route('/answer/<question_id>/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id, question_id):
-    data_manager.modify_vote_story(ANSWERS_FILE_PATH, vote_method, answer_id)
+    data_manager.vote_answer(vote_method, answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<question_id>/<answer_id>/delete')
 def delete_answer(question_id, answer_id):
-    data_manager.delete_answer(ANSWERS_FILE_PATH, answer_id)
+    data_manager.delete_answer(answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    data_manager.delete_records(answer_file=ANSWERS_FILE_PATH, question_file=QUESTIONS_FILE_PATH, id=question_id)
+    data_manager.delete_question(question_id)
     return redirect('/')
 
 
@@ -169,7 +203,7 @@ def add_newstuff_withimage(question_id):
             new_answer.update({"image": ""})
 
         data_manager.write_new_answer_to_database(question_id, new_answer)
-        return redirect(url_for("manage_questions", question_id=question_id))
+        return redirect(url_for("manage_questions", question_id=question_id, modify_view=False))
 
 
 @app.route('/search')
