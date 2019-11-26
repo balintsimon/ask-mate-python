@@ -94,6 +94,33 @@ def edit_question(question_id):
                            question=current_question)
 
 
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+@app.route('/answer/<question_id>/<answer_id>/new-comment', methods=['GET', 'POST'])
+def write_new_comment(question_id, answer_id=None):
+    if request.method == 'POST':
+        comment = request.form.to_dict()
+        comment.update({"question_id": question_id})
+        print(comment)
+        data_manager.write_new_comment_to_database(comment)
+        return url_for("manage_questions", question_id=question_id)
+
+    if answer_id:
+        id_type = "answer_id"
+        id = answer_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=answer_id)
+        labelaction = "Add new comment for the answer"
+    else:
+        id_type = "question_id"
+        id = question_id
+        route = url_for('write_new_comment', question_id=question_id, answer_id=None)
+        labelaction = "Add new comment for the question"
+    return render_template("comment.html",
+                           id_type=id_type,
+                           id=id,
+                           sending_route=route,
+                           labelaction=labelaction,
+                           method="POST")
+
 @app.route('/answer/<answer_id>', methods=('GET', 'POST'))
 def manage_answer(answer_id):
     if request.method == "POST":

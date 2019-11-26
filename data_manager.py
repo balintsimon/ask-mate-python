@@ -199,6 +199,26 @@ def write_new_answer_to_database(cursor, question_id, answer):
 
 
 @connection.connection_handler
+def write_new_comment_to_database(cursor, data):
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        if data["answer_id"]:
+            pass
+    except KeyError:
+        data.update({"answer_id": None})
+
+    cursor.execute("""
+                    INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
+                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s);
+                    """,
+                   {"question_id": data["question_id"],
+                    "answer_id": data["answer_id"],
+                    "message": data["message"],
+                    "time": dt,
+                    "edit": 0})
+
+
+@connection.connection_handler
 def get_question_by_id(cursor, question_id):
     cursor.execute("""
                     SELECT * FROM question
