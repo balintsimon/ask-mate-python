@@ -47,6 +47,19 @@ def modify_view_number(cursor, question_id):
                     """, {'question_id': question_id});
 
 
+@connection.connection_handler
+def delete_answer(cursor, answer_id):
+    cursor.execute("""
+                    DELETE FROM comment
+                    WHERE answer_id = %(answer_id)s""",
+                   {'answer_id': answer_id});
+
+    cursor.execute("""
+                    DELETE FROM answer
+                    WHERE id = %(answer_id)s""",
+                    {'answer_id': answer_id});
+
+
 def delete_records(answer_file=None, question_file=None, id=None):
     """ delete question by its ID from question_file and the answers attached to that ID from answer_file"""
     line_to_delete = get_single_line_by_key(id, question_file, "id")
@@ -55,10 +68,6 @@ def delete_records(answer_file=None, question_file=None, id=None):
 
     delete_answers(answer_file, q_id=id)
     delete_question(question_file, id)
-
-
-def delete_answer(answer_file, id):
-    delete_answers(answer_file, a_id=id)
 
 
 def allowed_image(filename, extensions):
