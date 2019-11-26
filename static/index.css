@@ -8,23 +8,25 @@ body{
 
 .img-container{
     background-image: url(images/indexheader.jpg);
-    height: 240px;
+    height: 220px;
     background-position-y: top;
     background-position-x: left;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
-}
+    padding-left: 15%;
+    padding-top: 2%;
 
-.inner-container h1{
+}
+.inner-container a{
+    text-decoration: none;
     text-align: left;
-    padding-top: 50px;
-    padding-left: 200px;
     color: white;
     font-family: 'Shadows Into Light', cursive;
     font-size: 100px;
+    display: inline-block;
+    font-weight: bolder;
 }
-
 
 .navigator-container{
     overflow: auto;
