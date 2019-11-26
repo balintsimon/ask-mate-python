@@ -121,7 +121,7 @@ def delete_answer(question_id, answer_id):
 
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
-    data_manager.delete_records(answer_file=ANSWERS_FILE_PATH, question_file=QUESTIONS_FILE_PATH, id=question_id)
+    data_manager.delete_question(question_id)
     return redirect('/')
 
 

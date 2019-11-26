@@ -60,14 +60,29 @@ def delete_answer(cursor, answer_id):
                     {'answer_id': answer_id});
 
 
-def delete_records(answer_file=None, question_file=None, id=None):
-    """ delete question by its ID from question_file and the answers attached to that ID from answer_file"""
-    line_to_delete = get_single_line_by_key(id, question_file, "id")
-    if line_to_delete["image"] is not "":
-        delete_file(line_to_delete["image"])
+@connection.connection_handler
+def delete_question(cursor, question_id):
+    cursor.execute("""
+                    DELETE FROM comment
+                    WHERE question_id = %(question_id)s
+                    """,
+                   {'question_id': question_id}
+                   );
 
-    delete_answers(answer_file, q_id=id)
-    delete_question(question_file, id)
+    cursor.execute("""
+                        DELETE FROM answer
+                        WHERE question_id = %(question_id)s
+                        """,
+                   {'question_id': question_id}
+                   );
+
+    cursor.execute("""
+                        DELETE FROM question
+                        WHERE id = %(question_id)s
+                        """,
+                   {'question_id': question_id}
+                   );
+
 
 
 def allowed_image(filename, extensions):
@@ -219,33 +234,6 @@ def write_changes_to_csv_file(filename, new_dataset, adding=True):
                 if new_dataset["id"] == submit["id"]:
                     submit = new_dataset
                 writer.writerow(submit)
-
-
-def delete_question(filename, q_id):
-    """rewrites the entire csv excluding the given ids"""
-    content = read_file(filename)
-
-    with open(filename, "w+") as f:
-        writer = csv.DictWriter(f, fieldnames=QUESTION_HEADERS, delimiter=',')
-        writer.writeheader()
-        for question in content:
-            if question['id'] != q_id:
-                writer.writerow(question)
-
-
-def delete_answers(filename, q_id=None, a_id=None):
-    content = read_file(filename)
-
-    with open(filename, "w+") as f:
-        writer = csv.DictWriter(f, fieldnames=ANSWER_HEADERS, delimiter=',')
-        writer.writeheader()
-        for answer in content:
-            if q_id:
-                if answer['question_id'] != q_id:
-                    writer.writerow(answer)
-            if a_id:
-                if answer['id'] != a_id:
-                    writer.writerow(answer)
 
 
 def delete_file(filename):
