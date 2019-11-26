@@ -31,11 +31,9 @@ def show_questions():
         order = True
 
     data = data_manager.get_all_questions(reverse=order, key=label_to_sortby)
-    header = ["submission time", "view number", "vote number", "title", "message"]
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
                            all_questions=data,
-                           question_header=header,
                            file_labels=labels,
                            order={True: "Descending", False: "Ascending"},
                            userpick_label=label_to_sortby,
@@ -220,13 +218,11 @@ def search_question():
     except:
         order = True
 
-    header = ["submission time", "view number", "vote number", "title", "message"]
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     search_phrase = request.args.get('q')
     search_results = data_manager.search_question(search_phrase.lower())
     return render_template("list.html",
                            all_questions=search_results,
-                           question_header=header,
                            file_labels=labels,
                            order={True: "Descending", False: "Ascending"},
                            userpick_label=label_to_sortby,

@@ -46,14 +46,15 @@
         </nav>
     </div>
     <main>
+        {% if all_questions %}
         <table class="table-container">
             <thead>
                 <tr>
-                {% for header in question_header %}
-                    {% if header != "id" %}
-                        <th>{{ header | title}}</th>
-                    {% endif %}
-                {% endfor %}
+                    <th>Submission time</th>
+                    <th>Views</th>
+                    <th>Votes</th>
+                    <th>Title</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,6 +67,9 @@
                     <td style="white-space: pre-line">{{ question['message'] }}</td>
                 </tr>
                 {% endfor %}
+            {% else %}
+                <p>No questions found</p>
+            {% endif %}
             </tbody>
         </table>
     </main>

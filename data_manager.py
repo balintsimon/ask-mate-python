@@ -235,6 +235,8 @@ def search_question(cursor, search_phrase):
                    {'search_phrase':'%' + search_phrase + '%'})
 
     search_result = cursor.fetchall()
+    if not search_result:
+        return None
     return search_result
 
 
