@@ -82,22 +82,6 @@ def get_answers_to_question(question_id, answers_file):
     return answers_to_question
 
 
-def modify_vote_story(filename, vote_method, story_id):
-    vote_to_modify = get_single_line_by_key(story_id, filename, "id")
-    vote_number = int(vote_to_modify["vote_number"])
-
-    if vote_number == 0 and vote_method != "vote_up":
-        pass
-    elif vote_method == "vote_up":
-        vote_number += 1
-    elif vote_method == "vote_down":
-        vote_number -= 1
-
-    vote_to_modify["vote_number"] = str(vote_number)
-
-    write_changes_to_csv_file(filename, new_dataset=vote_to_modify, adding=False)
-
-
 def modify_view_number(filename, story_id):
     view_to_modify = get_single_line_by_key(story_id, filename, "id")
     view_number = int(view_to_modify["view_number"])
