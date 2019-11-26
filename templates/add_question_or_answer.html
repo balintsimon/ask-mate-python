@@ -2,44 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ 'Add new question' if question else 'Add new answer' }}</title>
+    <title>{{ 'Edit question' if question_id else 'Add new question' }}</title>
     <link rel="stylesheet" type="text/css" href="/static/form.css">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h1>{{ 'Add new question' if question else 'Add new answer' }}</h1>
+        <h1>{{ 'Edit question' if question_id else 'Add new question' }}</h1>
     </header>
     <main>
-        {% if question %}
         <form method="POST">
             <div class="form-container">
                 <div class="text-container">
-                    <input type="text" name="title" title="question-title" autocomplete="off" required/>
+                    <input type="text" name="title" title="question-title" autocomplete="off" value="{{ question['title'] if question }}" required/>
                     <label for="title" class="label-title">
                         <span class="title-span">Title</span>
                     </label>
                 </div>
                 <div class="textarea-container">
                     <label for="message" title="message">Message:</label>
-                    <textarea title="message" name="message" rows="8" cols="50" required></textarea>
+                    <textarea title="message" name="message" rows="8" cols="50" required>{{ question['message'] if question }}</textarea>
                 </div>
-                    <button type="submit" title="submit_question">Post</button>
+                    <button type="submit" title="submit_question">{{ 'Update' if question else 'Post' }}</button>
             </div>
         </form>
-        {% else %}
-        <form method="POST">
-            <div class="textarea-container">
-                <label title="answer">Answer:</label>
-                <textarea title="answer" name="message" rows="8" cols="50" required></textarea>
-            </div>
-            <div class="image-container">
-                <label title="add-image">Image:</label>
-                <input type="file" title="image" name="image" accept=".jpg,.png"/>
-            </div>
-                <button type="submit" title="submit_answer">Answer</button>
-        </form>
-        {% endif %}
     </main>
 </body>
 </html>

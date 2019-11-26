@@ -50,7 +50,7 @@ def add_new_question():
         new_question = dict(request.form)
         data_manager.write_new_question_to_database(new_question.get("title"), new_question.get("message"))
         return redirect('/')
-    return render_template('add_question_or_answer.html', question=True)
+    return render_template('add_question_or_answer.html')
 
 
 @app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST']) #### del the D from the end
@@ -84,32 +84,14 @@ def manage_questions(question_id):
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_single_line_by_id_and_convert_time(question_id, QUESTIONS_FILE_PATH)
-    if request.method == "POST":
-        edited_question = {"id": question["id"],
-                           "submission_time": util.get_unix_time(),
-                           "view_number": question["view_number"],
-                           "vote_number": question["vote_number"],
-                           "title": request.form.get("title"),
-                           "message": request.form.get("message"),
-                           "image": request.form.get("image", question["image"]),
-                           }
-
-        print(edited_question)
-        data_manager.write_changes_to_csv_file(QUESTIONS_FILE_PATH, edited_question, adding=False)
+    if request.method == 'POST':
+        updated_question = dict(request.form)
+        data_manager.update_question(question_id, updated_question)
         return redirect("/")
-
-    return render_template("form.html",
+    current_question = data_manager.get_question_by_id(question_id)
+    return render_template("add_question_or_answer.html",
                            question_id=question_id,
-                           url_action=url_for("edit_question", question_id=question_id),
-                           action_method="post",
-                           page_title=f"Edit question ID {question_id}",
-                           header_title=f"Edit question ID {question_id}",
-                           question=question,
-                           title_field_title="Edit title:",
-                           body_title="Edit question:",
-                           image_title="Edit image:",
-                           button_title="Save change")
+                           question=current_question)
 
 
 @app.route('/answer/<answer_id>', methods=('GET', 'POST'))

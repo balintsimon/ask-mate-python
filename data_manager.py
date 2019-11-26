@@ -220,6 +220,20 @@ def get_answers_by_question_id(cursor, question_id):
     return answers
 
 
+@connection.connection_handler
+def update_question(cursor, question_id, updated_question):
+    dt = datetime.now()
+    cursor.execute("""
+                    UPDATE question
+                    SET submission_time = %(time)s, title = %(title)s, message = %(message)s
+                    WHERE id = %(question_id)s;
+                    """,
+                   {'time':dt,
+                    'title':updated_question['title'],
+                    'message':updated_question['message'],
+                    'question_id':question_id})
+
+
 def write_changes_to_csv_file(filename, new_dataset, adding=True):
     """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)
