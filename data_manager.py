@@ -193,13 +193,15 @@ def update_question(cursor, question_id, updated_question):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                     UPDATE question
-                    SET submission_time = %(time)s, title = %(title)s, message = %(message)s
+                    SET submission_time = %(time)s, title = %(title)s, message = %(message)s, image = %(new_image)s
                     WHERE id = %(question_id)s;
                     """,
                    {'time':dt,
                     'title':updated_question['title'],
                     'message':updated_question['message'],
+                    'new_image': updated_question['image'],
                     'question_id':question_id});
+
 
 @connection.connection_handler
 def vote_question(cursor, direction, question_id):
