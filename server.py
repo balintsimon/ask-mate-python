@@ -70,7 +70,8 @@ def write_new_comment(question_id, answer_id=None):
         comment.update({"question_id": question_id})
         print(comment)
         data_manager.write_new_comment_to_database(comment)
-        return url_for("manage_questions", question_id=question_id)
+        return redirect(url_for("manage_questions", question_id=question_id))
+
     if answer_id:
         id_type = "answer_id"
         id = answer_id
