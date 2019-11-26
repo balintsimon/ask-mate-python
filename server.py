@@ -170,7 +170,7 @@ def upload_image():
                 filename = secure_filename(image.filename)
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 question_id = request.form.get("question_id")
-                data_manager.upload_image_path(QUESTIONS_FILE_PATH, question_id, filename)
+                data_manager.upload_image_to_question(question_id, filename)
                 print("Image saved")
                 return redirect(request.referrer)
 

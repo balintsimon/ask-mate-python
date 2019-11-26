@@ -6,18 +6,6 @@ import connection
 import util
 from datetime import datetime
 
-QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
-ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
-
-
-def get_single_line_by_key(value_to_find, filename, key):
-    """Reads single answer or question from file by the given ID and cell name. Returns dictionary."""
-    all_stories = read_file(filename)
-
-    for story in all_stories:
-        if story[key] == value_to_find:
-            return story
-
 
 def sort_dict(func):
     """decorator function, sorts data by given key and order"""
@@ -106,17 +94,20 @@ def allowed_image(filename, extensions):
         return False
 
 '''
-def upload_image_path(filename, question_id, image_name):
-    """ appends the image_name to the 'imgage' column at the question_id" in given file
+@connection.connection_handler
+def upload_image_to_question(cursor, question_id, image_name):
+    """ appends the image_name to the 'image' column at the question_id
     ARGS:
-        filename(string)
         question_id(string): this is the ID that the image_name appends to
         image_name(string): validation is not happening here
     """
-    content = get_single_line_by_key(question_id, filename, "id")
-
-    content["image"] = image_name
-    write_changes_to_csv_file(filename, content, adding=False)
+    cursor.execute("""
+                    UPDATE question
+                    SET image = %(image_name)s
+                    WHERE id = %(question_id)s;
+                    """,
+                   {'image_name': image_name,
+                    'question_id': question_id});
 '''
 
 @connection.connection_handler
@@ -255,38 +246,6 @@ def vote_answer(cursor, direction, answer_id):
                         WHERE id = %(answer_id)s AND vote_number > 0
                         """, {'answer_id': answer_id});
 
-
-
-
-'''
->>>>>>> 2cbba391625886f74cfa9354a5045cb055c7e54c
-def write_changes_to_csv_file(filename, new_dataset, adding=True):
-    """Adds new or update existing question or answer to the csv file"""
-    existing_submits = read_file(filename)
-    open_option = "a" if adding is True elsanswer_ide "w"
-
-    with open(filename, open_option) as csv_file:
-        fieldnames = QUESTION_HEADERS if "question" in filename else ANSWER_HEADERS
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-
-        if adding is True:
-            writer.writerow(new_dataset)
-
-        else:
-            writer.writeheader()
-            for submit in existing_submits:
-                if new_dataset["id"] == submit["id"]:
-                    submit = new_dataset
-                writer.writerow(submit)
-'''
-
-def read_file(filename):
-    all_data = []
-    with open(filename, 'r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        for line in csv_reader:
-            all_data.append(dict(line))
-        return all_data
 
 
 @connection.connection_handler
