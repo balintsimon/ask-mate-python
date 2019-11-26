@@ -252,6 +252,25 @@ def vote_question(cursor, direction, question_id):
                         """, {'question_id': question_id});
 
 
+@connection.connection_handler
+def vote_answer(cursor, direction, answer_id):
+    if direction == "vote_up":
+        cursor.execute("""
+                        UPDATE answer
+                        SET vote_number = vote_number + 1
+                        WHERE id = %(answer_id)s
+                        """, {'answer_id': answer_id});
+    else:
+        cursor.execute("""
+                        UPDATE answer
+                        SET vote_number = vote_number - 1
+                        WHERE id = %(answer_id)s AND vote_number > 0
+                        """, {'answer_id': answer_id});
+
+
+
+        
+
 def write_changes_to_csv_file(filename, new_dataset, adding=True):
     """Adds new or update existing question or answer to the csv file"""
     existing_submits = read_file(filename)
