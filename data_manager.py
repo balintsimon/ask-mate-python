@@ -39,12 +39,13 @@ def get_all_questions(cursor):
 
 
 @connection.connection_handler
-def modify_view_number(cursor, question_id):
-    cursor.execute("""
-                    UPDATE question
-                    SET view_number = view_number + 1
-                    WHERE id = %(question_id)s
-                    """, {'question_id': question_id});
+def modify_view_number(cursor, question_id, modify_view=False):
+    if modify_view:
+        cursor.execute("""
+                        UPDATE question
+                        SET view_number = view_number + 1
+                        WHERE id = %(question_id)s
+                        """, {'question_id': question_id});
 
 
 @connection.connection_handler

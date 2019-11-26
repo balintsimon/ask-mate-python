@@ -62,14 +62,14 @@ def add_new_answer(question_id):
     return render_template('add_question_or_answer.html')
 
 
-@app.route('/questions/<question_id>')
-def manage_questions(question_id):
+@app.route('/questions/<question_id>/<modify_view>')
+def manage_questions(question_id, modify_view):
     if request.args.getlist('addinganswer'):
         addinganswer = True
     else:
         addinganswer = False
 
-    data_manager.modify_view_number(question_id)
+    data_manager.modify_view_number(question_id, modify_view)
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
