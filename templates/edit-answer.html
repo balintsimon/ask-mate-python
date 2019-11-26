@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'Edit answer' if answer_id else 'Add new answer' }}</title>
+    <link rel="stylesheet" type="text/css" href="/static/form.css">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>{{ 'Edit answer' if answer_id else 'Add new answer' }}</h1>
+    </header>
+    <main>
+        <form method="POST">
+            <div class="form-container">
+                <div class="textarea-container">
+                    <label for="message" title="message">Message:</label>
+                    <textarea title="message" name="message" rows="8" cols="50" required>{{ answer['message'] if answer }}</textarea>
+                </div>
+                    <button type="submit" title="submit_answer">{{ 'Update' if question else 'Post' }}</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
