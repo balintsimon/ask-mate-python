@@ -82,14 +82,13 @@ def get_answers_to_question(question_id, answers_file):
     return answers_to_question
 
 
-def modify_view_number(filename, story_id):
-    view_to_modify = get_single_line_by_key(story_id, filename, "id")
-    view_number = int(view_to_modify["view_number"])
-    view_number += 1
-
-    view_to_modify["view_number"] = str(view_number)
-
-    write_changes_to_csv_file(filename, view_to_modify, adding=False)
+@connection.connection_handler
+def modify_view_number(cursor, question_id):
+    cursor.execute("""
+                    UPDATE question
+                    SET view_number = view_number + 1
+                    WHERE id = %(question_id)s
+                    """, {'question_id': question_id});
 
 
 def fill_out_missing_question(new_data, filename):
