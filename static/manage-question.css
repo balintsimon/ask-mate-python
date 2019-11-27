@@ -45,6 +45,21 @@ body {
     padding-right: 5px;
 }
 
+.comments {
+    background-color: #327594;
+    width: 60%;
+    margin: 30px 30px 5px auto;
+
+    color: black;
+}
+
+.block .comments {
+    background-color: #9C1A1C;
+    padding: 0;
+    margin: 0;
+    border-radius: 0;
+}
+
 
 <style>
     div p { text-align: center}
@@ -62,7 +77,7 @@ body {
     .button { float: right; padding-right: 20px; padding-left: 25px}
     .head {background: lightgrey; width: fit-content}
     .delbtn, .editbtn, .combtn {float:right; padding-right: 5px;}
-    .comments {margin-top: 30px; margin-left: 30px; margin-right:30px; margin-bottom: 5px; color: black;}
+    .comments {}
 
 
 
