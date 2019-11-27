@@ -87,7 +87,6 @@ def allowed_image(filename, extensions):
         return False
 
 
-'''
 @connection.connection_handler
 def upload_image_to_question(cursor, question_id, image_name):
     """ appends the image_name to the 'image' column at the question_id
@@ -102,7 +101,6 @@ def upload_image_to_question(cursor, question_id, image_name):
                     """,
                    {'image_name': image_name,
                     'question_id': question_id});
-'''
 
 
 @connection.connection_handler
@@ -287,4 +285,15 @@ def update_answer(cursor, answer_id, update_answer):
                    {'time': dt,
                     'message': message,
                     'new_image': update_answer['image'],
-                    'answer_id': answer_id});
+                    'answer_id': answer_id})
+
+# @connection.connection_handler
+# def find_comments(cursor, question_id, answers=None):
+#     cursor.execute("""
+#                     SELECT * FROM comment
+#                     WHERE answer_id = %(answer_id)s OR question_id = %(question_id)s;""",
+#                    {'answer_id':answers,
+#                     'question_id':question_id})
+#
+#     comments = cursor.fetchall()
+#     return comments

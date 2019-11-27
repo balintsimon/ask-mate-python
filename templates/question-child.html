@@ -37,6 +37,14 @@
             <p>Viewed: {{ question['view_number'] }}</p>
         </div>
         <div class="questioncontent">{{ question['message'] }}</div>
+        <div class="block">
+            {% for comment in comments %}
+                {% if comment["question_id"] == question_id %}
+                    <p>{{ comment["message"] }}</p>
+                    <p>{{ comment["submission_time"] }}, {{ comment["edited_count"] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}
