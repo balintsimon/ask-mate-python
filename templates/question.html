@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ question['title'] }}</title>
+    <link type="text/css" href="/static/manage-question.css" rel="stylesheet">
     {% block head %} {% endblock %}
 </head>
 <body>
@@ -23,7 +24,7 @@
         <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
     {% endif %}
     <p></p>
-    <h3><label>Answers:</label></h3>
+
     {% if answers %}
         {% for answer in answers %}
             {% block comment scoped %}
