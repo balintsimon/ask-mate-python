@@ -305,7 +305,8 @@ def update_answer(cursor, answer_id, update_answer):
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
-                     WHERE question_id = %(question_id)s;""",
+                     WHERE question_id = %(question_id)s
+                     ORDER BY id;""",
                     {'question_id': question_id})
 
     comments = cursor.fetchall()
