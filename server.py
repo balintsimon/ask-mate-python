@@ -119,7 +119,6 @@ def manage_questions(question_id):
     else:
         addinganswer = False
 
-    # data_manager.modify_view_number(question_id)
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
     # if answers_to_question:
@@ -241,7 +240,7 @@ def add_newstuff_withimage(question_id):
             new_answer.update({"image": ""})
 
         data_manager.write_new_answer_to_database(question_id, new_answer)
-        return redirect(url_for("manage_questions", question_id=question_id, modify_view=False))
+        return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/search')
