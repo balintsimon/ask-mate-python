@@ -45,7 +45,8 @@
                     <div class="block">{{ comment["message"] }}
                         <p>{{ comment["submission_time"] }}, {{ comment["edited_count"] }}
                         <div class="delbtn">
-                                <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">
+                                <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}"
+                                   onclick="return confirm('Are you sure, you want to delete this comment?')">
                                     <img src="/static/images/recyclebin.jpg" height="20" width="20">
                                 </a>
                         </div>
@@ -81,7 +82,8 @@
                         <div class="head">{{ comment["submission_time"] }} edited: {{ comment["edited_count"] }}</div>
                         {{ comment["message"] }}
                         <div class="delbtn">
-                            <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">
+                            <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}"
+                               onclick="return confirm('Are you sure, you want to delete this comment?')">
                                 <img src="/static/images/recyclebin.jpg" height="20" width="20">
                             </a>
                         </div>
