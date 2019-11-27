@@ -13,13 +13,14 @@
     <header>
         <div class="img-container">
             <div class="inner-container">
-                <a href="{{ url_for('show_questions') }}">AskMate</a>
+                <a href="{{ url_for('index') }}">AskMate</a>
             </div>
         </div>
     </header>
     <div class="navigator-container">
         <nav>
             <a href={{ url_for('add_new_question') }}>Ask a question</a>
+            <a href="{{url_for('show_questions') }}">Show all questions</a>
             <div class="search-bar">
                 <form action="/search" method="get">
                     <input type="text" name="q" id="search-bar" autocomplete="off" placeholder="Find question">
