@@ -177,17 +177,20 @@ def edit_answer(answer_id):
 def edit_comment(comment_id):
     if request.method == "POST":
         message = request.form.get("message")
+        question_id = request.form.get("question_id")
         data_manager.edit_comment(comment_id, message)
-        return redirect(request.referrer)
 
-    message = data_manager.get_comment_by_comment_id(comment_id)
+        return redirect(url_for('manage_questions', question_id=question_id))
+
+    commentdata = data_manager.get_comment_by_comment_id(comment_id)
+
     return render_template("comment.html",
-                           id_type=None,
-                           id=None,
-                           sending_route='/comment/<comment_id>/edit',
+                           id_type="question_id",
+                           id=commentdata["question_id"], # need this for the post request redirection
+                           sending_route=f'/comment/{comment_id}/edit',
                            labelaction='Edit comment',
                            method="POST",
-                           message=message,)
+                           message=commentdata["message"],)
 
 
 @app.route('/question/<question_id>/<vote_method>')
