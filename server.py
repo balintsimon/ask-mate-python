@@ -2,8 +2,6 @@ from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 import os
 import data_manager
-import connection
-import util
 
 app = Flask(__name__)
 
@@ -199,14 +197,18 @@ def vote_questions(vote_method, question_id):
     return redirect('/list')
 
 
-@app.route('/answer/<question_id>/<answer_id>/<vote_method>')
-def vote_answers(vote_method, answer_id, question_id):
+@app.route('/answer/<answer_id>/<vote_method>')
+def vote_answers(vote_method, answer_id):
     data_manager.vote_answer(vote_method, answer_id)
+    answer = data_manager.get_answer_by_answer_id(answer_id)
+    question_id = answer["question_id"]
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
-@app.route('/answer/<question_id>/<answer_id>/delete')
-def delete_answer(question_id, answer_id):
+@app.route('/answer/<answer_id>/delete')
+def delete_answer(answer_id):
+    answer = data_manager.get_answer_by_answer_id(answer_id)
+    question_id = answer["question_id"]
     data_manager.delete_answer(answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
@@ -223,7 +225,7 @@ def delete_question(question_id):
     return redirect('/list')
 
 
-@app.route('/upload-image', methods=['GET', 'POST'])
+'''@app.route('/upload-image', methods=['GET', 'POST'])
 def upload_image():
     if request.method == "POST":
         if request.files:
@@ -243,10 +245,11 @@ def upload_image():
             else:
                 print("not allowed image")
                 return redirect(request.referrer)
+'''
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
-def add_newstuff_withimage(question_id):
+def add_new_answer_with_image(question_id):
     if request.method == "POST":
         if request.files:
             image = request.files["image"]

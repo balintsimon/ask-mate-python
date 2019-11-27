@@ -3,7 +3,6 @@ import os
 import connection
 import psycopg2
 import connection
-import util
 from datetime import datetime
 
 
