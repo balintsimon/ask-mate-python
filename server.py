@@ -16,7 +16,21 @@ ANSWERS_FILE_PATH = "./sample_data/answer.csv"
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
+
 @app.route('/')
+def index():
+    data = data_manager.get_latest_questions()
+    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+    return render_template("list.html",
+                           all_questions=data,
+                           file_labels=labels,
+                           order={"DESC": "Descending", "ASC": "Ascending"},
+                           userpick_label="submission_time",
+                           userpick_order="DESC",
+                           )
+
+
+@app.route('/list')
 def show_questions():
     LABEL = 0
     ORDER = 1
@@ -56,7 +70,7 @@ def add_new_question():
             image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
             new_question["image"] = image.filename
         data_manager.write_new_question_to_database(new_question)
-        return redirect('/')
+        return redirect('/list')
     return render_template('add_question_or_answer.html')
 
 
@@ -153,7 +167,7 @@ def edit_answer(question_id, answer_id):
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
     data_manager.vote_question(vote_method, question_id)
-    return redirect('/')
+    return redirect('/list')
 
 
 @app.route('/answer/<question_id>/<answer_id>/<vote_method>')
@@ -171,7 +185,7 @@ def delete_answer(question_id, answer_id):
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
     data_manager.delete_question(question_id)
-    return redirect('/')
+    return redirect('/list')
 
 
 @app.route('/upload-image', methods=['GET', 'POST'])

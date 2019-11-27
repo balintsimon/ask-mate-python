@@ -18,6 +18,17 @@ def get_all_questions(cursor, sortby, order):
 
 
 @connection.connection_handler
+def get_latest_questions(cursor):
+    cursor.execute("""
+                    SELECT * from question
+                    ORDER BY submission_time DESC
+                    LIMIT 5;
+                    """)
+    data = cursor.fetchall()
+    return data
+
+
+@connection.connection_handler
 def modify_view_number(cursor, question_id, modify_view=False):
     if modify_view:
         cursor.execute("""
