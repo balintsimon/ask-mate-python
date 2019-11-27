@@ -159,12 +159,14 @@ def write_new_comment_to_database(cursor, data):
 
 @connection.connection_handler
 def edit_comment(cursor, comment_id, message):
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                     UPDATE comment
-                    SET message = %(message)s, edited_count = edited_count + 1
+                    SET message = %(message)s, edited_count = edited_count + 1, submission_time = %(submission_time)s
                     WHERE id = %(comment_id)s;
                     """,
                    {'comment_id': comment_id,
+                    'submission_time': dt,
                     'message': message})
 
 
