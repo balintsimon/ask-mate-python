@@ -277,6 +277,15 @@ def get_answer_by_answer_id(cursor, answer_id):
 
 
 @connection.connection_handler
+def get_comment_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+                    SELECT * FROM comment
+                    WHERE id = %(comment_id)s
+                    """,
+                   {'comment_id': comment_id})
+
+
+@connection.connection_handler
 def update_answer(cursor, answer_id, update_answer):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = update_answer['message']
