@@ -173,6 +173,23 @@ def edit_answer(answer_id):
                            answer=current_answer)
 
 
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    if request.method == "POST":
+        message = request.form.get("message")
+        data_manager.edit_comment(comment_id, message)
+        return redirect(request.referrer)
+
+    message = data_manager.get_comment_by_comment_id(comment_id)
+    return render_template("comment.html",
+                           id_type=None,
+                           id=None,
+                           sending_route='/comment/<comment_id>/edit',
+                           labelaction='Edit comment',
+                           method="POST",
+                           message=message,)
+
+
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
     data_manager.vote_question(vote_method, question_id)
