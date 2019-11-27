@@ -8,8 +8,8 @@
 
 
 {% block question %}
-    <h1>{{ question['title'] }}</h1>
     <div class="block">
+        <h1>{{ question['title'] }}</h1>
         <div class="column">
             <img class=imgblock
                  src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}"
@@ -35,6 +35,16 @@
                 {% endif %}
             {% endfor %}
         </div>
+        <div class="nav">
+            <a href="{{ url_for('write_new_comment', question_id=question['id']) }}">Add comment</a>
+
+
+
+
+            <a href="{{ url_for('edit_question', question_id=question['id']) }}">Edit</a>
+        <a href="/question/{{ question['id'] }}/delete">Delete question</a>
+
+    </div>
     </div>
 
 {% endblock %}

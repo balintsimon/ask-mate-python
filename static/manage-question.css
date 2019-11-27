@@ -10,15 +10,15 @@ body {
 
     }
 
-h1 {
-    color: #F7F7F7F7;
-    margin-bottom: 50px;
-    padding-top: 50px;
-    text-align: center;
-}
+
 
 .block {
     background-color: #F7F7F7F7;
+    overflow: hidden;
+    margin: 30px;
+    padding: 20px 20px;
+    border-radius: 10px;
+
 }
 
 .questioncontent {
@@ -27,18 +27,28 @@ h1 {
 
 .message:nth-of-type(odd) {
     background-color: #285369;
-    border: 3px solid lightgrey;
+    border: 2.5px solid lightgrey;
     color: #f7f7f7f7;
+    width: 90%;
+    margin: 20px 20px 20px 100px;
+    border-radius: 10px;
 }
 
 .head {
     color: black;
+    border-bottom-right-radius: 3px;
+    padding-bottom: 4px;
+}
+
+.nav {
+    float:right;
+    padding-right: 5px;
 }
 
 
 <style>
     div p { text-align: center}
-    .block {border: 2px solid grey; overflow: hidden;}
+
     .column { width: 230px; float: left; background: lightgrey; margin: 5px;}
     .questioncontent {overflow: hidden; margin: 5px; white-space: pre-line;}
     .imgblock {width: 150px; height: auto; display: block; margin-left: auto; margin-right: auto; padding: 15px;}
