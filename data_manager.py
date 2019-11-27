@@ -159,12 +159,14 @@ def write_new_comment_to_database(cursor, data):
 
 @connection.connection_handler
 def edit_comment(cursor, comment_id, message):
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                     UPDATE comment
-                    SET message = %(message)s, edited_count = edited_count + 1
+                    SET message = %(message)s, edited_count = edited_count + 1, submission_time = %(submission_time)s
                     WHERE id = %(comment_id)s;
                     """,
                    {'comment_id': comment_id,
+                    'submission_time': dt,
                     'message': message})
 
 
@@ -194,6 +196,7 @@ def get_answers_by_question_id(cursor, question_id):
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE question_id = %(question_id)s
+                    ORDER BY vote_number DESC, submission_time ASC;
                     """,
                    {'question_id': question_id})
 
@@ -274,6 +277,17 @@ def get_answer_by_answer_id(cursor, answer_id):
 
 
 @connection.connection_handler
+def get_comment_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+                    SELECT * FROM comment
+                    WHERE id = %(comment_id)s
+                    """,
+                   {'comment_id': comment_id})
+    data = cursor.fetchone()
+    return data
+
+
+@connection.connection_handler
 def update_answer(cursor, answer_id, update_answer):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = update_answer['message']
@@ -291,7 +305,8 @@ def update_answer(cursor, answer_id, update_answer):
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
-                     WHERE question_id = %(question_id)s;""",
+                     WHERE question_id = %(question_id)s
+                     ORDER BY id;""",
                     {'question_id': question_id})
 
     comments = cursor.fetchall()
