@@ -36,7 +36,7 @@ def show_questions():
     ORDER = 1
     try:
         label_to_sortby = request.args.getlist('sorting')[LABEL]
-        if label_to_sortby == None: #if has no value, request.args returns empty dict with value None
+        if label_to_sortby == None:  # if has no value, request.args returns empty dict with value None
             raise ValueError
     except:
         label_to_sortby = "submission_time"
@@ -74,7 +74,7 @@ def add_new_question():
     return render_template('add_question_or_answer.html')
 
 
-@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST']) #### del the D from the end
+@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST'])  #### del the D from the end
 def add_new_answer(question_id):
     if request.method == 'POST':
         new_answer = dict(request.form)
@@ -119,7 +119,7 @@ def manage_questions(question_id):
     else:
         addinganswer = False
 
-    data_manager.modify_view_number(question_id)
+    # data_manager.modify_view_number(question_id)
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
@@ -129,6 +129,12 @@ def manage_questions(question_id):
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
                            answer_headers=ANSWER_HEADERS)
+
+
+@app.route('/modify_view/<question_id>')
+def modify_view(question_id):
+    data_manager.modify_view_number(question_id)
+    return redirect(url_for('manage_questions', question_id=question_id))
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -227,7 +233,7 @@ def add_newstuff_withimage(question_id):
 
         new_answer = dict(request.form)
         if image.filename:
-            new_answer.update({"image": filename}) # ugly solution, a band-aid
+            new_answer.update({"image": filename})  # ugly solution, a band-aid
         else:
             new_answer.update({"image": ""})
 
