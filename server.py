@@ -150,15 +150,15 @@ def edit_question(question_id):
                            question=current_question)
 
 
-@app.route('/answer/<question_id>/<answer_id>/edit', methods=['GET', 'POST'])
-def edit_answer(question_id, answer_id):
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    current_answer = data_manager.get_answer_by_answer_id(answer_id)
+    question_id = current_answer['question_id']
     if request.method == "POST":
         update_answer = dict(request.form)
-        print(update_answer)
         data_manager.update_answer(answer_id, update_answer)
         return redirect(f'/questions/{question_id}')
 
-    current_answer = data_manager.get_answer_by_answer_id(answer_id)
     return render_template("edit-answer.html",
                            answer_id=answer_id,
                            answer=current_answer)
