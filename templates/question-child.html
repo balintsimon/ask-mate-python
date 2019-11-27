@@ -44,7 +44,11 @@
                 {% if comment["question_id"] == question_id and comment["answer_id"] == None %}
                     <div class="block">{{ comment["message"] }}
                         <p>{{ comment["submission_time"] }}, {{ comment["edited_count"] }}
-                    <div class="delbtn"><a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">Delete</a></div>
+                        <div class="delbtn">
+                                <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">
+                                    <img src="/static/images/recyclebin.jpg" height="20" width="20">
+                                </a>
+                        </div>
                     </div>
                 {% endif %}
             {% endfor %}
@@ -76,7 +80,11 @@
                     {% if comment["answer_id"] == answer["id"] %}
                         <div class="head">{{ comment["submission_time"] }} edited: {{ comment["edited_count"] }}</div>
                         {{ comment["message"] }}
-                        <div class="delbtn"><a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">Delete</a></div>
+                        <div class="delbtn">
+                            <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}">
+                                <img src="/static/images/recyclebin.jpg" height="20" width="20">
+                            </a>
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
