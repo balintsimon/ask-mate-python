@@ -196,6 +196,7 @@ def get_answers_by_question_id(cursor, question_id):
     cursor.execute("""
                     SELECT * FROM answer
                     WHERE question_id = %(question_id)s
+                    ORDER BY vote_number DESC, submission_time ASC;
                     """,
                    {'question_id': question_id})
 
