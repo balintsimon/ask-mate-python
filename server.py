@@ -3,7 +3,6 @@ from werkzeug.utils import secure_filename
 import os
 import data_manager
 import connection
-import util
 
 app = Flask(__name__)
 
