@@ -242,7 +242,20 @@ def search_question(cursor, search_phrase):
                     """,
                    {'search_phrase': '%' + search_phrase + '%'})
 
-    search_result = cursor.fetchall()
+    question_result = cursor.fetchall()
+
+    cursor.execute("""
+                    SELECT * FROM answer
+                    WHERE LOWER(message) LIKE %(search_phrase)s
+                    """,
+                   {'search_phrase': '%' + search_phrase + '%'})
+    answer_result = cursor.fetchall()
+
+    for result in answer_result:
+        result["title"] = "Answer to question"
+        result["id"] = result["question_id"]
+
+    search_result = question_result + answer_result
     if not search_result:
         return None
     return search_result
