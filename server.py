@@ -201,13 +201,15 @@ def vote_questions(vote_method, question_id):
 @app.route('/answer/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id):
     data_manager.vote_answer(vote_method, answer_id)
-    question = data_manager.get_answer_by_answer_id(answer_id)
-    question_id = question["question_id"]
+    answer = data_manager.get_answer_by_answer_id(answer_id)
+    question_id = answer["question_id"]
     return redirect(url_for("manage_questions", question_id=question_id))
 
 
-@app.route('/answer/<question_id>/<answer_id>/delete')
-def delete_answer(question_id, answer_id):
+@app.route('/answer/<answer_id>/delete')
+def delete_answer(answer_id):
+    answer = data_manager.get_answer_by_answer_id(answer_id)
+    question_id = answer["question_id"]
     data_manager.delete_answer(answer_id)
     return redirect(url_for("manage_questions", question_id=question_id))
 
