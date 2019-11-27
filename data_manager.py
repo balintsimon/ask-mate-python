@@ -7,21 +7,11 @@ import util
 from datetime import datetime
 
 
-def sort_dict(func):
-    """decorator function, sorts data by given key and order"""
-    def wrapper(*args, reverse=True, key="submission_time"):
-        data = func(*args)
-        array = sorted(data, key=lambda x: x[key], reverse=reverse)
-        return array
-
-    return wrapper
-
-
-@sort_dict
 @connection.connection_handler
-def get_all_questions(cursor):
+def get_all_questions(cursor, sortby, order):
    cursor.execute("""
-                    SELECT * from question""")
+                    SELECT * from question
+                    ORDER BY {0} {1}""".format(sortby, order))  # careful with this, no userinput allowed to go into here
    data = cursor.fetchall()
    return data
 
