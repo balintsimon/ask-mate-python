@@ -45,7 +45,13 @@ def show_questions():
 def add_new_question():
     if request.method == 'POST':
         new_question = dict(request.form)
-        data_manager.write_new_question_to_database(new_question.get("title"), new_question.get("message"))
+        image = request.files['image']
+        if image.filename == "" or image.filename is None:
+            new_question['image'] = ""
+        else:
+            image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
+            new_question["image"] = image.filename
+        data_manager.write_new_question_to_database(new_question)
         return redirect('/')
     return render_template('add_question_or_answer.html')
 
@@ -109,11 +115,18 @@ def manage_questions(question_id):
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
+    current_question = data_manager.get_question_by_id(question_id)
+
     if request.method == 'POST':
         updated_question = dict(request.form)
+        image = request.files['image']
+        if image.filename == "" or image.filename is None:
+            updated_question['image'] = current_question["image"]
+        else:
+            image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
+            updated_question["image"] = image.filename
         data_manager.update_question(question_id, updated_question)
         return redirect("/")
-    current_question = data_manager.get_question_by_id(question_id)
     return render_template("add_question_or_answer.html",
                            question_id=question_id,
                            question=current_question)

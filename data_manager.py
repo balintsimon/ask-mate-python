@@ -111,7 +111,7 @@ def upload_image_to_question(cursor, question_id, image_name):
 '''
 
 @connection.connection_handler
-def write_new_question_to_database(cursor, title, message):
+def write_new_question_to_database(cursor, new_question):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
@@ -120,9 +120,9 @@ def write_new_question_to_database(cursor, title, message):
                    {"time": dt,
                     "view_number": 0,
                     "vote_number": 0,
-                    "title": title,
-                    "message": message,
-                    "image": ""
+                    "title": new_question['title'],
+                    "message": new_question['message'],
+                    "image": new_question["image"]
                     })
 
 
