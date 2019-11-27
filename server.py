@@ -22,20 +22,24 @@ def show_questions():
     ORDER = 1
     try:
         label_to_sortby = request.args.getlist('sorting')[LABEL]
+        if label_to_sortby == None: #if has no value, request.args returns empty dict with value None
+            raise ValueError
     except:
         label_to_sortby = "submission_time"
+
     try:
         order = request.args.getlist('sorting')[ORDER]
-        order = bool(order == "True")
-    except:
-        order = True
+        if order == None:
+            raise ValueError
+    except (IndexError, ValueError):
+        order = "DESC"
 
-    data = data_manager.get_all_questions(reverse=order, key=label_to_sortby)
+    data = data_manager.get_all_questions(label_to_sortby, order)
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
                            all_questions=data,
                            file_labels=labels,
-                           order={True: "Descending", False: "Ascending"},
+                           order={"DESC": "Descending", "ASC": "Ascending"},
                            userpick_label=label_to_sortby,
                            userpick_order=order,
                            )
