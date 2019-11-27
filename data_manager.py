@@ -287,13 +287,12 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
-# @connection.connection_handler
-# def find_comments(cursor, question_id, answers=None):
-#     cursor.execute("""
-#                     SELECT * FROM comment
-#                     WHERE answer_id = %(answer_id)s OR question_id = %(question_id)s;""",
-#                    {'answer_id':answers,
-#                     'question_id':question_id})
-#
-#     comments = cursor.fetchall()
-#     return comments
+@connection.connection_handler
+def find_comments(cursor, question_id):
+    cursor.execute("""
+                     SELECT * FROM comment
+                     WHERE question_id = %(question_id)s;""",
+                    {'question_id': question_id})
+
+    comments = cursor.fetchall()
+    return comments

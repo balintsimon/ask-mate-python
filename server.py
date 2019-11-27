@@ -121,11 +121,12 @@ def manage_questions(question_id):
 
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
-    # if answers_to_question:
-    #     comments = data_manager.find_comments(question_id, answers_to_question)
-    # else:
-    #     comments = data_manager.find_comments(question_id)
+
+    comments = data_manager.find_comments(question_id)
+
     return render_template("question-child.html",
+                           question_id=int(question_id),
+                           comments=comments,
                            question=current_question,
                            answers=answers_to_question,
                            addinganswer=addinganswer,
