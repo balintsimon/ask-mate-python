@@ -83,22 +83,6 @@ def allowed_image(filename, extensions):
     else:
         return False
 
-'''
-@connection.connection_handler
-def upload_image_to_question(cursor, question_id, image_name):
-    """ appends the image_name to the 'image' column at the question_id
-    ARGS:
-        question_id(string): this is the ID that the image_name appends to
-        image_name(string): validation is not happening here
-    """
-    cursor.execute("""
-                    UPDATE question
-                    SET image = %(image_name)s
-                    WHERE id = %(question_id)s;
-                    """,
-                   {'image_name': image_name,
-                    'question_id': question_id});
-'''
 
 @connection.connection_handler
 def write_new_question_to_database(cursor, new_question):
@@ -263,4 +247,15 @@ def update_answer(cursor, answer_id, update_answer):
                    {'time': dt,
                     'message': message,
                     'new_image': update_answer['image'],
-                    'answer_id': answer_id});
+                    'answer_id': answer_id})
+
+# @connection.connection_handler
+# def find_comments(cursor, question_id, answers=None):
+#     cursor.execute("""
+#                     SELECT * FROM comment
+#                     WHERE answer_id = %(answer_id)s OR question_id = %(question_id)s;""",
+#                    {'answer_id':answers,
+#                     'question_id':question_id})
+#
+#     comments = cursor.fetchall()
+#     return comments
