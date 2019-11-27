@@ -283,6 +283,8 @@ def get_comment_by_comment_id(cursor, comment_id):
                     WHERE id = %(comment_id)s
                     """,
                    {'comment_id': comment_id})
+    data = cursor.fetchone()
+    return data
 
 
 @connection.connection_handler
