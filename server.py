@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, request, url_for
 from werkzeug.utils import secure_filename
 import os
 import data_manager
-import connection
 
 app = Flask(__name__)
 
@@ -226,7 +225,7 @@ def delete_question(question_id):
     return redirect('/list')
 
 
-@app.route('/upload-image', methods=['GET', 'POST'])
+'''@app.route('/upload-image', methods=['GET', 'POST'])
 def upload_image():
     if request.method == "POST":
         if request.files:
@@ -246,10 +245,11 @@ def upload_image():
             else:
                 print("not allowed image")
                 return redirect(request.referrer)
+'''
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
-def add_newstuff_withimage(question_id):
+def add_new_answer_with_image(question_id):
     if request.method == "POST":
         if request.files:
             image = request.files["image"]
