@@ -66,7 +66,7 @@
                     <td>{{ question['view_number'] }}</td>
                     <td>{{ question['vote_number'] }}</td>
                     <td><a href={{ url_for('modify_view', question_id = question['id']) }}>{{ question['title'] }}</a></td>
-                    <td style="white-space: pre-line">{{ question['message'] }}</td>
+                    <td style="white-space: pre-line">{{ question['message'][:200] + '...' }}</td>
                     <td><img src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}" alt="No image" height="128" width="128"></td>
                 </tr>
                 {% endfor %}
