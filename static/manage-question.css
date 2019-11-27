@@ -41,7 +41,7 @@ body {
 }
 
 .nav {
-    float:right;
+    float:top;
     padding-right: 5px;
 }
 
@@ -54,10 +54,11 @@ body {
 }
 
 .block .comments {
-    background-color: #9C1A1C;
+    float:right;
     padding: 0;
     margin: 0;
     border-radius: 0;
+
 }
 
 
