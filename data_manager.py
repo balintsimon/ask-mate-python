@@ -9,11 +9,12 @@ from datetime import datetime
 
 @connection.connection_handler
 def get_all_questions(cursor, sortby, order):
-   cursor.execute("""
+    cursor.execute("""
                     SELECT * from question
-                    ORDER BY {0} {1}""".format(sortby, order))  # careful with this, no userinput allowed to go into here
-   data = cursor.fetchall()
-   return data
+                    ORDER BY {0} {1}""".format(sortby,
+                                               order))  # careful with this, no userinput allowed to go into here
+    data = cursor.fetchall()
+    return data
 
 
 @connection.connection_handler
@@ -24,6 +25,8 @@ def modify_view_number(cursor, question_id, modify_view=False):
                         SET view_number = view_number + 1
                         WHERE id = %(question_id)s
                         """, {'question_id': question_id});
+
+
 @connection.connection_handler
 def modify_view_number(cursor, question_id):
     cursor.execute("""
@@ -43,7 +46,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
                     DELETE FROM answer
                     WHERE id = %(answer_id)s""",
-                    {'answer_id': answer_id});
+                   {'answer_id': answer_id});
 
 
 @connection.connection_handler
@@ -70,7 +73,6 @@ def delete_question(cursor, question_id):
                    );
 
 
-
 def allowed_image(filename, extensions):
     """checks if filename falls within the restrictions"""
     if not "." in filename:
@@ -82,6 +84,7 @@ def allowed_image(filename, extensions):
         return True
     else:
         return False
+
 
 '''
 @connection.connection_handler
@@ -99,6 +102,7 @@ def upload_image_to_question(cursor, question_id, image_name):
                    {'image_name': image_name,
                     'question_id': question_id});
 '''
+
 
 @connection.connection_handler
 def write_new_question_to_database(cursor, new_question):
@@ -125,13 +129,13 @@ def write_new_answer_to_database(cursor, question_id, answer):
                     INSERT INTO answer (submission_time, vote_number, question_id, message, image)
                     VALUES (%(time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
                     """,
-                        {
-                            "time": dt,
-                            "vote_number": 0,
-                            "question_id": question_id,
-                            "message": new_answer,
-                            "image": new_image
-                        })
+                   {
+                       "time": dt,
+                       "vote_number": 0,
+                       "question_id": question_id,
+                       "message": new_answer,
+                       "image": new_image
+                   })
 
 
 @connection.connection_handler
@@ -155,12 +159,32 @@ def write_new_comment_to_database(cursor, data):
 
 
 @connection.connection_handler
+def edit_comment(cursor, comment_id, message):
+    cursor.execute("""
+                    UPDATE comment
+                    SET message = %(message)s, edited_count = edited_count + 1
+                    WHERE id = %(comment_id)s;
+                    """,
+                   {'comment_id': comment_id,
+                    'message': message})
+
+
+@connection.connection_handler
+def delete_comment(cursor, comment_id):
+    cursor.execute("""
+                    DELETE from comment
+                    WHERE id = %(comment_id)s;
+                    """,
+                   {'comment_id': comment_id})
+
+
+@connection.connection_handler
 def get_question_by_id(cursor, question_id):
     cursor.execute("""
                     SELECT * FROM question
                     WHERE id = %(question_id)s;
                     """,
-                   {'question_id':question_id})
+                   {'question_id': question_id})
 
     question = cursor.fetchone()
     return question
@@ -172,7 +196,7 @@ def get_answers_by_question_id(cursor, question_id):
                     SELECT * FROM answer
                     WHERE question_id = %(question_id)s
                     """,
-                   {'question_id':question_id})
+                   {'question_id': question_id})
 
     answers = cursor.fetchall()
     return answers
@@ -186,11 +210,11 @@ def update_question(cursor, question_id, updated_question):
                     SET submission_time = %(time)s, title = %(title)s, message = %(message)s, image = %(new_image)s
                     WHERE id = %(question_id)s;
                     """,
-                   {'time':dt,
-                    'title':updated_question['title'],
-                    'message':updated_question['message'],
+                   {'time': dt,
+                    'title': updated_question['title'],
+                    'message': updated_question['message'],
                     'new_image': updated_question['image'],
-                    'question_id':question_id});
+                    'question_id': question_id});
 
 
 @connection.connection_handler
@@ -215,7 +239,7 @@ def search_question(cursor, search_phrase):
                     SELECT * FROM question
                     WHERE LOWER(title) LIKE %(search_phrase)s OR LOWER(message) LIKE %(search_phrase)s
                     """,
-                   {'search_phrase':'%' + search_phrase + '%'})
+                   {'search_phrase': '%' + search_phrase + '%'})
 
     search_result = cursor.fetchall()
     if not search_result:
@@ -237,7 +261,6 @@ def vote_answer(cursor, direction, answer_id):
                         SET vote_number = vote_number - 1
                         WHERE id = %(answer_id)s AND vote_number > 0
                         """, {'answer_id': answer_id});
-
 
 
 @connection.connection_handler
