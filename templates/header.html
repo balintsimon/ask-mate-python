@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to AskMate!</title>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    {% block head %} {% endblock %}
+</head>
+
+<body>
+    <header>
+        <div class="img-container">
+            <div class="inner-container">
+                <a href="{{ url_for('index') }}">AskMate</a>
+            </div>
+        </div>
+    </header>
+    {% block body %} {% endblock %}
+</body>
+</html>

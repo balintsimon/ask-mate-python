@@ -1,9 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
+
 
 title {
     color: #f7f7f7f7;
@@ -14,6 +9,10 @@ body {
     background-color: #0B2329;
 
     }
+
+form {
+    padding-top: 2em;
+}
 
 body form label {
     color: #f7f7f7f7;

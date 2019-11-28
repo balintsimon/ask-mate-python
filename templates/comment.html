@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends "header.html" %}
+
+{% block head %}
     <link type="text/css" href="/static/comment.css" rel="stylesheet">
     <title>{{ labelaction }}</title>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <form action="{{ sending_route}}" method="{{ method }}">
         <div>
             <pre>
@@ -16,4 +16,4 @@
         </div>
         <button type="submit">Send</button>
     </form>
-</body>
+{% endblock %}
