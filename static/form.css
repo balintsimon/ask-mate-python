@@ -65,6 +65,7 @@ button:hover{
     height: 100%;
     pointer-events: none;
     outline: none;
+    border-bottom: #f7f7f7f7 2px solid;
 }
 
 .text-container label::after{
