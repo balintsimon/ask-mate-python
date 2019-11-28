@@ -61,6 +61,17 @@ body {
 
 }
 
+.imgblock:hover {
+    position: absolute;
+    align-items: center;
+    transform: scale(3) translate(+50%);
+    transition: transform .25s ease;
+}
+
+.image:hover {
+    transform: scale(5) translate(+50%);
+    transition: transform .25s ease;
+}
 
 <style>
     div p { text-align: center}

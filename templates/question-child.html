@@ -11,7 +11,7 @@
     <div class="block">
         <h1>{{ question['title'] }}</h1>
         <div class="column">
-            <img class=imgblock
+            <img class="imgblock" id="question_image"
                  src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}"
                  alt="No image">
             <p>{{ question['submission_time'] }}</p>
