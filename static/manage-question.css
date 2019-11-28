@@ -80,6 +80,10 @@ a {text-decoration: none; color: white;}
     max-width: 300px;
 }
 
+.imgblock {
+    background-color: white;
+}
+
 .imgblock:hover {
     position: absolute;
     transform: scale(3) translate(+35%, +35%);
