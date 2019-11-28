@@ -23,12 +23,12 @@
 </head>
 <body>
     <div class="title">
-
         <img class="imgblock"
              src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}"
              alt="No image">
         <h1>{{ question['title'] }}</h1>
     </div>
+
     <div class="block">
         <div class="column">
 
