@@ -23,7 +23,7 @@
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
         <div class="navigator-float">
-            <form action="/" method="GET">
+            <form action="/list" method="GET">
                 <label for="sorting"></label>
                 <select class="sorting" name="sorting" id="sorting">
                     {% for label in file_labels %}
