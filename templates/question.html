@@ -64,7 +64,9 @@
                 </div>
                 <div class="navbar">
                     <span>{{ comment["submission_time"] }}</span>
-                    {% if comment["edited_count"] == 1 %}
+                    {% if comment["edited_count"] == None or comment["edited_count"] == 0 %}
+                        <span></span>
+                    {% elif comment["edited_count"] == 1 %}
                         <span>(Edited {{ comment["edited_count"] }} time.)</span>
                     {% elif comment["edited_count"] != 0 %}
                         <span>(Edited {{ comment["edited_count"] }} times.)</span>
