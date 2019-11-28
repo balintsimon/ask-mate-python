@@ -61,7 +61,7 @@ a {text-decoration: none; color: white;}
     border-radius: 10px;
 } **/
 
-/*
+
 
 .imgblock {
     max-height: 300px;
@@ -76,7 +76,8 @@ a {text-decoration: none; color: white;}
     position: absolute;
     transform: scale(3) translate(+35%, +35%);
     transition: transform .25s ease;
-    z-index: 1;
+    z-index: 1;No image
+
 }
 
 .image:hover {
