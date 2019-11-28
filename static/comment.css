@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+title {
+    color: #f7f7f7f7;
+    background-color: #327594;
+}
+
+body {
+    background-color: #0B2329;
+
+    }
+
+body form label {
+    color: #f7f7f7f7;
+    background-color: #327594;
+    margin: 2em 1em;
+    padding: 10px 10px;
+    border-radius: 3px;
+}
+
+body form textarea {
+    margin: 2em 1em;
+}
+
+body form button {
+    margin-left: 20em;
+}
+
+.block {
+    background-color: #F7F7F7F7;
+    overflow: hidden;
+    margin: 30px;
+    padding: 20px 20px;
+    border-radius: 10px;
+
+}
