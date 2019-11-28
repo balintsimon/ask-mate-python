@@ -1,65 +1,76 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
-
 body {
     background-color: #0B2329;
 
     }
 
+ul {list-style-type: none;}
+h1, h3 {color: white;}
+a {text-decoration: none; color: white;}
+#bignum {font-size: 2em; color: blue;}
 
+.title {display: flex; align-items: baseline}
 
 .block {
-    background-color: #F7F7F7F7;
-    overflow: hidden;
-    margin: 30px;
-    padding: 20px 20px;
     border-radius: 10px;
-
+    background-color: #F7F7F7F7;
+    border: 2px solid #285369;
+    /* overflow: hidden; */
+    display:flex;
+    flex-direction:row;
 }
+.column {display: flex; flex-direction: column; max-width: 25vh; align-items: center; padding: 10px; border-radius: 10px}
+.content {display: flex; flex: 1 1 auto; flex-direction: column; border-left: 4px solid #285369;}
+.msg {background: white; flex: 1 1 auto; border-radius: 0 10px 0 0; padding: 10px;}
+.navbar {display: flex; justify-content: right; align-items: center; background-color: #327594; height: min-content; border-radius: 0 0 10px 0; color: white;}
+.navbar > * {margin-right: 10px;}
+.comments {padding-left: 25vh; margin-top: 10px; opacity: 0.8;}
+.comments > * {margin: 10px;}
+.answerblock {margin: 20px;}
 
-.questioncontent {
-    display: block;
-}
 
-.message:nth-of-type(odd) {
+/* * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+} */
+
+
+/**.message:nth-of-type(odd) {
     background-color: #285369;
     border: 2.5px solid lightgrey;
     color: #f7f7f7f7;
     width: 90%;
     margin: 20px 20px 20px 100px;
     border-radius: 10px;
-}
+} **/
 
-.head {
+/*.head {
     color: black;
     border-bottom-right-radius: 3px;
     padding-bottom: 4px;
-}
+} */
 
-.nav {
+/* .nav {
     float:top;
     padding-right: 5px;
-}
+} */
 
-.comments {
+/* .comments {
     background-color: #327594;
     width: 60%;
     margin: 30px 30px 5px auto;
 
     color: black;
-}
+} */
 
-.block .comments {
+/* .block .comments {
     float:right;
     padding: 0;
     margin: 0;
     border-radius: 0;
 
-}
+} */
 
 .imgblock:hover {
     position: absolute;
@@ -73,7 +84,7 @@ body {
     transition: transform .25s ease;
 }
 
-<style>
+/*<style>
     div p { text-align: center}
 
     .column { width: 230px; float: left; background: lightgrey; margin: 5px;}
@@ -93,5 +104,5 @@ body {
 
 
 
-</style>
+</style> */
 

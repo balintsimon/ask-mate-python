@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>
+    <link type="text/css" href="/static/manage-question.css" rel="stylesheet">
+<!-- <style>
     ul {list-style-type: none;}
     #bignum {font-size: 2em; color: blue;}
 
@@ -15,7 +16,7 @@
     .comments {padding-left: 25vh; background: yellow;}
     .answerblock {margin: 20px;}
 
-</style>
+</style> -->
     <meta charset="UTF-8">
     <title>{{ question['title'] }}</title>
     {% block head %} {% endblock %}
@@ -54,11 +55,13 @@
     </div>
 
     <div class="comments">
-        <div class="msg">
+
         {% for comment in comments %}
             {% if comment["question_id"] == question_id and comment["answer_id"] == None %}
-                {{ comment["message"] }}
-
+            <div class="content">
+                <div class="msg">
+                    {{ comment["message"] }}
+                </div>
                 <div class="navbar">
                     {% if comment["edited_count"] != 0 %}
                     <span>Edited by {{ comment["edited_count"] }} times</span>
@@ -72,9 +75,10 @@
                         <a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a>
                     {% endif %}
                 </div>
+            </div>
             {% endif %}
         {% endfor %}
-        </div>
+
     </div>
 
 
@@ -88,7 +92,7 @@
     {% endif %}
 
     <p></p>
-    <h3><label>Answers:</label></h3>
+    <h3>Answers:</h3>
     {% if answers %}
         {% for answer in answers %}
             {% block answer scoped %} {% endblock%}
