@@ -64,7 +64,7 @@ body {
 .imgblock:hover {
     position: absolute;
     align-items: center;
-    transform: scale(3) translate(+50%);
+    transform: scale(4) translate(+50%, +20%);
     transition: transform .25s ease;
 }
 
