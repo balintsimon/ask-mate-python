@@ -197,8 +197,8 @@ def vote_questions(vote_method, question_id):
     return redirect('/list')
 
 
-@app.route('/answer/<question_id>/<answer_id>/<vote_method>')
-def vote_answers(vote_method, question_id, answer_id):
+@app.route('/answer/<answer_id>/<vote_method>')
+def vote_answers(vote_method, answer_id):
     data_manager.vote_answer(vote_method, answer_id)
     answer = data_manager.get_answer_by_answer_id(answer_id)
     question_id = answer["question_id"]
