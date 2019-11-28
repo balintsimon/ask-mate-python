@@ -23,7 +23,13 @@
             {% for comment in comments %}
                 {% if comment["question_id"] == question_id and comment["answer_id"] == None %}
                     <div class="block">{{ comment["message"] }}
-                        <p>{{ comment["submission_time"] }}, {{ comment["edited_count"] }}
+                        {% if comment["edited_count"]  == 0 %}
+                            <p>{{ comment["submission_time"] }}
+                        {% elif comment["edited_count"] == 1 %}
+                            <p>{{ comment["submission_time"] }} (Edited {{ comment["edited_count"] }} time.)
+                        {% else %}
+                            <p>{{ comment["submission_time"] }} (Edited {{ comment["edited_count"] }} times.)
+                        {% endif %}
                         <div class="editbtn"><a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a></div>
                         <div class="delbtn">
                                 <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}"
@@ -70,7 +76,13 @@
             <div class="block comments">
                 {% for comment in comments %}
                     {% if comment["answer_id"] == answer["id"] %}
-                        <div class="head">{{ comment["submission_time"] }} edited: {{ comment["edited_count"] }}</div>
+                        {% if comment["edited_count"] == 0 %}
+                            <div class="head">{{ comment["submission_time"] }}</div>
+                        {% elif comment["edited_count"] == 1 %}
+                            <div class="head">{{ comment["submission_time"] }} (Edited {{ comment["edited_count"] }} time.)</div>
+                        {% else %}
+                            <div class="head">{{ comment["submission_time"] }} (Edited {{ comment["edited_count"] }} times.)</div>
+                        {% endif %}
                         {{ comment["message"] }}
                         <div class="editbtn"><a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a></div>
                         <div class="delbtn">
