@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link type="text/css" href="/static/comment.css" rel="stylesheet">
     <title>{{ labelaction }}</title>
 </head>
 <body>
@@ -10,7 +11,7 @@
             <pre>
                 <input type="hidden" name="{{ id_type }}" value="{{ id }}">
                 <label for="msg">{{ labelaction }}</label>
-                <textarea name="message" id="msg">{{ message if message else "" }}</textarea>
+                <textarea name="message" id="msg" rows="10" cols="25">{{ message if message else "" }}</textarea>
             </pre>
         </div>
         <button type="submit">Send</button>
