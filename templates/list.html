@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body>
     <header>
@@ -19,19 +20,12 @@
     </header>
     <div class="navigator-container">
         <nav>
-            <a href={{ url_for('add_new_question') }}>Ask a question</a>
-            <a href="{{url_for('show_questions') }}">Show all questions</a>
-            <div class="search-bar">
-                <form action="/search" method="get">
-                    <input type="text" name="q" id="search-bar" autocomplete="off" placeholder="Find question">
-                    <label for="search-bar"></label>
-                    <button type="submit">Search</button>
-                </form>
-            </div>
+            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
+            <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
         <div class="navigator-float">
             <form action="/" method="GET">
                 <label for="sorting"></label>
-                <select name="sorting" id="sorting">
+                <select class="sorting" name="sorting" id="sorting">
                     {% for label in file_labels %}
                         <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
                     {% endfor %}
@@ -44,6 +38,15 @@
                 <button type="submit">Sort</button>
             </form>
         </div>
+        <form action="/search" method="get">
+            <div class="search-box">
+                <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
+                <label for="search-bar"></label>
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
         </nav>
     </div>
     <main>

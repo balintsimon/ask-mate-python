@@ -1,7 +1,7 @@
 .table-container{
     border-collapse: collapse;
     text-align: center;
-    color: white;
+    color: #f7f7f7f7;
     overflow: hidden;
     width: 100%;
 }
@@ -40,7 +40,7 @@
 
 .table-container a{
     font-size: large;
-    color: white;
+    color: #f7f7f7f7;
     text-decoration: none;
     font-weight: bolder;
 }

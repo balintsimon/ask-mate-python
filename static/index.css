@@ -12,12 +12,12 @@ p{
     margin-top: 10%;
     font-size: 30px;
     font-weight: bold;
-    color: white;
+    color: #f7f7f7f7;
 }
 
 .img-container{
     background-image: url(images/indexheader.jpg);
-    height: 220px;
+    height: 200px;
     background-position-y: top;
     background-position-x: left;
     background-repeat: no-repeat;
@@ -29,8 +29,7 @@ p{
 }
 .inner-container a{
     text-decoration: none;
-    text-align: left;
-    color: white;
+    color: #f7f7f7f7;
     font-family: 'Shadows Into Light', cursive;
     font-size: 100px;
     display: inline-block;
@@ -38,38 +37,91 @@ p{
 }
 
 .navigator-container{
-    overflow: auto;
-    background-color: #0B2329;
-    border-bottom: silver 4px solid;
+    padding: 10px 0;
+    border-bottom: 3px solid silver;
+    text-align: right;
+}
+
+.navigator-container *{
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+.search-box {
+    display: inline;
+    position: absolute;
+    background-color: #f7f7f7f7;
+    height: 40px;
+    border-radius: 40px;
+    padding: 0;
+    left: 2%;
+}
+
+.search-box:hover > .search-txt {
+    width: 240px;
+    padding: 0 6px;
+}
+
+.search-box:hover > .search-btn {
+    background: #f7f7f7f7;
+
+}
+
+.search-btn {
+    float: right;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: none;
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 15px 0;
+    justify-content: center;
+    align-items: center;
+    transition: 0.4s;
+    color: #f7f7f7f7;
+    cursor: pointer;
+    border:none;
 }
 
-.search-bar{
-    display: inline-block;
-    margin-left: 25%;
+.search-btn > i {
+    font-size: 30px;
 }
 
-.search-bar input{
-    padding-right: 150px;
+.search-txt {
+    border: none;
+    background: none;
+    outline: none;
+    float: left;
+    padding: 0;
+    font-size: 16px;
+    transition: 0.4s;
+    line-height: 40px;
+    width: 0;
+}
+
+.fa-search{
+    color: black;
+    padding-right: 3px;
+}
+
+.search-txt:focus{
+    width: 240px;
+    padding: 0 6px;
 }
 
 .navigator-container nav a{
-    color: white;
+    color: #f7f7f7f7;
     text-decoration: none;
     font-weight: bold;
     font-family: 'Permanent Marker', cursive;
     font-size: 25px;
     background-clip: content-box;
-    margin-left: 1%;
-
+    display: inline;
 
 }
 
 .navigator-container form label{
-    color: white;
+    color: #f7f7f7f7;
 }
 
 .navigator-container nav a:hover{
@@ -79,6 +131,17 @@ p{
 
 .navigator-float {
     float: right;
-    margin-top: auto;
-    margin-right: 10px;
+    display: flex;
+    margin-left: 20px;
+    margin-right: 50px;
+    padding: 0;
+}
+
+
+#last-nav{
+    margin-left: 100px;
+    margin-right: 25px;
+}
+
+#first-nav{
 }
