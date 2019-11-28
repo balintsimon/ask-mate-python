@@ -8,7 +8,7 @@ h1, h3 {color: white;}
 a {text-decoration: none; color: white;}
 #bignum {font-size: 2em; color: blue;}
 
-.title {display: flex; align-items: baseline}
+.title {display: flex; min-height: 280px; align-items: baseline}
 
 .block {
     border-radius: 10px;
@@ -72,16 +72,27 @@ a {text-decoration: none; color: white;}
 
 } */
 
+#no_answer {
+    color: white;
+}
+
+.imgblock {
+    max-height: 300px;
+    max-width: 300px;
+}
+
 .imgblock:hover {
     position: absolute;
-    align-items: center;
-    transform: scale(4) translate(+50%, +20%);
+    transform: scale(3) translate(+35%, +35%);
     transition: transform .25s ease;
+    z-index: 1;
 }
 
 .image:hover {
-    transform: scale(5) translate(+50%);
+    position: absolute;
+    transform: scale(5) translate(+40%, +20%);
     transition: transform .25s ease;
+    z-index: 1;
 }
 
 /*<style>

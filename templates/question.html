@@ -24,7 +24,7 @@
 <body>
     <div class="title">
 
-        <img class=imgblock
+        <img class="imgblock"
              src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}"
              alt="No image">
         <h1>{{ question['title'] }}</h1>
@@ -63,10 +63,12 @@
                     {{ comment["message"] }}
                 </div>
                 <div class="navbar">
-                    {% if comment["edited_count"] != 0 %}
-                    <span>Edited by {{ comment["edited_count"] }} times</span>
-                    {% endif %}
                     <span>{{ comment["submission_time"] }}</span>
+                    {% if comment["edited_count"] == 1 %}
+                        <span>(Edited {{ comment["edited_count"] }} time.)</span>
+                    {% elif comment["edited_count"] != 0 %}
+                        <span>(Edited {{ comment["edited_count"] }} times.)</span>
+                    {% endif %}
                     {% if not addinganswer %}
                         <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}"
                            onclick="return confirm('Are you sure, you want to delete this comment?')">
@@ -98,7 +100,7 @@
             {% block answer scoped %} {% endblock%}
         {% endfor %}
     {% else %}
-        <p>There are no answers to this question yet</p>
+        <p id="no_answer">There are no answers to this question yet.</p>
     {% endif %}
 
     <nav>
