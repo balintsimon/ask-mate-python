@@ -39,7 +39,7 @@
 
         </div>
         <div class="content">
-            <div class="msg">{{ question['message'] }}</div>
+            <div class="msg">{{ question['message'] | safe }}</div>
             <div class="navbar">
                 <p>username</p>
                 <p>{{ question['submission_time'] }}</p>
