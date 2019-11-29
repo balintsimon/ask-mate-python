@@ -1,5 +1,8 @@
 import csv
 import os
+
+from psycopg2 import sql
+
 import connection
 import psycopg2
 import connection
@@ -8,10 +11,11 @@ from datetime import datetime
 
 @connection.connection_handler
 def get_all_questions(cursor, sortby, order):
-    cursor.execute("""
+    order = 'DESC' if order == 'DESC' else 'ASC'
+    cursor.execute(sql.SQL("""
                     SELECT * from question
-                    ORDER BY {0} {1}""".format(sortby,
-                                               order))  # careful with this, no userinput allowed to go into here
+                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
+                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
     data = cursor.fetchall()
     return data
 
@@ -39,9 +43,9 @@ def modify_view_number(cursor, question_id):
 @connection.connection_handler
 def delete_answer(cursor, answer_id):
     cursor.execute("""
-                    DELETE FROM comment
-                    WHERE answer_id = %(answer_id)s""",
-                   {'answer_id': answer_id});
+        DELETE FROM comment
+        WHERE answer_id = %(answer_id)s""",
+       {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
