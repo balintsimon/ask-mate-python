@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, g
 from werkzeug.utils import secure_filename
+import util
 import os
 import data_manager
 
@@ -15,17 +16,34 @@ QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "titl
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
+@app.before_request
+def before_request():
+    g.user = None
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        print(username)
+        if request.form.get('password') == request.form.get('confirm-password'):
+            print('success!')
+    return render_template('login-register.html')
+
+
 @app.route('/')
 def index():
-    data = data_manager.get_latest_questions()
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html",
-                           all_questions=data,
-                           file_labels=labels,
-                           order={"DESC": "Descending", "ASC": "Ascending"},
-                           userpick_label="submission_time",
-                           userpick_order="DESC",
-                           )
+    if g.user:
+        data = data_manager.get_latest_questions()
+        labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+        return render_template("list.html",
+                               all_questions=data,
+                               file_labels=labels,
+                               order={"DESC": "Descending", "ASC": "Ascending"},
+                               userpick_label="submission_time",
+                               userpick_order="DESC",
+                               )
+    return redirect(url_for('registration'))
 
 
 @app.route('/list')
