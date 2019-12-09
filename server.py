@@ -34,11 +34,11 @@ def login_required(func):
         return redirect(url_for('registration'))
     return validate
 
-
+"""
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
-
+"""
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
