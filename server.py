@@ -1,10 +1,11 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, g, session
 from werkzeug.utils import secure_filename
+import util
 import os
 import data_manager
 
 app = Flask(__name__)
-
+app.secret_key = os.urandom(24)
 app.config["IMAGE_UPLOADS"] = "./static/images"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
@@ -15,17 +16,38 @@ QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "titl
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
 
+@app.before_request
+def before_request():
+    g.user = None
+
+
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    session.pop('user', None)
+    if request.method == 'POST':
+        if request.form.get('password') == request.form.get('confirm-password'):
+            password = util.hash_password(request.form.get('password'))
+            username = request.form.get('username')
+            data_manager.create_user(username, password)
+            session['user'] = username
+            g.user = session['user']
+            return render_template('list.html')
+    return render_template('login-register.html')
+
+
 @app.route('/')
 def index():
-    data = data_manager.get_latest_questions()
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html",
-                           all_questions=data,
-                           file_labels=labels,
-                           order={"DESC": "Descending", "ASC": "Ascending"},
-                           userpick_label="submission_time",
-                           userpick_order="DESC",
-                           )
+    if g.user:
+        data = data_manager.get_latest_questions()
+        labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+        return render_template("list.html",
+                               all_questions=data,
+                               file_labels=labels,
+                               order={"DESC": "Descending", "ASC": "Ascending"},
+                               userpick_label="submission_time",
+                               userpick_order="DESC",
+                               )
+    return redirect(url_for('registration'))
 
 
 @app.route('/list')

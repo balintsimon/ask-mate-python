@@ -69,8 +69,7 @@ DROP SEQUENCE IF EXISTS public.users_id_seq;
 CREATE TABLE users (
     id serial NOT NULL,
     name varchar(50) UNIQUE,
-    password varchar(60) UNIQUE,
-    registration_date timestamp without time zone,
+    password VARCHAR(100) UNIQUE,
     reputation integer
 );
 
