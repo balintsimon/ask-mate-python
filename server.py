@@ -21,6 +21,11 @@ def before_request():
     g.user = None
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
+
+
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     session.pop('user', None)
@@ -32,7 +37,7 @@ def registration():
             session['user'] = username
             g.user = session['user']
             return render_template('list.html')
-    return render_template('login-register.html')
+    return render_template('register.html')
 
 
 @app.route('/')
@@ -47,7 +52,7 @@ def index():
                                userpick_label="submission_time",
                                userpick_order="DESC",
                                )
-    return redirect(url_for('registration'))
+    return redirect(url_for('login'))
 
 
 @app.route('/list')
