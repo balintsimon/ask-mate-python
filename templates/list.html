@@ -22,6 +22,7 @@
         <nav>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
+            <a id="user_logout" href="{{ url_for('logout') }}">Log out</a>
         <div class="navigator-float">
             <form action="/list" method="GET">
                 <label for="sorting"></label>

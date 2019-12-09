@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request, url_for, g, session
+import functools
 from werkzeug.utils import secure_filename
 import util
 import os
@@ -19,6 +20,19 @@ ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "messag
 @app.before_request
 def before_request():
     g.user = None
+    if 'user' in session:
+        g.user = session['user']
+
+
+def login_required(func):
+    @functools.wraps(func)
+    def validate(*args, **kwargs):
+        g.user = None
+        if 'user' in session:
+            g.user = session['user']
+            return func(*args, **kwargs)
+        return redirect(url_for('registration'))
+    return validate
 
 
 @app.route('/registration', methods=['GET', 'POST'])
@@ -32,7 +46,29 @@ def registration():
             session['user'] = username
             g.user = session['user']
             return render_template('list.html')
-    return render_template('login-register.html')
+    return render_template('login-register.html', mode="registration")
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session.pop('user', None)
+        try:
+            user = data_manager.get_user(request.form.get('username'))
+            if util.verify_password(request.form.get('password'), user["password"]):
+                session['user'] = user["name"]
+                return redirect(url_for('index'))
+            return render_template("login-register.html", mode="error")
+        except TypeError:
+            return render_template("login-register.html", mode="error")
+
+    return render_template("login-register.html", mode="login")
+
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for("login"))
 
 
 @app.route('/')
@@ -51,6 +87,7 @@ def index():
 
 
 @app.route('/list')
+@login_required
 def show_questions():
     LABEL = 0
     ORDER = 1

@@ -2,21 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User page</title>
     <link rel="stylesheet" type="text/css" href="static/login-register.css">
 </head>
 <body>
 <div class="form-container">
-<h1>Sign up</h1>
-<form method="post">
-    <label for="username">Username</label>
-    <input type="text" name="username" id="username" required autocomplete="off">
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required autocomplete="off">
-    <label for="confirm-password">Confirm Password</label>
-    <input type="password" name="confirm-password" id="confirm-password" required autocomplete="off">
-    <button type="submit">Sign up</button>
-</form>
+    {% if mode == "login" %}
+    <h1>Log in</h1>
+        <form method="post">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required autocomplete="off"><br>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required autocomplete="off"><br>
+            <button type="submit">Log in</button>
+        </form><br>
+        <form method="get" action="{{ url_for("registration") }}">
+            <label for="to_register">If you don't have an account, </label>
+            <input type="submit" name="to_register" id="to_register" value="register one here">
+        </form>
+    {% elif mode == "registration" %}
+    <h1>Sign up</h1>
+        <form method="post">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" required autocomplete="off"><br>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required autocomplete="off"><br>
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" name="confirm-password" id="confirm-password" required autocomplete="off"><br>
+            <button type="submit">Sign up</button>
+        </form><br>
+        <form method="get" action="{{ url_for("login") }}">
+            <label for="to_login">If you already have an account, </label>
+            <input type="submit" name="to_login" id="to_login" value="log in here.">
+        </form>
+    {% elif mode == "error" %}
+        <h1>The username and/or password you entered is not valid.</h1>
+        <br>
+        <form method="get" action="{{ url_for("login") }}">
+            <label for="to_login">If you already have an account, </label>
+            <input type="submit" name="to_login" id="to_login" value="log in here.">
+        </form>
+        <br>
+        <form method="get" action="{{ url_for("registration") }}">
+            <label for="to_register">If you don't have an account, </label>
+            <input type="submit" name="to_register" id="to_register" value="register one here">
+        </form>
+    {% endif %}
 </div>
 </body>
 </html>

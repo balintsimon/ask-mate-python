@@ -336,3 +336,14 @@ def create_user(cursor, username, password):
     VALUES (DEFAULT , %(username)s, %(password)s, DEFAULT );
     """, {'username': username,
           'password': password})
+
+@connection.connection_handler
+def get_user(cursor, username):
+    cursor.execute("""
+    SELECT name, password FROM users
+    WHERE name = %(username)s
+    """,
+    {'username': username})
+
+    user = cursor.fetchone()
+    return user
