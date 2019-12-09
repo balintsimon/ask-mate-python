@@ -327,3 +327,11 @@ def find_comments(cursor, question_id):
 
     comments = cursor.fetchall()
     return comments
+
+@connection.connection_handler
+def create_user(cursor, username, password):
+    cursor.execute("""
+    INSERT INTO users
+    SET name = %(username)s, password = %(password)s;
+    """, {'username': username,
+          'password': password})
