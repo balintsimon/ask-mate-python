@@ -44,7 +44,9 @@ def login():
 def registration():
     session.pop('user', None)
     if request.method == 'POST':
-        if request.form.get('password') == request.form.get('confirm-password'):
+        if data_manager.get_user(request.form.get('username')):
+            return render_template('login-register.html', mode="error")
+        elif request.form.get('password') == request.form.get('confirm-password'):
             password = util.hash_password(request.form.get('password'))
             username = request.form.get('username')
             data_manager.create_user(username, password)
