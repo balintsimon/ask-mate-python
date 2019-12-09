@@ -147,5 +147,5 @@ INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
 
-INSERT INTO users VALUES(0, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' ,'2019-12-01 08:00:00', 0);
+INSERT INTO users VALUES(0, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' , 0);
 

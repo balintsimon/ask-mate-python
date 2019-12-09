@@ -1,7 +1,7 @@
 import csv
 import os
 
-from psycopg2 import sql
+from psycopg2 import sql, errorcodes, errors
 
 import connection
 import psycopg2
@@ -331,8 +331,21 @@ def find_comments(cursor, question_id):
 
 @connection.connection_handler
 def create_user(cursor, username, password):
+    try:
+        cursor.execute("""
+        INSERT INTO users
+        VALUES (DEFAULT , %(username)s, %(password)s, DEFAULT );
+        """, {'username': username,
+              'password': password})
+    except psycopg2.errors.UniqueViolation:
+        return False
+    return True
+
+@connection.connection_handler
+def get_user_password(cursor, username):
     cursor.execute("""
-    INSERT INTO users
-    VALUES (DEFAULT , %(username)s, %(password)s, DEFAULT );
-    """, {'username': username,
-          'password': password})
+                    SELECT password FROM users
+                    WHERE name = %(username)s;
+                    """, {'username': username})
+    password = cursor.fetchone()
+    return password

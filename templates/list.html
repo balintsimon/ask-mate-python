@@ -20,6 +20,7 @@
     </header>
     <div class="navigator-container">
         <nav>
+            <p>Hello {{ session['user'] }}</p>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
         <div class="navigator-float">

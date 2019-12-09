@@ -9,10 +9,16 @@ body{
 }
 
 .form-container h1{
-    margin-bottom: 80px;
+    margin-bottom: 50px;
     color: #f7f7f7f7;
     text-transform: uppercase;
     font-weight: 500;
+}
+
+.error{
+    color: #9C1A1C;
+    font-size: 20px;
+    text-align: center;
 }
 
 .form-container{

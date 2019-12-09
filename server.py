@@ -19,25 +19,34 @@ ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "messag
 @app.before_request
 def before_request():
     g.user = None
+    if 'user' in session:
+        g.user = session['user']
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    session.pop('user', None)
+    hashed_password = data_manager.get_user_password(request.form.get('username'))
+    check_password = util.verify_password(request.form.get('password'), hashed_password['password'] if hashed_password else None)
+    if hashed_password is None or check_password is False:
+        return render_template('login.html', error=True)
+    session['user'] = request.form.get('username')
+    return redirect(url_for('index'))
 
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    session.pop('user', None)
-    if request.method == 'POST':
-        if request.form.get('password') == request.form.get('confirm-password'):
-            password = util.hash_password(request.form.get('password'))
-            username = request.form.get('username')
-            data_manager.create_user(username, password)
-            session['user'] = username
-            g.user = session['user']
-            return render_template('list.html')
-    return render_template('register.html')
+    if request.method == 'GET':
+        return render_template('register.html')
+    if request.form.get('password') != request.form.get('confirm-password'):
+        return render_template('register.html', error="Password and Confirm password doesn't match!")
+    password = util.hash_password(request.form.get('password'))
+    user = data_manager.create_user(request.form.get('username'), password)
+    if user is False:
+        return render_template('register.html', error='This username already exists!')
+    return redirect(url_for('login'))
 
 
 @app.route('/')
