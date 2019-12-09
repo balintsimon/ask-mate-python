@@ -35,6 +35,11 @@ def login_required(func):
     return validate
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
+
+
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     session.pop('user', None)
@@ -83,7 +88,7 @@ def index():
                                userpick_label="submission_time",
                                userpick_order="DESC",
                                )
-    return redirect(url_for('registration'))
+    return redirect(url_for('login'))
 
 
 @app.route('/list')
