@@ -27,7 +27,7 @@ def registration():
         if request.form.get('password') == request.form.get('confirm-password'):
             password = util.hash_password(request.form.get('password'))
             username = request.form.get('username')
-            data_manager.allowed_image(password, username)
+            data_manager.create_user(username, password)
     return render_template('login-register.html')
 
 

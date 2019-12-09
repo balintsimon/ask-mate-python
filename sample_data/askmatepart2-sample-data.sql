@@ -69,9 +69,7 @@ DROP SEQUENCE IF EXISTS public.users_id_seq;
 CREATE TABLE users (
     id serial NOT NULL,
     name varchar(50) UNIQUE,
-    password integer UNIQUE,
-    question_id integer,
-    answer_id integer,
+    password VARCHAR(100) UNIQUE,
     reputation integer
 );
 
