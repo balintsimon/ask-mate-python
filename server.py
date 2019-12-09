@@ -24,10 +24,10 @@ def before_request():
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     if request.method == 'POST':
-        username = request.form.get('username')
-        print(username)
         if request.form.get('password') == request.form.get('confirm-password'):
-            print('success!')
+            password = util.hash_password(request.form.get('password'))
+            username = request.form.get('username')
+            data_manager.allowed_image(password, username)
     return render_template('login-register.html')
 
 
