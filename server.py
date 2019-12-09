@@ -1,11 +1,11 @@
-from flask import Flask, render_template, redirect, request, url_for, g
+from flask import Flask, render_template, redirect, request, url_for, g, session
 from werkzeug.utils import secure_filename
 import util
 import os
 import data_manager
 
 app = Flask(__name__)
-
+app.secret_key = os.urandom(24)
 app.config["IMAGE_UPLOADS"] = "./static/images"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
@@ -23,11 +23,15 @@ def before_request():
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
+    session.pop('user', None)
     if request.method == 'POST':
         if request.form.get('password') == request.form.get('confirm-password'):
             password = util.hash_password(request.form.get('password'))
             username = request.form.get('username')
             data_manager.create_user(username, password)
+            session['user'] = username
+            g.user = session['user']
+            return render_template('list.html')
     return render_template('login-register.html')
 
 
