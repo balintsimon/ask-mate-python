@@ -154,7 +154,7 @@ def write_new_comment_to_database(cursor, data):
 
     cursor.execute("""
                     INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_name)
-                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s), %(user_name)s;
+                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s, %(user_name)s);
                     """,
                    {"question_id": data["question_id"],
                     "answer_id": data["answer_id"],
