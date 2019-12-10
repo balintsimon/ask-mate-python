@@ -42,7 +42,7 @@
                     {% endif %}
                 </div>
                 <div class="navbar">
-                    <span>Username</span>
+                    <span>{{ answer["username"] }}</span>
                     <span class="date">Posted: {{ answer["submission_time"] }}</span>
                     {% if not addinganswer %}
                         <a href="{{ url_for('edit_answer', answer_id = answer['id']) }}">Edit</a>
@@ -58,7 +58,7 @@
                     <div class="content">
                         <div class="msg">{{ comment["message"] }}</div>
                         <div class="navbar">
-                            <span>username</span>
+                            <span>{{ comment["username"] }}</span>
                             <span>{{ comment["submission_time"] }}</span>
                             {% if comment["edited_count"] == 1 %}
                                 <span>(Edited {{ comment["edited_count"] }} time.)</span>
