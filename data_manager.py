@@ -327,3 +327,13 @@ def find_comments(cursor, question_id):
 
     comments = cursor.fetchall()
     return comments
+
+
+@connection.connection_handler
+def sort_questions(cursor, order_by):
+    cursor.execute(sql.SQL("""
+                    SELECT * FROM question
+                    ORDER BY {0} ;""").format(sql.Identifier(order_by)))
+
+    data = cursor.fetchall()
+    return data

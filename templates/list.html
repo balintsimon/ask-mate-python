@@ -21,22 +21,6 @@
     <div class="navigator-container">
         <nav>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
-        <div class="navigator-float">
-            <form action="/list" method="GET">
-                <label for="sorting"></label>
-                <select class="sorting" name="sorting" id="sorting">
-                    {% for label in file_labels %}
-                        <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-                <select name="sorting">
-                    {%for bool in order %}
-                        <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Sort</button>
-            </form>
-        </div>
         <form action="/search" method="get">
             <div class="search-box">
                 <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
@@ -49,18 +33,45 @@
         </nav>
     </div>
     <main>
-    <form action="/list">
-        <input id="prodId" name="order_by" type="hidden" value="xm234jq">
         {% if all_questions %}
-        <table class="table-container">
+            <table class="table-container">
             <thead>
-
                 <tr>
-                    <th>Submission time</th>
-                    <th>Views</th>
-                    <th>Votes</th>
-                    <th><button type="submit">Title</button></th>
-                    <th>Message</th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="submission_time">
+                            <input type="hidden" name="order_direction" value="desc">
+                            <button type="submit">Submission Time</button>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="view_number">
+                            <input type="hidden" name="order_direction" value="desc">
+                            <button type="submit">Views</button>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="vote_number">
+                            <input type="hidden" name="order_direction" value="desc">
+                            <button type="submit">Votes</button>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="title">
+                            <input type="hidden" name="order_direction" value="desc">
+                            <button type="submit">Title</button>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="message">
+                            <input type="hidden" name="order_direction" value="desc">
+                            <button type="submit">Message</button>
+                        </form>
+                    </th>
                     <th>Image</th>
                 </tr>
             </thead>
@@ -80,7 +91,6 @@
             {% endif %}
             </tbody>
         </table>
-    </form>
     </main>
     <footer class="footer-container"></footer>
 </body>

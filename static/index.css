@@ -15,6 +15,21 @@ p{
     color: #f7f7f7f7;
 }
 
+.sorting-container button{
+    background: none;
+    border: none;
+    color: #f7f7f7f7;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sorting-container button:hover{
+    opacity: 0.7;
+}
+
 .img-container{
     background-image: url(images/indexheader.jpg);
     height: 200px;
