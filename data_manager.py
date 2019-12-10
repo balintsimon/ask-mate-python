@@ -357,3 +357,13 @@ def get_user_password(cursor, username):
     password = cursor.fetchone()
     return password
 
+@connection.connection_handler
+def get_user(cursor, username):
+    cursor.execute("""
+    SELECT name, password FROM users
+    WHERE name = %(username)s
+    """,
+    {'username': username})
+
+    user = cursor.fetchone()
+    return user

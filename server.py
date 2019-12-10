@@ -43,7 +43,10 @@ def registration():
     if request.form.get('password') != request.form.get('confirm-password'):
         return render_template('register.html', error="Password and Confirm password doesn't match!")
     password = util.hash_password(request.form.get('password'))
-    user = data_manager.create_user(request.form.get('username'), password)
+    username = request.form.get('username')
+    if data_manager.get_user(username):
+        return render_template('register.html', error='This username already exists!')
+    user = data_manager.create_user(username, password)
     if user is False:
         return render_template('register.html', error='This username already exists!')
     return redirect(url_for('login'))
