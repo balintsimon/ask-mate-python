@@ -70,7 +70,8 @@ DROP SEQUENCE IF EXISTS public.users_id_seq;
 CREATE TABLE users (
     id serial NOT NULL,
     name varchar(50) UNIQUE,
-    password text,
+    password varchar(60) UNIQUE,
+    registration_date timestamp without time zone,
     reputation integer
 );
 
@@ -110,9 +111,8 @@ ALTER TABLE ONLY question_tag
 ALTER TABLE ONLY users
     ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
-
-ALTER TABLE ONLY users ALTER COLUMN reputation SET DEFAULT 0;
-
+ALTER TABLE ONLY users
+    ALTER COLUMN reputation SET DEFAULT 0;
 
 INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
 INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
@@ -147,5 +147,5 @@ INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
 
-INSERT INTO users VALUES(0, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' , 0);
+INSERT INTO users VALUES(0, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' ,'2019-12-01 08:00:00', 0);
 
