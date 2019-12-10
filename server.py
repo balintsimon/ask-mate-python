@@ -29,32 +29,37 @@ def index():
 
 
 @app.route('/list')
-def show_questions():
-    LABEL = 0
-    ORDER = 1
-    try:
-        label_to_sortby = request.args.getlist('sorting')[LABEL]
-        if label_to_sortby == None:  # if has no value, request.args returns empty dict with value None
-            raise ValueError
-    except:
-        label_to_sortby = "submission_time"
+def sort():
+    return render_template('list.html')
 
-    try:
-        order = request.args.getlist('sorting')[ORDER]
-        if order == None:
-            raise ValueError
-    except (IndexError, ValueError):
-        order = "DESC"
 
-    data = data_manager.get_all_questions(label_to_sortby, order)
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html",
-                           all_questions=data,
-                           file_labels=labels,
-                           order={"DESC": "Descending", "ASC": "Ascending"},
-                           userpick_label=label_to_sortby,
-                           userpick_order=order,
-                           )
+# @app.route('/list')
+# def show_questions():
+#     LABEL = 0
+#     ORDER = 1
+#     try:
+#         label_to_sortby = request.args.getlist('sorting')[LABEL]
+#         if label_to_sortby == None:  # if has no value, request.args returns empty dict with value None
+#             raise ValueError
+#     except:
+#         label_to_sortby = "submission_time"
+#
+#     try:
+#         order = request.args.getlist('sorting')[ORDER]
+#         if order == None:
+#             raise ValueError
+#     except (IndexError, ValueError):
+#         order = "DESC"
+#
+#     data = data_manager.get_all_questions(label_to_sortby, order)
+#     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
+#     return render_template("list.html",
+#                            all_questions=data,
+#                            file_labels=labels,
+#                            order={"DESC": "Descending", "ASC": "Ascending"},
+#                            userpick_label=label_to_sortby,
+#                            userpick_order=order,
+#                            )
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])

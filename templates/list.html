@@ -21,7 +21,6 @@
     <div class="navigator-container">
         <nav>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
-            <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
         <div class="navigator-float">
             <form action="/list" method="GET">
                 <label for="sorting"></label>
@@ -50,14 +49,17 @@
         </nav>
     </div>
     <main>
+    <form action="/list">
+        <input id="prodId" name="order_by" type="hidden" value="xm234jq">
         {% if all_questions %}
         <table class="table-container">
             <thead>
+
                 <tr>
                     <th>Submission time</th>
                     <th>Views</th>
                     <th>Votes</th>
-                    <th>Title</th>
+                    <th><button type="submit">Title</button></th>
                     <th>Message</th>
                     <th>Image</th>
                 </tr>
@@ -78,6 +80,7 @@
             {% endif %}
             </tbody>
         </table>
+    </form>
     </main>
     <footer class="footer-container"></footer>
 </body>
