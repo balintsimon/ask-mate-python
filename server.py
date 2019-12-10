@@ -36,6 +36,12 @@ def login():
     return redirect(url_for('index'))
 
 
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for("login"))
+
+
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     if request.method == 'GET':
