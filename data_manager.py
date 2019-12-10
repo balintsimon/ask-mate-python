@@ -110,15 +110,16 @@ def upload_image_to_question(cursor, question_id, image_name):
 def write_new_question_to_database(cursor, new_question):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
-                INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s); 
+                INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_name)
+                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s), %(user_name)s; 
                 """,
                    {"time": dt,
                     "view_number": 0,
                     "vote_number": 0,
                     "title": new_question['title'],
                     "message": new_question['message'],
-                    "image": new_question["image"]
+                    "image": new_question["image"],
+                    "user_name": new_question["user_name"]
                     })
 
 
@@ -127,16 +128,18 @@ def write_new_answer_to_database(cursor, question_id, answer):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_answer = answer["message"]
     new_image = answer["image"]
+    user_name = answer["user_name"]
     cursor.execute("""
-                    INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-                    VALUES (%(time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s)
+                    INSERT INTO answer (submission_time, vote_number, question_id, message, image, user_name)
+                    VALUES (%(time)s, %(vote_number)s, %(question_id)s, %(message)s, %(image)s, %(user_name)s)
                     """,
                    {
                        "time": dt,
                        "vote_number": 0,
                        "question_id": question_id,
                        "message": new_answer,
-                       "image": new_image
+                       "image": new_image,
+                       "user_name": user_name
                    })
 
 
@@ -150,14 +153,15 @@ def write_new_comment_to_database(cursor, data):
         data.update({"answer_id": None})
 
     cursor.execute("""
-                    INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count)
-                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s);
+                    INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_name)
+                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s), %(user_name)s;
                     """,
                    {"question_id": data["question_id"],
                     "answer_id": data["answer_id"],
                     "message": data["message"],
                     "time": dt,
-                    "edit": 0})
+                    "edit": 0,
+                    "user_name": data["user_name"]})
 
 
 @connection.connection_handler
@@ -327,3 +331,29 @@ def find_comments(cursor, question_id):
 
     comments = cursor.fetchall()
     return comments
+
+
+@connection.connection_handler
+def create_user(cursor, username, password):
+    dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        cursor.execute("""
+        INSERT INTO users
+        VALUES (DEFAULT , %(username)s, %(password)s, %(registration_time)s, DEFAULT);
+        """, {'username': username,
+              'password': password,
+              'registration_time': dt})
+    except psycopg2.errors.UniqueViolation:
+        return False
+    return True
+
+
+@connection.connection_handler
+def get_user_password(cursor, username):
+    cursor.execute("""
+                    SELECT password FROM users
+                    WHERE name = %(username)s;
+                    """, {'username': username})
+    password = cursor.fetchone()
+    return password
+
