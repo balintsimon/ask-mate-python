@@ -41,14 +41,16 @@
         <div class="content">
             <div class="msg">{{ question['message'] | safe }}</div>
             <div class="navbar">
-                <p>{{ question["username"] }}</p>
+                <p>{{ question["user_name"] }}</p>
                 <p>{{ question['submission_time'] }}</p>
 
                 {% if not addinganswer %}
-                    <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
+                    <div class="bindedtouser" style="display:none">
+                        <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
                         <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
                         </form>
-                    <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
+                        <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -111,3 +113,15 @@
 
 </body>
 </html>
+
+<script defer>
+    function showNavButtons(){
+        navbtns.style.display = "block"
+    }
+    {% if session["username"] %}
+        let navbtns = document.getElementsByClassName("bindedtouser");
+        showNavButtons()
+    {% endif %}
+
+
+</script>
