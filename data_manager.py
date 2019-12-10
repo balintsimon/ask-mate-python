@@ -330,10 +330,10 @@ def find_comments(cursor, question_id):
 
 
 @connection.connection_handler
-def sort_questions(cursor, order_by):
+def sort_questions(cursor, order_by, order_direction):
     cursor.execute(sql.SQL("""
                     SELECT * FROM question
-                    ORDER BY {0} ;""").format(sql.Identifier(order_by)))
+                    ORDER BY {0} {1};""").format(sql.Identifier(order_by), sql.SQL(order_direction)))
 
     data = cursor.fetchall()
     return data

@@ -21,12 +21,12 @@ def index():
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
                            all_questions=data,
-                           file_labels=labels,)
+                           file_labels=labels)
 
 
 @app.route('/list')
 def sort():
-    data = data_manager.sort_questions(request.args.get('order_by'))
+    data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template('list.html', all_questions=data, file_labels=labels)
 

@@ -15,19 +15,50 @@ p{
     color: #f7f7f7f7;
 }
 
-.sorting-container button{
+.sorting-container{
+    display: flex;
+    justify-content: center;
+}
+
+.btn-group button{
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: block;
+}
+
+.sorting-container label{
     background: none;
     border: none;
     color: #f7f7f7f7;
     text-decoration: none;
-    cursor: pointer;
     font-family: 'Permanent Marker', cursive;
     font-size: 20px;
     font-weight: bold;
+    padding-top: 5px;
 }
 
-.sorting-container button:hover{
-    opacity: 0.7;
+.fa-sort-down{
+    margin-top: -8px;
+}
+
+.fa-sort-up{
+    margin-bottom: -10px;
+    box-sizing: content-box;
+    background-clip: content-box;
+}
+
+.fa-sort-up, .fa-sort-down{
+    color: #f7f7f7f7;
+    margin-left: 20px;
+    font-size: 30px;
+    background-clip: content-box;
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.fa-sort-up:hover, .fa-sort-down:hover{
+    color: #DC5947;
 }
 
 .img-container{

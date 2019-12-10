@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to AskMate!</title>
+    <script src="../static/JS/ui.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/static/index.css">
     <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
@@ -20,16 +21,16 @@
     </header>
     <div class="navigator-container">
         <nav>
-            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
-        <form action="/search" method="get">
+            <form action="/search" method="get">
             <div class="search-box">
-                <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
+                <input  class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
                 <label for="search-bar"></label>
                 <button class="search-btn" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-        </form>
+            </form>
+            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
         </nav>
     </div>
     <main>
@@ -40,36 +41,71 @@
                     <th>
                         <form class="sorting-container" action="/list">
                             <input id="title-search" name="order_by" type="hidden" value="submission_time">
-                            <input type="hidden" name="order_direction" value="desc">
-                            <button type="submit">Submission Time</button>
+                            <label for="title-search">Time</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
                         </form>
                     </th>
                     <th>
                         <form class="sorting-container" action="/list">
                             <input id="title-search" name="order_by" type="hidden" value="view_number">
-                            <input type="hidden" name="order_direction" value="desc">
-                            <button type="submit">Views</button>
+                            <label for="title-search">Views</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
                         </form>
                     </th>
                     <th>
                         <form class="sorting-container" action="/list">
                             <input id="title-search" name="order_by" type="hidden" value="vote_number">
-                            <input type="hidden" name="order_direction" value="desc">
-                            <button type="submit">Votes</button>
+                            <label for="title-search">Votes</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
                         </form>
                     </th>
                     <th>
                         <form class="sorting-container" action="/list">
                             <input id="title-search" name="order_by" type="hidden" value="title">
-                            <input type="hidden" name="order_direction" value="desc">
-                            <button type="submit">Title</button>
+                            <label for="title-search">Title</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
                         </form>
                     </th>
                     <th>
                         <form class="sorting-container" action="/list">
                             <input id="title-search" name="order_by" type="hidden" value="message">
-                            <input type="hidden" name="order_direction" value="desc">
-                            <button type="submit">Message</button>
+                            <label for="title-search">Message</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
                         </form>
                     </th>
                     <th>Image</th>
