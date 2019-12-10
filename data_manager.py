@@ -111,7 +111,7 @@ def write_new_question_to_database(cursor, new_question):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_name)
-                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s), %(user_name)s; 
+                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s, %(user_name)s); 
                 """,
                    {"time": dt,
                     "view_number": 0,
