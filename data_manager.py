@@ -1,7 +1,7 @@
 import csv
 import os
 
-from psycopg2 import sql
+from psycopg2 import sql, errorcodes, errors
 
 import connection
 import psycopg2

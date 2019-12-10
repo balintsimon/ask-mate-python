@@ -12,3 +12,4 @@ def verify_password(plain_text_password, hashed_password):
         return False
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+

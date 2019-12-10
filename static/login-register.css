@@ -1,0 +1,88 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+body{
+    background-image: url(images/indexheader.jpg);
+}
+
+.form-container h1{
+    margin-bottom: 50px;
+    color: #f7f7f7f7;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.error{
+    color: #9C1A1C;
+    font-size: 20px;
+    text-align: center;
+}
+
+.form-container{
+    background: #0B2329;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    padding: 60px;
+    text-align: center;
+    width: 300px;
+    height: 400px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 10px #222;
+
+}
+
+.form-container input[type="text"], .form-container input[type="password"]{
+    background: none;
+    margin: 25px auto;
+    display: block;
+    text-align: center;
+    padding: 14px 20px;
+    border: 2px solid #3498db;
+    width: 200px;
+    outline: none;
+    color: #f7f7f7f7;
+    border-radius: 24px;
+    transition: 0.25s;
+}
+
+.form-container input[type="text"]:focus, .form-container input[type="password"]:focus{
+    width: 250px;
+    border-color: #f7f7f7f7;
+}
+
+.form-container button{
+    background: none;
+    margin: 25px auto;
+    display: block;
+    text-align: center;
+    padding: 14px 30px;
+    border: 2px solid #f7f7f7f7;
+    outline: none;
+    color: #f7f7f7f7;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+
+.form-container button:hover{
+    background: #f7f7f7;
+    color: #222;
+}
+
+.form-container p{
+    color: #f7f7f7f7;
+    margin-bottom: 5px;
+}
+
+.form-container a{
+    color: #f7f7f7f7;
+    font-weight: bold;
+}
