@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="static/login-register.css">
+</head>
+<body>
+<div class="form-container">
+    <h1>Login</h1>
+    {% if error %}
+        <h2 class="error">Invalid username or password!</h2>
+    {% endif %}
+    <form method="post">
+        <label for="username"></label>
+        <input type="text" name="username" id="username" placeholder="Username" required autocomplete="off">
+        <label for="password"></label>
+        <input type="password" name="password" id="password" placeholder="Password" required autocomplete="off">
+        <button type="submit">Login</button>
+        <p>Don't have an AskMate account?</p>
+        <a href="{{ url_for('registration') }}">Sign Up</a>
+    </form>
+</div>
+</body>
+</html>

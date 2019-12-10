@@ -15,13 +15,7 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS pk_ques
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.tag DROP CONSTRAINT IF EXISTS pk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_id CASCADE;
-
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CASCADE;
-ALTER TABLE IF EXISTS ONLY public.question DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
-ALTER TABLE IF EXISTS ONLY public.answer DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
-ALTER TABLE IF EXISTS ONLY public.comment DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
-
-
 
 DROP TABLE IF EXISTS public.question;
 DROP SEQUENCE IF EXISTS public.question_id_seq;
@@ -33,8 +27,7 @@ CREATE TABLE question (
     title text,
     message text,
     image text,
-    user_id integer,
-    voted_answer_id integer
+    user_name varchar(50)
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -46,7 +39,7 @@ CREATE TABLE answer (
     question_id integer,
     message text,
     image text,
-    user_id integer
+    user_name varchar(50)
 );
 
 DROP TABLE IF EXISTS public.comment;
@@ -58,7 +51,7 @@ CREATE TABLE comment (
     message text,
     submission_time timestamp without time zone,
     edited_count integer,
-    user_id integer
+    user_name varchar(50)
 );
 
 
@@ -80,10 +73,13 @@ DROP SEQUENCE IF EXISTS public.users_id_seq;
 CREATE TABLE users (
     id serial NOT NULL,
     name varchar(50) UNIQUE,
-    password varchar(60) UNIQUE,
+    password varchar(60),
     registration_date timestamp without time zone,
     reputation integer
 );
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);
@@ -94,6 +90,9 @@ ALTER TABLE ONLY comment
 ALTER TABLE ONLY question
     ADD CONSTRAINT pk_question_id PRIMARY KEY (id);
 
+ALTER TABLE ONLY question
+    ADD CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(name);
+
 ALTER TABLE ONLY question_tag
     ADD CONSTRAINT pk_question_tag_id PRIMARY KEY (question_id, tag_id);
 
@@ -103,8 +102,14 @@ ALTER TABLE ONLY tag
 ALTER TABLE ONLY comment
     ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
 
+ALTER TABLE ONLY comment
+    ADD CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(name);
+
 ALTER TABLE ONLY answer
     ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
+
+ALTER TABLE ONLY answer
+    ADD CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(name);
 
 ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
@@ -116,22 +121,14 @@ ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id);
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
+    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
 
 ALTER TABLE ONLY users
-    ALTER COLUMN reputation SET DEFAULT 0;
+    ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
 
-ALTER TABLE ONLY comment
-    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);
-
-ALTER TABLE ONLY answer
-    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);
-
-ALTER TABLE ONLY question
-    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);
-
-ALTER TABLE ONLY question
-    ADD CONSTRAINT fk_voted_answer_id FOREIGN KEY (voted_answer_id) REFERENCES answer(id);
+ALTER TABLE ONLY users
+ALTER COLUMN reputation
+    SET DEFAULT 0;
 
 INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
 INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
@@ -166,6 +163,5 @@ INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
 
-INSERT INTO users VALUES(1, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' ,'2019-12-01 08:00:00', 0);
-SELECT pg_catalog.setval('users_id_seq', 1, true);
+INSERT INTO users VALUES(0, 'admin', '$2b$12$8rdtcWmFIfRzpEspyjJBReFoNF463wpCy2UFKZiuepVXdMOy8Eva6' ,'2019-12-01 08:00:00', 0);
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+    <link rel="stylesheet" type="text/css" href="static/login-register.css">
+</head>
+<body>
+<div class="form-container">
+    <h1>Sign up</h1>
+    <h2 class="error">{{ error }}</h2>
+    <form method="post">
+        <label for="username"></label>
+        <input type="text" name="username" id="username" placeholder="Username" required autocomplete="off">
+        <label for="password"></label>
+        <input type="password" name="password" id="password" placeholder="Password" required autocomplete="off">
+        <label for="confirm-password"></label>
+        <input type="password" name="confirm-password" id="confirm-password" placeholder="Confirm password" required autocomplete="off">
+        <button type="submit">Create Account</button>
+    </form>
+</div>
+</body>
+</html>
