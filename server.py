@@ -10,8 +10,6 @@ app.config["IMAGE_UPLOADS"] = "./static/images"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
-QUESTIONS_FILE_PATH = "./sample_data/question.csv"
-ANSWERS_FILE_PATH = "./sample_data/answer.csv"
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
@@ -53,44 +51,19 @@ def registration():
 def index():
     if g.user:
         data = data_manager.get_latest_questions()
-        labels = ["submission_time", "view_number", "vote_number", "title", "message"]
         return render_template("list.html",
-                               all_questions=data,
-                               file_labels=labels,
-                               order={"DESC": "Descending", "ASC": "Ascending"},
-                               userpick_label="submission_time",
-                               userpick_order="DESC",
-                               )
+                               all_questions=data)
     return redirect(url_for('login'))
 
 
 @app.route('/list')
-def show_questions():
-    LABEL = 0
-    ORDER = 1
-    try:
-        label_to_sortby = request.args.getlist('sorting')[LABEL]
-        if label_to_sortby == None:  # if has no value, request.args returns empty dict with value None
-            raise ValueError
-    except:
-        label_to_sortby = "submission_time"
-
-    try:
-        order = request.args.getlist('sorting')[ORDER]
-        if order == None:
-            raise ValueError
-    except (IndexError, ValueError):
-        order = "DESC"
-
-    data = data_manager.get_all_questions(label_to_sortby, order)
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template("list.html",
-                           all_questions=data,
-                           file_labels=labels,
-                           order={"DESC": "Descending", "ASC": "Ascending"},
-                           userpick_label=label_to_sortby,
-                           userpick_order=order,
-                           )
+def sort():
+    if request.args.get('order_by') is None:
+        data = data_manager.get_all_questions()
+    else:
+        data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
+    return render_template('list.html',
+                           all_questions=data)
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -106,22 +79,8 @@ def add_new_question():
         username = session['user']
         new_question.update({"user_name": username})
         data_manager.write_new_question_to_database(new_question)
-        return redirect('/list')
+        return redirect('/')
     return render_template('add_question_or_answer.html')
-
-
-"""
-@app.route('/question/<question_id>/new-answerD', methods=['GET', 'POST'])  #### del the D from the end
-def add_new_answer(question_id):
-    if request.method == 'POST':
-        new_answer = dict(request.form)
-        username = session['user']
-        new_answer.update({"user_name": username})
-        data_manager.write_new_answer_to_database(question_id, new_answer)
-        return redirect(f'/questions/{question_id}')
-
-    return render_template('add_question_or_answer.html')
-"""
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
@@ -267,29 +226,6 @@ def delete_question(question_id):
     return redirect('/list')
 
 
-'''@app.route('/upload-image', methods=['GET', 'POST'])
-def upload_image():
-    if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
-
-            if image.filename == "":
-                return redirect(request.referrer)
-
-            if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                question_id = request.form.get("question_id")
-                data_manager.upload_image_to_question(question_id, filename)
-                print("Image saved")
-                return redirect(request.referrer)
-
-            else:
-                print("not allowed image")
-                return redirect(request.referrer)
-'''
-
-
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_new_answer_with_image(question_id):
     if request.method == "POST":
@@ -320,28 +256,12 @@ def add_new_answer_with_image(question_id):
 
 @app.route('/search')
 def search_question():
-    LABEL = 0
-    ORDER = 1
-    try:
-        label_to_sortby = request.args.getlist('sorting')[LABEL]
-    except:
-        label_to_sortby = "submission_time"
-    try:
-        order = request.args.getlist('sorting')[ORDER]
-        order = bool(order == "True")
-    except:
-        order = True
-
     labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     search_phrase = request.args.get('q')
     search_results = data_manager.search_question(search_phrase.lower())
     return render_template("list.html",
                            all_questions=search_results,
-                           file_labels=labels,
-                           order={True: "Descending", False: "Ascending"},
-                           userpick_label=label_to_sortby,
-                           userpick_order=order,
-                           )
+                           file_labels=labels)
 
 
 if __name__ == '__main__':

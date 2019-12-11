@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to AskMate!</title>
+    <script src="../static/JS/ui.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/static/index.css">
     <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
     <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
@@ -22,44 +23,93 @@
         <nav>
             <p>Hello {{ session['user'] }}</p>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
-            <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
-        <div class="navigator-float">
-            <form action="/list" method="GET">
-                <label for="sorting"></label>
-                <select class="sorting" name="sorting" id="sorting">
-                    {% for label in file_labels %}
-                        <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-                <select name="sorting">
-                    {%for bool in order %}
-                        <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Sort</button>
-            </form>
-        </div>
+            <a id="last-nav" href="{{url_for('sort') }}">Show all questions</a>
         <form action="/search" method="get">
             <div class="search-box">
-                <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
+                <input  class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
                 <label for="search-bar"></label>
                 <button class="search-btn" type="submit">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
-        </form>
+            </form>
         </nav>
     </div>
     <main>
         {% if all_questions %}
-        <table class="table-container">
+            <table class="table-container">
             <thead>
                 <tr>
-                    <th>Submission time</th>
-                    <th>Views</th>
-                    <th>Votes</th>
-                    <th>Title</th>
-                    <th>Message</th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="submission_time">
+                            <label for="title-search">Time</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="view_number">
+                            <label for="title-search">Views</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="vote_number">
+                            <label for="title-search">Votes</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="title">
+                            <label for="title-search">Title</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </th>
+                    <th>
+                        <form class="sorting-container" action="/list">
+                            <input id="title-search" name="order_by" type="hidden" value="message">
+                            <label for="title-search">Message</label>
+                            <div class="btn-group">
+                                <button class="asc" name="order_direction" value="asc" type="submit">
+                                    <i class="fas fa-sort-up"></i>
+                                </button>
+                                <button class="desc" name="order_direction" value="desc" type="submit">
+                                    <i class="fas fa-sort-down"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </th>
                     <th>Image</th>
                 </tr>
             </thead>
