@@ -16,8 +16,9 @@ p{
 }
 
 .fa-times{
-    color: #222;
+    color: #f7f7f7f7;
     margin: 0 auto;
+    float: right;
 }
 
 .last-nav-link{
