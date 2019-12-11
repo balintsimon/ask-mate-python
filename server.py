@@ -206,8 +206,8 @@ def edit_comment(comment_id):
 def vote_questions(vote_method, question_id):
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
-    user.update({"user_name": user_name})
-    if data_manager.check_if_user_voted_on_question(user_name, question_id):
+    user.update({"user_name": user_name, "vote_method": vote_method})
+    if data_manager.check_if_user_voted_on_question(user_name, question_id, vote_method):
         return redirect(url_for("manage_questions", question_id=question_id))
     else:
         data_manager.vote_question(vote_method, question_id, user)
@@ -221,9 +221,9 @@ def vote_answers(vote_method, answer_id):
 
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
-    user.update({"user_name": user_name})
+    user.update({"user_name": user_name, "vote_method": vote_method})
 
-    if data_manager.check_if_user_voted_on_answer(user_name, answer_id):
+    if data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method):
         return redirect(f'/questions/{question_id}')
     else:
         data_manager.vote_answer(vote_method, answer_id, user)
