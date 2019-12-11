@@ -364,3 +364,17 @@ def sort_questions(cursor, order_by, order_direction):
 
     data = cursor.fetchall()
     return data
+
+
+@connection.connection_handler
+def get_user(cursor, username):
+    cursor.execute("""
+    SELECT name, password FROM users
+    WHERE name = %(username)s
+    """,
+    {'username': username})
+
+    user = cursor.fetchone()
+    return user
+
+
