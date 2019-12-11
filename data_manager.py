@@ -15,8 +15,7 @@ def get_all_questions(cursor, sortby, order):
     cursor.execute(sql.SQL("""
                     SELECT * from question
                     ORDER BY {0} {1}""").format(sql.Identifier(sortby),
-                                                sql.SQL(
-                                                    order)))  # careful with this, no userinput allowed to go into here
+                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
     data = cursor.fetchall()
     return data
 
@@ -46,7 +45,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
-                   {'answer_id': answer_id});
+       {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -112,7 +111,7 @@ def write_new_question_to_database(cursor, new_question):
     dt = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute("""
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image, user_name)
-                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s), %(user_name)s; 
+                VALUES (%(time)s, %(view_number)s, %(vote_number)s, %(title)s, %(message)s, %(image)s, %(user_name)s); 
                 """,
                    {"time": dt,
                     "view_number": 0,
@@ -155,7 +154,7 @@ def write_new_comment_to_database(cursor, data):
 
     cursor.execute("""
                     INSERT INTO comment (question_id, answer_id, message, submission_time, edited_count, user_name)
-                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s), %(user_name)s;
+                    VALUES (%(question_id)s, %(answer_id)s, %(message)s, %(time)s, %(edit)s, %(user_name)s);
                     """,
                    {"question_id": data["question_id"],
                     "answer_id": data["answer_id"],
@@ -322,14 +321,13 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
-
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
                      WHERE question_id = %(question_id)s
                      ORDER BY id;""",
-                   {'question_id': question_id})
+                    {'question_id': question_id})
 
     comments = cursor.fetchall()
     return comments
@@ -359,6 +357,16 @@ def get_user_password(cursor, username):
     password = cursor.fetchone()
     return password
 
+@connection.connection_handler
+def get_user(cursor, username):
+    cursor.execute("""
+    SELECT name, password FROM users
+    WHERE name = %(username)s
+    """,
+    {'username': username})
+
+    user = cursor.fetchone()
+    return user
 
 @connection.connection_handler
 def get_user_attributes(cursor, username=None):
