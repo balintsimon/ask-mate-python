@@ -41,11 +41,11 @@
         <div class="content">
             <div class="msg">{{ question['message'] | safe }}</div>
             <div class="navbar">
-                <p>{{ question["user_name"] }}</p>
-                <p>{{ question['submission_time'] }}</p>
+                <span>{{ question["user_name"] }}</span>
+                <span>{{ question['submission_time'] }}</span>
 
                 {% if not addinganswer %}
-                    <div class="bindedtouser" style="display:none">
+                    <div class="{{ question['user_name'] }} admin" style="display:none;">
                         <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
                         <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
                         </form>
@@ -74,11 +74,13 @@
                         <span>(Edited {{ comment["edited_count"] }} times.)</span>
                     {% endif %}
                     {% if not addinganswer %}
+                    <div class="{{ comment['user_name'] }} admin" style="display:none">
                         <a href="{{ url_for('delete_comment', question_id=question_id, comment_id=comment['id']) }}"
                            onclick="return confirm('Are you sure, you want to delete this comment?')">
                             <img src="/static/images/recyclebin.jpg" height="20" width="20">
                         </a>
                         <a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -114,13 +116,17 @@
 </body>
 </html>
 
-<script defer>
-    function showNavButtons(){
-        navbtns.style.display = "block"
+<script>
+    function showNavButtons(tag){
+        tag.style.display = "block"
     }
-    {% if session["username"] %}
-        let navbtns = document.getElementsByClassName("bindedtouser");
-        showNavButtons()
+    {% if session["user"] %}
+        let username = {{ session['user']|tojson }};
+        let navbtns = document.getElementsByClassName(username);
+
+        for (item of navbtns){
+            showNavButtons(item)
+        }
     {% endif %}
 
 
