@@ -42,7 +42,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
-       {'answer_id': answer_id});
+                   {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -318,13 +318,14 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
+
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
                      WHERE question_id = %(question_id)s
                      ORDER BY id;""",
-                    {'question_id': question_id})
+                   {'question_id': question_id})
 
     comments = cursor.fetchall()
     return comments
@@ -371,13 +372,14 @@ def get_user(cursor, username):
     SELECT name, password FROM users
     WHERE name = %(username)s
     """,
-    {'username': username})
+                   {'username': username})
 
     user = cursor.fetchone()
     return user
 
+
 @connection.connection_handler
-def get_user_attributes(cursor, username=None):
+def get_user_list(cursor, username=None):
     if username:
         cursor.execute("""
             SELECT u.reputation, u.name, date(u.registration_date) as member_since,
@@ -392,12 +394,14 @@ GROUP BY u.id;
                        {'username': username})
     else:
         cursor.execute("""
-SELECT u.reputation, u.name, date(u.registration_date) as member_since,
+SELECT u.id, u.reputation, u.name, date(u.registration_date) as member_since,
        count(DISTINCT q.id) as question,
-count(DISTINCT a.id) as answer
+count(DISTINCT a.id) as answer,
+count(DISTINCT c.id) as comment
 from users as u
 left outer join question q on u.name = q.user_name
 left outer join answer a on u.name = a.user_name
+left outer join comment c on u.name = c.user_name
 GROUP BY u.id""")
 
     all_user_attribute = cursor.fetchall()
@@ -414,3 +418,19 @@ def get_user_id(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
+
+@connection.connection_handler
+def get_user_attributes(cursor, user_id):
+    cursor.execute("""
+    SELECT u.*, a.message, q.title, c.message
+    from users as u
+    left outer join question q on u.name = q.user_name
+    left outer join answer a on u.name = a.user_name
+    left outer join comment c on u.name = c.user_name
+    WHERE u.id = %(user_id)s
+    GROUP BY u.id, a.id, q.id, c.id;
+    """,
+                   {'user_id': user_id})
+    user_attributes = cursor.fetchone()
+    return user_attributes
