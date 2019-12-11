@@ -69,7 +69,7 @@ def index():
 @app.route('/list')
 def sort():
     if request.args.get('order_by') is None:
-        data = data_manager.get_all_questions()
+        data = data_manager.get_all_questions("submission_time", "DESC")
     else:
         data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
     return render_template('list.html',
@@ -201,6 +201,11 @@ def edit_comment(comment_id):
                            method="POST",
                            message=commentdata["message"], )
 
+@app.route('/accept/<question_id>/<accepted_answer_id>')
+def accept_answer(question_id, accepted_answer_id):
+    data_manager.set_new_accepted_answer(question_id, accepted_answer_id)
+    return redirect(url_for('manage_questions', question_id=question_id))
+
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
@@ -257,7 +262,7 @@ def delete_comment(question_id, comment_id):
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
     data_manager.delete_question(question_id)
-    return redirect('/list')
+    return redirect(url_for('index'))
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -298,10 +303,20 @@ def search_question():
                            file_labels=labels)
 
 
-@app.route('/user')
+@app.route('/user', methods=['GET', 'POST'])
 def list_users():
-    all_users = data_manager.get_user_attributes()
-    return render_template('users.html', all_users=all_users)
+    if request.method == 'GET':
+        all_users = data_manager.get_user_list()
+        return render_template('users.html', all_users=all_users)
+
+
+@app.route('/user/<user_id>')
+def get_user_attributes(user_id):
+    user_questions = data_manager.get_user_questions(user_id)
+    user_answers = data_manager.get_user_answers(user_id)
+    user_comments = data_manager.get_user_comments(user_id)
+    return render_template('user_info.html', user_questions=user_questions,user_answers=user_answers,user_comments=user_comments)
+
 
 
 if __name__ == '__main__':

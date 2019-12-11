@@ -10,9 +10,12 @@ from datetime import datetime
 
 
 @connection.connection_handler
-def get_all_questions(cursor):
-    cursor.execute("""
-                    SELECT * FROM question;""")
+def get_all_questions(cursor, sortby, order):
+    order = 'DESC' if order == 'DESC' else 'ASC'
+    cursor.execute(sql.SQL("""
+                    SELECT * from question
+                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
+                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
     data = cursor.fetchall()
     return data
 
@@ -198,9 +201,20 @@ def get_question_by_id(cursor, question_id):
 @connection.connection_handler
 def get_answers_by_question_id(cursor, question_id):
     cursor.execute("""
-                    SELECT * FROM answer
-                    WHERE question_id = %(question_id)s
-                    ORDER BY vote_number DESC, submission_time ASC;
+                    SELECT 
+                        CASE
+                        WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
+                        END as accepted,
+                    answer.id,
+                    answer.submission_time, 
+                    answer.vote_number, 
+                    answer.message, 
+                    answer.question_id, 
+                    answer.image 
+                    FROM answer
+                    LEFT JOIN question ON answer.question_id = question.id
+                    WHERE answer.question_id = %(question_id)s
+                    ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,
                    {'question_id': question_id})
 
@@ -230,8 +244,8 @@ def check_if_user_voted_on_question(cursor, user, question):
                 WHERE user_name = %(user)s AND question_id = %(question)s;
                 """,
                    {
-                   "user": user,
-                   "question": question
+                       "user": user,
+                       "question": question
                    })
 
     result = cursor.fetchone()
@@ -410,13 +424,14 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
+
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
                      WHERE question_id = %(question_id)s
                      ORDER BY id;""",
-                    {'question_id': question_id})
+                   {'question_id': question_id})
 
     comments = cursor.fetchall()
     return comments
@@ -468,28 +483,19 @@ def get_user(cursor, username):
     user = cursor.fetchone()
     return user
 
+
 @connection.connection_handler
-def get_user_attributes(cursor, username=None):
-    if username:
-        cursor.execute("""
-                SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
-                   a.message as answer, c.message as comment
-            FROM users as u
-            left outer join question as q on q.user_name =  u.name
-            left outer join answer as a on a.user_name = u.name
-            left outer join comment as c on c.user_name=u.name
-            WHERE name = %(username)s;
-                """,
-                       {'username': username})
-    else:
-        cursor.execute("""
-        SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
-           a.message as answer, c.message as comment
-    FROM users as u
-    left outer join question as q on q.user_name =  u.name
-    left outer join answer as a on a.user_name = u.name
-    left outer join comment as c on c.user_name=u.name;
-        """)
+def get_user_list(cursor):
+    cursor.execute("""
+SELECT u.id, u.reputation, u.name, date(u.registration_date) as member_since,
+       count(DISTINCT q.id) as question,
+count(DISTINCT a.id) as answer,
+count(DISTINCT c.id) as comment
+from users as u
+left outer join question q on u.name = q.user_name
+left outer join answer a on u.name = a.user_name
+left outer join comment c on u.name = c.user_name
+GROUP BY u.id""")
 
     all_user_attribute = cursor.fetchall()
     return all_user_attribute
@@ -505,6 +511,63 @@ def get_user_id(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
+
+@connection.connection_handler
+def get_user_attributes(cursor, user_id):
+    cursor.execute("""
+    SELECT u.*, a.message, q.title, c.message
+    from users as u
+    left outer join question q on u.name = q.user_name
+    left outer join answer a on u.name = a.user_name
+    left outer join comment c on u.name = c.user_name
+    WHERE u.id = %(user_id)s
+    GROUP BY u.id, a.id, q.id, c.id;
+    """,
+                   {'user_id': user_id})
+    user_attributes = cursor.fetchall()
+    return user_attributes
+
+
+@connection.connection_handler
+def get_user_questions(cursor, user_id):
+    cursor.execute("""
+    SELECT q.*
+    from question as q
+    join users u on u.name = q.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_questions = cursor.fetchall()
+    return user_questions
+
+
+@connection.connection_handler
+def get_user_answers(cursor, user_id):
+    cursor.execute("""
+    SELECT a.*
+    from answer as a
+    join users u on u.name = a.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_answers = cursor.fetchall()
+    return user_answers
+
+
+@connection.connection_handler
+def get_user_comments(cursor, user_id):
+    cursor.execute("""
+    SELECT c.*
+    from comment as c
+    join users u on u.name = c.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_comments = cursor.fetchone()
+    return user_comments
+
+
 @connection.connection_handler
 def get_user_id_by_name(cursor, username):
     cursor.execute("""
@@ -515,3 +578,13 @@ def get_user_id_by_name(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
+@connection.connection_handler
+def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
+    cursor.execute("""
+        UPDATE question
+        SET accepted_answer = %(answer)s
+        WHERE id = %(qid)s;
+        """,
+       {"answer":accepted_answer_id, "qid": question_id}
+       )

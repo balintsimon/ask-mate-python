@@ -16,6 +16,7 @@ ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_ques
 ALTER TABLE IF EXISTS ONLY public.tag DROP CONSTRAINT IF EXISTS pk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.question DROP CONSTRAINT IF EXISTS fk_answer_id CASCADE;
 
 DROP TABLE IF EXISTS public.question;
 DROP SEQUENCE IF EXISTS public.question_id_seq;
@@ -27,7 +28,8 @@ CREATE TABLE question (
     title text,
     message text,
     image text,
-    user_name varchar(50)
+    user_name varchar(50),
+    accepted_answer integer
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -144,6 +146,9 @@ ALTER TABLE ONLY votes
 
 ALTER TABLE ONLY votes
     ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
+
+ALTER TABLE ONLY question
+    ADD CONSTRAINT fk_answer_id FOREIGN KEY (accepted_answer) REFERENCES answer(id);
 
 ALTER TABLE ONLY users
 ALTER COLUMN reputation
