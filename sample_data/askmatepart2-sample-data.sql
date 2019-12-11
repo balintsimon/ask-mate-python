@@ -78,6 +78,16 @@ CREATE TABLE users (
     reputation integer
 );
 
+DROP TABLE IF EXISTS public.votes;
+CREATE TABLE votes (
+    id serial NOT NULL,
+    user_id integer NOT NULL,
+    user_name varchar(50) NOT NULL,
+    question_id integer,
+    answer_id integer,
+    comment_id integer
+);
+
 ALTER TABLE ONLY users
     ADD CONSTRAINT pk_user_id PRIMARY KEY (id);
 
@@ -119,6 +129,21 @@ ALTER TABLE ONLY comment
 
 ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id);
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT fk_user_name FOREIGN KEY (user_name) REFERENCES users(name);
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
+
+ALTER TABLE ONLY votes
+    ADD CONSTRAINT fk_comment_id FOREIGN KEY (comment_id) REFERENCES comment(id);
 
 ALTER TABLE ONLY users
 ALTER COLUMN reputation
