@@ -65,6 +65,7 @@
                     {{ comment["message"] }}
                 </div>
                 <div class="navbar">
+                    <span>{{ comment['user_name'] }}</span>
                     <span>{{ comment["submission_time"] }}</span>
                     {% if comment["edited_count"] == None or comment["edited_count"] == 0 %}
                         <span></span>
