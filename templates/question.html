@@ -129,6 +129,13 @@
             showNavButtons(item)
         }
     {% endif %}
+    {% if session["user"] == question["user_name"] %}
+        let acceptbtns = document.getElementsByClassName("acceptbtn");
+        for (item of acceptbtns){
+            item.style.visibility = "visible"
+
+        }
+    {% endif%}
 
 
 </script>

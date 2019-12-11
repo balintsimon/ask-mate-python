@@ -26,11 +26,13 @@
 
 {% block answer %}
     <div class="answerblock">
+        <a class="acceptbtn" id="{{accepted}}" style="visibility:hidden">Accept</a>
         <div class="block">
             <div class="column">
                 <a href='/answer/{{ answer["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a>
                 <p>{{ answer["vote_number"] }}</p>
                 <a href='/answer/{{ answer["id"] }}/vote_down'><img src="/static/images/downvote.png" height="20" width="20"></a>
+
             </div>
             <div style="clear:both;"></div>
 
