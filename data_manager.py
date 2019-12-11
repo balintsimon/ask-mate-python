@@ -10,6 +10,47 @@ from datetime import datetime
 
 
 @connection.connection_handler
+def get_author_by_question_id(cursor, question_id):
+    cursor.execute("""
+        SELECT user_name FROM question
+        WHERE id = %(q_id)s
+    """,
+                   {"qid": question_id})
+    return cursor.fetchone()
+
+
+def calculate_reputation(type, direction, original):
+    repchart_up = {"question": 5, "answer": 10, "accepted": 15}
+    repchart_down = {"question": -2, "answer": -2, "accepted": -15}
+    if direction == "vote_up":
+        rep = repchart_up
+    else:
+        rep = repchart_down
+    original = original+rep[type]
+    return original
+
+
+@connection.connection_handler
+def get_reputation(cursor, username):
+    cursor.execute("""
+        SELECT reputation FROM users
+        WHERE name = %(user)s;
+        """,
+        {"user": username})
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def update_user_reputation(cursor, username, value):
+    cursor.execute("""
+        UPDATE users
+        SET reputation = %(reputation)s
+        WHERE name = %(user)s
+        """,
+        {"user": username, "reputation": value})
+
+
+@connection.connection_handler
 def get_all_questions(cursor, sortby, order):
     order = 'DESC' if order == 'DESC' else 'ASC'
     cursor.execute(sql.SQL("""

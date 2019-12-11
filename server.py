@@ -212,6 +212,16 @@ def vote_questions(vote_method, question_id):
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
     user.update({"user_name": user_name})
+
+    author = data_manager.get_author_by_question_id(question_id)
+    author_repu = data_manager.get_reputation(author)
+    #===============================
+    ########### insert here the back_to_zero_calculator ##########
+    #===========================
+    new_repu = data_manager.calculate_reputation("question", vote_method, author_repu)
+    data_manager.update_user_reputation(author, new_repu)
+
+
     if data_manager.check_if_user_voted_on_question(user_name, question_id):
         return redirect(url_for("manage_questions", question_id=question_id))
     else:
