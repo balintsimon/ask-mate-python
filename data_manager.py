@@ -201,16 +201,20 @@ def get_question_by_id(cursor, question_id):
 @connection.connection_handler
 def get_answers_by_question_id(cursor, question_id):
     cursor.execute("""
-                    SELECT answer.id,
+                    SELECT 
+                        CASE
+                        WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
+                        END as accepted,
+                    answer.id,
                     answer.submission_time, 
                     answer.vote_number, 
                     answer.message, 
                     answer.question_id, 
                     answer.image 
                     FROM answer
-                    JOIN question ON answer.question_id = question.id
+                    LEFT JOIN question ON answer.question_id = question.id
                     WHERE answer.question_id = %(question_id)s
-                    ORDER BY question.accepted_answer DESC, vote_number DESC, submission_time ASC;
+                    ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,
                    {'question_id': question_id})
 
