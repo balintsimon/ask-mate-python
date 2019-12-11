@@ -26,7 +26,10 @@
 
 {% block answer %}
     <div class="answerblock">
-        <a class="acceptbtn" id="{{accepted}}" style="visibility:hidden">Accept</a>
+        <a class="acceptbtn"
+           id="{{accepted}}"
+           style="visibility:hidden"
+           href="{{ url_for('accept_answer', accepted_answer_id=answer['id'], question_id=question['id']) }}">Accept</a>
         <div class="block">
             <div class="column">
                 <a href='/answer/{{ answer["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a>

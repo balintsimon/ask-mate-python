@@ -241,6 +241,11 @@ def edit_comment(comment_id):
                            method="POST",
                            message=commentdata["message"],)
 
+@app.route('/accept/<question_id>/<accepted_answer_id>')
+def accept_answer(question_id, accepted_answer_id):
+    data_manager.set_new_accepted_answer(question_id, accepted_answer_id)
+    return redirect(url_for('manage_questions', question_id=question_id))
+
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):

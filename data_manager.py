@@ -367,3 +367,13 @@ def get_user(cursor, username):
 
     user = cursor.fetchone()
     return user
+
+@connection.connection_handler
+def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
+    cursor.execute("""
+        UPDATE question
+        SET accepted_answer = %(answer)s
+        WHERE id = %(qid)s;
+        """,
+       {"answer":accepted_answer_id, "qid": question_id}
+       )
