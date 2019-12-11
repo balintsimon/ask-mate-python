@@ -10,12 +10,9 @@ from datetime import datetime
 
 
 @connection.connection_handler
-def get_all_questions(cursor, sortby, order):
-    order = 'DESC' if order == 'DESC' else 'ASC'
-    cursor.execute(sql.SQL("""
-                    SELECT * from question
-                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
-                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
+def get_all_questions(cursor):
+    cursor.execute("""
+                    SELECT * FROM question;""")
     data = cursor.fetchall()
     return data
 
@@ -403,6 +400,17 @@ def get_user_password(cursor, username):
     password = cursor.fetchone()
     return password
 
+
+@connection.connection_handler
+def sort_questions(cursor, order_by, order_direction):
+    cursor.execute(sql.SQL("""
+                    SELECT * FROM question
+                    ORDER BY {0} {1};""").format(sql.Identifier(order_by), sql.SQL(order_direction)))
+
+    data = cursor.fetchall()
+    return data
+
+
 @connection.connection_handler
 def get_user(cursor, username):
     cursor.execute("""
@@ -414,6 +422,43 @@ def get_user(cursor, username):
     user = cursor.fetchone()
     return user
 
+@connection.connection_handler
+def get_user_attributes(cursor, username=None):
+    if username:
+        cursor.execute("""
+                SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
+                   a.message as answer, c.message as comment
+            FROM users as u
+            left outer join question as q on q.user_name =  u.name
+            left outer join answer as a on a.user_name = u.name
+            left outer join comment as c on c.user_name=u.name
+            WHERE name = %(username)s;
+                """,
+                       {'username': username})
+    else:
+        cursor.execute("""
+        SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
+           a.message as answer, c.message as comment
+    FROM users as u
+    left outer join question as q on q.user_name =  u.name
+    left outer join answer as a on a.user_name = u.name
+    left outer join comment as c on c.user_name=u.name;
+        """)
+
+    all_user_attribute = cursor.fetchall()
+    return all_user_attribute
+
+
+@connection.connection_handler
+def get_user_id(cursor, username):
+    cursor.execute("""
+    SELECT id from users
+    WHERE name = %(username)s;
+    """,
+                   {'username': username})
+
+    user_id = cursor.fetchone()
+    return user_id
 @connection.connection_handler
 def get_user_id_by_name(cursor, username):
     cursor.execute("""
