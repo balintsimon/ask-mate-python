@@ -245,10 +245,10 @@ def edit_comment(comment_id):
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
     user_name = session["user"]
-    user_id = data_manager.get_user_id_by_name(user_name)
-    user = {"user_id": user_id, "user_name": user_name}
+    user = data_manager.get_user_id_by_name(user_name)
+    user.update({"user_name": user_name})
     if data_manager.check_if_user_voted_on_question(user_name, question_id):
-        pass
+        return redirect(url_for("manage_questions", question_id=question_id))
     else:
         data_manager.vote_question(vote_method, question_id, user)
         return redirect('/list')
@@ -256,10 +256,18 @@ def vote_questions(vote_method, question_id):
 
 @app.route('/answer/<answer_id>/<vote_method>')
 def vote_answers(vote_method, answer_id):
-    data_manager.vote_answer(vote_method, answer_id)
     answer = data_manager.get_answer_by_answer_id(answer_id)
     question_id = answer["question_id"]
-    return redirect(url_for("manage_questions", question_id=question_id))
+
+    user_name = session["user"]
+    user = data_manager.get_user_id_by_name(user_name)
+    user.update({"user_name": user_name})
+
+    if data_manager.check_if_user_voted_on_answer(user_name, answer_id):
+        return redirect(f'/questions/{question_id}')
+    else:
+        data_manager.vote_answer(vote_method, answer_id, user)
+        return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/delete')

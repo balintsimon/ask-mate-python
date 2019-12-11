@@ -230,7 +230,7 @@ def update_question(cursor, question_id, updated_question):
 def check_if_user_voted_on_question(cursor, user, question):
     cursor.execute("""
                 SELECT * FROM votes
-                WHERE user_name = %(user)s && question_id = %(question)d;
+                WHERE user_name = %(user)s AND question_id = %(question)s;
                 """,
                    {
                    "user": user,
@@ -240,21 +240,18 @@ def check_if_user_voted_on_question(cursor, user, question):
     result = cursor.fetchone()
     return result
 
+
 @connection.connection_handler
 def vote_question(cursor, direction, question_id, user):
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, question_id)
+                    VALUES (%(user_id)s, %(user_name)s, %(question_id)s);
+                    """,{
+                       "question_id": question_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name']
+                   })
     if direction == "vote_up":
-        cursor.execute("""
-                        INSERT INTO votes (user_id, user_name, question_id)
-                        VALUES (%(user_id)s, %(user_name)s, %(question_id)s);
-                        """,
-                       {
-                           "question_id": question_id,
-                           "user_id": user['user_id'],
-                           "user_name": user['user_name']
-                       }
-        )
-
-
         cursor.execute("""
                         UPDATE question
                         SET vote_number = vote_number + 1
@@ -296,7 +293,30 @@ def search_question(cursor, search_phrase):
 
 
 @connection.connection_handler
-def vote_answer(cursor, direction, answer_id):
+def check_if_user_voted_on_answer(cursor, user, answer):
+    cursor.execute("""
+                SELECT * FROM votes
+                WHERE user_name = %(user)s AND answer_id = %(answer)s;
+                """,
+                   {
+                   "user": user,
+                   "answer": answer
+                   })
+
+    result = cursor.fetchone()
+    return result
+
+@connection.connection_handler
+def vote_answer(cursor, direction, answer_id, user):
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, answer_id)
+                    VALUES (%(user_id)s, %(user_name)s, %(answer_id)s);
+                    """,{
+                       "answer_id": answer_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name']
+                   })
+
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE answer
@@ -401,3 +421,6 @@ def get_user_id_by_name(cursor, username):
     WHERE name = %(username)s
     """,
                    {"username": username})
+
+    user_id = cursor.fetchone()
+    return user_id
