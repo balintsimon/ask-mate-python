@@ -15,7 +15,8 @@ def get_all_questions(cursor, sortby, order):
     cursor.execute(sql.SQL("""
                     SELECT * from question
                     ORDER BY {0} {1}""").format(sql.Identifier(sortby),
-                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
+                                                sql.SQL(
+                                                    order)))  # careful with this, no userinput allowed to go into here
     data = cursor.fetchall()
     return data
 
@@ -45,7 +46,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
-       {'answer_id': answer_id});
+                   {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -321,13 +322,14 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
+
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
                      WHERE question_id = %(question_id)s
                      ORDER BY id;""",
-                    {'question_id': question_id})
+                   {'question_id': question_id})
 
     comments = cursor.fetchall()
     return comments
@@ -357,3 +359,29 @@ def get_user_password(cursor, username):
     password = cursor.fetchone()
     return password
 
+
+@connection.connection_handler
+def get_user_attributes(cursor, username=None):
+    if username:
+        cursor.execute("""
+                SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
+                   a.message as answer, c.message as comment
+            FROM users as u
+            left outer join question as q on q.user_name =  u.name
+            left outer join answer as a on a.user_name = u.name
+            left outer join comment as c on c.user_name=u.name
+            WHERE name = %(username)s;
+                """,
+                       {'username': username})
+    else:
+        cursor.execute("""
+        SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
+           a.message as answer, c.message as comment
+    FROM users as u
+    left outer join question as q on q.user_name =  u.name
+    left outer join answer as a on a.user_name = u.name
+    left outer join comment as c on c.user_name=u.name;
+        """)
+
+    all_user_attribute = cursor.fetchall()
+    return all_user_attribute
