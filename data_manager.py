@@ -512,13 +512,25 @@ def get_user_id(cursor, username):
     user_id = cursor.fetchone()
     return user_id
 
+@connection.connection_handler
+def get_user_name(cursor, user_id):
+    cursor.execute("""
+    SELECT name from users
+    WHERE id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+
+    user_name = cursor.fetchone()
+    return user_name
+
+
 
 @connection.connection_handler
 def get_user_attributes(cursor, user_id):
     cursor.execute("""
-    SELECT u.*, a.message, q.title, c.message
-    from users as u
-    left outer join question q on u.name = q.user_name
+    SELECT q.*
+    from question q
+    left outer join users u on u.name = q.user_name
     left outer join answer a on u.name = a.user_name
     left outer join comment c on u.name = c.user_name
     WHERE u.id = %(user_id)s
@@ -545,9 +557,10 @@ def get_user_questions(cursor, user_id):
 @connection.connection_handler
 def get_user_answers(cursor, user_id):
     cursor.execute("""
-    SELECT a.*
-    from answer as a
-    join users u on u.name = a.user_name
+    SELECT q.*
+    from question as q
+    left outer join answer a on a.question_id = q.id   
+    join users u on a.user_name = u.name
     WHERE u.id = %(user_id)s;
     """,
                    {'user_id': user_id})
@@ -558,13 +571,16 @@ def get_user_answers(cursor, user_id):
 @connection.connection_handler
 def get_user_comments(cursor, user_id):
     cursor.execute("""
-    SELECT c.*
-    from comment as c
-    join users u on u.name = c.user_name
+    SELECT q.*
+    from question as q
+
+    left outer join comment c on c.question_id = q.id
+    left outer join answer a on c.answer_id = a.id
+    join users u on a.user_name = u.name OR q.user_name = u.name
     WHERE u.id = %(user_id)s;
     """,
                    {'user_id': user_id})
-    user_comments = cursor.fetchone()
+    user_comments = cursor.fetchall()
     return user_comments
 
 
@@ -578,6 +594,7 @@ def get_user_id_by_name(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
 
 @connection.connection_handler
 def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
