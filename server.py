@@ -209,15 +209,14 @@ def vote_questions(vote_method, question_id):
     user.update({"user_name": user_name, "vote_method": vote_method})
     if data_manager.check_if_user_voted_on_question(user_name, question_id):
         result = data_manager.check_if_user_voted_on_question(user_name, question_id)
-        voted = data_manager.delete_vote_on_question(result, vote_method)
+        voted = data_manager.delete_vote_on_question_from_votes_db(result, vote_method)
         if voted:
             data_manager.vote_question(vote_method, question_id)
-        print(result)
         return redirect(url_for("manage_questions", question_id=question_id))
     else:
-        data_manager.create_vote_on_question(question_id, user)
+        data_manager.create_vote_on_question_in_votes_db(question_id, user)
         data_manager.vote_question(vote_method, question_id)
-        return redirect('/list')
+        return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/<vote_method>')
@@ -230,9 +229,14 @@ def vote_answers(vote_method, answer_id):
     user.update({"user_name": user_name, "vote_method": vote_method})
 
     if data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method):
+        result = data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method)
+        voted = data_manager.delete_vote_on_answer_from_votes_db(result, vote_method)
+        if voted:
+            data_manager.vote_answer(vote_method, answer_id)
         return redirect(f'/questions/{question_id}')
     else:
-        data_manager.vote_answer(vote_method, answer_id, user)
+        data_manager.create_vote_on_answer_in_votes_db(answer_id, user)
+        data_manager.vote_answer(vote_method, answer_id)
         return redirect(url_for("manage_questions", question_id=question_id))
 
 

@@ -255,7 +255,7 @@ def vote_question(cursor, direction, question_id):
 
 
 @connection.connection_handler
-def create_vote_on_question(cursor, question_id, user):
+def create_vote_on_question_in_votes_db(cursor, question_id, user):
     vote = -1 if user["vote_method"] == "vote_down" else 1
 
     cursor.execute("""
@@ -269,7 +269,7 @@ def create_vote_on_question(cursor, question_id, user):
                    })
 
 @connection.connection_handler
-def delete_vote_on_question(cursor, vote_data, vote_method):
+def delete_vote_on_question_from_votes_db(cursor, vote_data, vote_method):
     vote_value = -1 if vote_method == "vote_down" else 1
     result_vote = vote_data['vote_method'] + vote_value
 
@@ -279,15 +279,6 @@ def delete_vote_on_question(cursor, vote_data, vote_method):
             WHERE question_id = %(question_id)s
         """, {'question_id': vote_data['question_id']})
 
-        '''
-        cursor.execute("""
-                    UPDATE votes
-                    SET vote_method = %(abcd)s
-                    WHERE question_id = %(question_id)s
-                    """, {'abcd': result_vote,
-                          'question_id': vote_data['question_id']
-                          });
-        '''
         return True
     else:
         return False
@@ -324,8 +315,7 @@ def search_question(cursor, search_phrase):
 def check_if_user_voted_on_answer(cursor, user, answer, vote_method):
     cursor.execute("""
                 SELECT * FROM votes
-                WHERE user_name = %(user)s AND answer_id = %(answer)s
-                AND vote_method = %(vote_method)s;
+                WHERE user_name = %(user)s AND answer_id = %(answer)s;
                 """,
                    {
                    "user": user,
@@ -336,18 +326,9 @@ def check_if_user_voted_on_answer(cursor, user, answer, vote_method):
     result = cursor.fetchone()
     return result
 
-@connection.connection_handler
-def vote_answer(cursor, direction, answer_id, user):
-    cursor.execute("""
-                    INSERT INTO votes (user_id, user_name, answer_id, vote_method)
-                    VALUES (%(user_id)s, %(user_name)s, %(answer_id)s, %(vote_method)s);
-                    """,{
-                       "answer_id": answer_id,
-                       "user_id": user['id'],
-                       "user_name": user['user_name'],
-                       "vote_method": user['vote_method']
-                   })
 
+@connection.connection_handler
+def vote_answer(cursor, direction, answer_id):
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE answer
@@ -358,8 +339,39 @@ def vote_answer(cursor, direction, answer_id, user):
         cursor.execute("""
                         UPDATE answer
                         SET vote_number = vote_number - 1
-                        WHERE id = %(answer_id)s AND vote_number > 0
+                        WHERE id = %(answer_id)s
                         """, {'answer_id': answer_id});
+
+
+@connection.connection_handler
+def create_vote_on_answer_in_votes_db(cursor, answer_id, user):
+    vote = -1 if user["vote_method"] == "vote_down" else 1
+
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, answer_id, vote_method)
+                    VALUES (%(user_id)s, %(user_name)s, %(answer_id)s, %(vote_method)s);
+                    """,{
+                       "answer_id": answer_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name'],
+                       "vote_method": vote
+                   })
+
+
+@connection.connection_handler
+def delete_vote_on_answer_from_votes_db(cursor, vote_data, vote_method):
+    vote_value = -1 if vote_method == "vote_down" else 1
+    result_vote = vote_data['vote_method'] + vote_value
+
+    if result_vote == 0:
+        cursor.execute("""
+            DELETE FROM votes
+            WHERE answer_id = %(answer_id)s
+        """, {'answer_id': vote_data['answer_id']})
+        # van-e itt egyáltalán answer_id???
+        return True
+    else:
+        return False
 
 
 @connection.connection_handler
