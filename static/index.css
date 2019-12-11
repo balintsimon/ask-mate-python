@@ -187,3 +187,7 @@ p{
     margin-right: 50px;
     padding: 0;
 }
+
+#user-nav {
+    alignment: left;
+}
