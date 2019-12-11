@@ -82,3 +82,12 @@ a {text-decoration: none; color: white;}
     transition: transform .25s ease;
     z-index: 1;
 }
+.loginrequired {
+    visibility: hidden;
+    display: flex;
+    margin-right: 10px;
+    justify-content: center;
+}
+.loginrequired > * {
+    margin-right: 10px;
+}
