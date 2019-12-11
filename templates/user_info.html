@@ -20,11 +20,8 @@
     </header>
     <div class="navigator-container">
         <nav>
-            {% if session['user'] %}
-            <p>Hello {{ session['user'] }}</p>
-            {% endif %}
 
-            <a id="user-nav" href="{{url_for('index') }}">Home</a>
+            <a id="user-nav" href="{{url_for('sort') }}">Questions</a>
 
         </nav>
     </div>
@@ -56,7 +53,81 @@
             {% else %}
                 <p>No questions found</p>
             {% endif %}
+            </tbody>
+        </table>
+    </main>
+    <div class="navigator-container">
+        <nav>
 
+            <a id="user-nav" href="{{url_for('sort') }}">Answers</a>
+
+        </nav>
+    </div>
+    <main>
+        {% if user_answers %}
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Submitted</th>
+                    <th>Viewed</th>
+                    <th>Voted</th>
+                    <th>Title</th>
+                    <th>Message</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in user_answers %}
+                <tr>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a href={{ url_for('modify_view', question_id = question['id']) }}>{{ question['title'] }}</a></td>
+                    <td style="white-space: pre-line">{{ (question['message'][:200] + '...') if question['message'] | length > 200 else question['message'] }}</td>
+                    <td><img src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}" alt="No image" height="128" width="128"></td>
+
+                </tr>
+                {% endfor %}
+            {% else %}
+                <p>No questions found</p>
+            {% endif %}
+            </tbody>
+        </table>
+ <div class="navigator-container">
+        <nav>
+
+            <a id="user-nav" href="{{url_for('sort') }}">Comments</a>
+
+        </nav>
+    </div>
+    <main>
+        {% if user_comments %}
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Submitted</th>
+                    <th>Viewed</th>
+                    <th>Voted</th>
+                    <th>Title</th>
+                    <th>Message</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in user_comments %}
+                <tr>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a href={{ url_for('modify_view', question_id = question['id']) }}>{{ question['title'] }}</a></td>
+                    <td style="white-space: pre-line">{{ (question['message'][:200] + '...') if question['message'] | length > 200 else question['message'] }}</td>
+                    <td><img src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}" alt="No image" height="128" width="128"></td>
+
+                </tr>
+                {% endfor %}
+            {% else %}
+                <p>No comments found</p>
+            {% endif %}
             </tbody>
         </table>
     </main>
