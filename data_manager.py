@@ -21,14 +21,24 @@ def get_author_by_question_id(cursor, question_id):
 
 def calculate_reputation(type, direction, original):
     repchart_up = {"question": 5, "answer": 10, "accepted": 15}
-    repchart_down = {"question": -2, "answer": -2, "accepted": -15}
+    repchart_down = {"question": -2, "answer": -2, "accepted": 0}
     if direction == "vote_up":
         rep = repchart_up
     else:
         rep = repchart_down
-    original = original+rep[type]
+    original = original['reputation'] + int(rep[type])
     return original
 
+
+def annul_calc_reputation(type, direction, original):
+    repchart_up = {"question": -5, "answer": -10, "accepted": -15}
+    repchart_down = {"question": 2, "answer": 2, "accepted": 0}
+    if direction == "vote_up":
+        rep = repchart_down
+    else:
+        rep = repchart_up
+    original = original['reputation'] + rep[type]
+    return original
 
 @connection.connection_handler
 def get_reputation(cursor, username):
@@ -247,6 +257,7 @@ def get_answers_by_question_id(cursor, question_id):
                         WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
                         END as accepted,
                     answer.id,
+                    answer.user_name,
                     answer.submission_time, 
                     answer.vote_number, 
                     answer.message, 
