@@ -9,8 +9,6 @@ app.config["IMAGE_UPLOADS"] = "./static/images"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
-QUESTIONS_FILE_PATH = "./sample_data/question.csv"
-ANSWERS_FILE_PATH = "./sample_data/answer.csv"
 QUESTION_HEADERS = ["id", "submission_time", "view_number", "vote_number", "title", "message", "image"]
 ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "message", "image"]
 
@@ -18,17 +16,15 @@ ANSWER_HEADERS = ["id", "submission_time", "vote_number", "question_id", "messag
 @app.route('/')
 def index():
     data = data_manager.get_latest_questions()
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
     return render_template("list.html",
-                           all_questions=data,
-                           file_labels=labels)
+                           all_questions=data)
 
 
 @app.route('/list')
 def sort():
     data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
-    labels = ["submission_time", "view_number", "vote_number", "title", "message"]
-    return render_template('list.html', all_questions=data, file_labels=labels)
+    return render_template('list.html',
+                           all_questions=data)
 
 
 @app.route('/add-questions', methods=['GET', 'POST'])
@@ -42,7 +38,7 @@ def add_new_question():
             image.save(os.path.join(app.config['IMAGE_UPLOADS'], image.filename))
             new_question["image"] = image.filename
         data_manager.write_new_question_to_database(new_question)
-        return redirect('/list')
+        return redirect('/')
     return render_template('add_question_or_answer.html')
 
 
