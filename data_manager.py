@@ -224,16 +224,14 @@ def update_question(cursor, question_id, updated_question):
 
 
 @connection.connection_handler
-def check_if_user_voted_on_question(cursor, user, question, vote_method):
+def check_if_user_voted_on_question(cursor, user, question):
     cursor.execute("""
                 SELECT * FROM votes
-                WHERE user_name = %(user)s AND question_id = %(question)s
-                        AND vote_method = %(vote_method)s;
+                WHERE user_name = %(user)s AND question_id = %(question)s;
                 """,
                    {
                    "user": user,
-                   "question": question,
-                   "vote_method": vote_method
+                   "question": question
                    })
 
     result = cursor.fetchone()
@@ -241,16 +239,7 @@ def check_if_user_voted_on_question(cursor, user, question, vote_method):
 
 
 @connection.connection_handler
-def vote_question(cursor, direction, question_id, user):
-    cursor.execute("""
-                    INSERT INTO votes (user_id, user_name, question_id, vote_method)
-                    VALUES (%(user_id)s, %(user_name)s, %(question_id)s, %(vote_method)s);
-                    """,{
-                       "question_id": question_id,
-                       "user_id": user['id'],
-                       "user_name": user['user_name'],
-                       "vote_method": user['vote_method']
-                   })
+def vote_question(cursor, direction, question_id):
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE question
@@ -261,8 +250,47 @@ def vote_question(cursor, direction, question_id, user):
         cursor.execute("""
                         UPDATE question
                         SET vote_number = vote_number - 1
-                        WHERE id = %(question_id)s and vote_number > 0
+                        WHERE id = %(question_id)s
                         """, {'question_id': question_id});
+
+
+@connection.connection_handler
+def create_vote_on_question(cursor, question_id, user):
+    vote = -1 if user["vote_method"] == "vote_down" else 1
+
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, question_id, vote_method)
+                    VALUES (%(user_id)s, %(user_name)s, %(question_id)s, %(vote_method)s);
+                    """,{
+                       "question_id": question_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name'],
+                       "vote_method": vote
+                   })
+
+@connection.connection_handler
+def delete_vote_on_question(cursor, vote_data, vote_method):
+    vote_value = -1 if vote_method == "vote_down" else 1
+    result_vote = vote_data['vote_method'] + vote_value
+
+    if result_vote == 0:
+        cursor.execute("""
+            DELETE FROM votes
+            WHERE question_id = %(question_id)s
+        """, {'question_id': vote_data['question_id']})
+
+        '''
+        cursor.execute("""
+                    UPDATE votes
+                    SET vote_method = %(abcd)s
+                    WHERE question_id = %(question_id)s
+                    """, {'abcd': result_vote,
+                          'question_id': vote_data['question_id']
+                          });
+        '''
+        return True
+    else:
+        return False
 
 
 @connection.connection_handler

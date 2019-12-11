@@ -85,7 +85,7 @@ CREATE TABLE votes (
     user_name varchar(50) NOT NULL,
     question_id integer,
     answer_id integer,
-    vote_method varchar(9) NOT NULL
+    vote_method int NOT NULL check (vote_method between -1 and 1)
 );
 
 ALTER TABLE ONLY users

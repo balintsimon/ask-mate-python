@@ -207,10 +207,16 @@ def vote_questions(vote_method, question_id):
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
     user.update({"user_name": user_name, "vote_method": vote_method})
-    if data_manager.check_if_user_voted_on_question(user_name, question_id, vote_method):
+    if data_manager.check_if_user_voted_on_question(user_name, question_id):
+        result = data_manager.check_if_user_voted_on_question(user_name, question_id)
+        voted = data_manager.delete_vote_on_question(result, vote_method)
+        if voted:
+            data_manager.vote_question(vote_method, question_id)
+        print(result)
         return redirect(url_for("manage_questions", question_id=question_id))
     else:
-        data_manager.vote_question(vote_method, question_id, user)
+        data_manager.create_vote_on_question(question_id, user)
+        data_manager.vote_question(vote_method, question_id)
         return redirect('/list')
 
 
