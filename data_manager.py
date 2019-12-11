@@ -15,7 +15,7 @@ def get_author_by_question_id(cursor, question_id):
         SELECT user_name FROM question
         WHERE id = %(q_id)s
     """,
-                   {"qid": question_id})
+                   {"q_id": question_id})
     return cursor.fetchone()
 
 
@@ -247,6 +247,7 @@ def get_answers_by_question_id(cursor, question_id):
                         WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
                         END as accepted,
                     answer.id,
+                    answer.user_name,
                     answer.submission_time, 
                     answer.vote_number, 
                     answer.message, 
@@ -294,15 +295,7 @@ def check_if_user_voted_on_question(cursor, user, question):
 
 
 @connection.connection_handler
-def vote_question(cursor, direction, question_id, user):
-    cursor.execute("""
-                    INSERT INTO votes (user_id, user_name, question_id)
-                    VALUES (%(user_id)s, %(user_name)s, %(question_id)s);
-                    """, {
-        "question_id": question_id,
-        "user_id": user['id'],
-        "user_name": user['user_name']
-    })
+def vote_question(cursor, direction, question_id):
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE question
@@ -313,8 +306,38 @@ def vote_question(cursor, direction, question_id, user):
         cursor.execute("""
                         UPDATE question
                         SET vote_number = vote_number - 1
-                        WHERE id = %(question_id)s and vote_number > 0
+                        WHERE id = %(question_id)s
                         """, {'question_id': question_id});
+
+
+@connection.connection_handler
+def create_vote_on_question_in_votes_db(cursor, question_id, user):
+    vote = -1 if user["vote_method"] == "vote_down" else 1
+
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, question_id, vote_method)
+                    VALUES (%(user_id)s, %(user_name)s, %(question_id)s, %(vote_method)s);
+                    """,{
+                       "question_id": question_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name'],
+                       "vote_method": vote
+                   })
+
+@connection.connection_handler
+def delete_vote_on_question_from_votes_db(cursor, vote_data, vote_method):
+    vote_value = -1 if vote_method == "vote_down" else 1
+    result_vote = vote_data['vote_method'] + vote_value
+
+    if result_vote == 0:
+        cursor.execute("""
+            DELETE FROM votes
+            WHERE question_id = %(question_id)s
+        """, {'question_id': vote_data['question_id']})
+
+        return True
+    else:
+        return False
 
 
 @connection.connection_handler
@@ -345,14 +368,15 @@ def search_question(cursor, search_phrase):
 
 
 @connection.connection_handler
-def check_if_user_voted_on_answer(cursor, user, answer):
+def check_if_user_voted_on_answer(cursor, user, answer, vote_method):
     cursor.execute("""
                 SELECT * FROM votes
                 WHERE user_name = %(user)s AND answer_id = %(answer)s;
                 """,
                    {
-                       "user": user,
-                       "answer": answer
+                   "user": user,
+                   "answer": answer,
+                   "vote_method": vote_method
                    })
 
     result = cursor.fetchone()
@@ -360,16 +384,7 @@ def check_if_user_voted_on_answer(cursor, user, answer):
 
 
 @connection.connection_handler
-def vote_answer(cursor, direction, answer_id, user):
-    cursor.execute("""
-                    INSERT INTO votes (user_id, user_name, answer_id)
-                    VALUES (%(user_id)s, %(user_name)s, %(answer_id)s);
-                    """, {
-        "answer_id": answer_id,
-        "user_id": user['id'],
-        "user_name": user['user_name']
-    })
-
+def vote_answer(cursor, direction, answer_id):
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE answer
@@ -380,8 +395,39 @@ def vote_answer(cursor, direction, answer_id, user):
         cursor.execute("""
                         UPDATE answer
                         SET vote_number = vote_number - 1
-                        WHERE id = %(answer_id)s AND vote_number > 0
+                        WHERE id = %(answer_id)s
                         """, {'answer_id': answer_id});
+
+
+@connection.connection_handler
+def create_vote_on_answer_in_votes_db(cursor, answer_id, user):
+    vote = -1 if user["vote_method"] == "vote_down" else 1
+
+    cursor.execute("""
+                    INSERT INTO votes (user_id, user_name, answer_id, vote_method)
+                    VALUES (%(user_id)s, %(user_name)s, %(answer_id)s, %(vote_method)s);
+                    """,{
+                       "answer_id": answer_id,
+                       "user_id": user['id'],
+                       "user_name": user['user_name'],
+                       "vote_method": vote
+                   })
+
+
+@connection.connection_handler
+def delete_vote_on_answer_from_votes_db(cursor, vote_data, vote_method):
+    vote_value = -1 if vote_method == "vote_down" else 1
+    result_vote = vote_data['vote_method'] + vote_value
+
+    if result_vote == 0:
+        cursor.execute("""
+            DELETE FROM votes
+            WHERE answer_id = %(answer_id)s
+        """, {'answer_id': vote_data['answer_id']})
+        # van-e itt egyáltalán answer_id???
+        return True
+    else:
+        return False
 
 
 @connection.connection_handler
@@ -508,13 +554,25 @@ def get_user_id(cursor, username):
     user_id = cursor.fetchone()
     return user_id
 
+@connection.connection_handler
+def get_user_name(cursor, user_id):
+    cursor.execute("""
+    SELECT name from users
+    WHERE id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+
+    user_name = cursor.fetchone()
+    return user_name
+
+
 
 @connection.connection_handler
 def get_user_attributes(cursor, user_id):
     cursor.execute("""
-    SELECT u.*, a.message, q.title, c.message
-    from users as u
-    left outer join question q on u.name = q.user_name
+    SELECT q.*
+    from question q
+    left outer join users u on u.name = q.user_name
     left outer join answer a on u.name = a.user_name
     left outer join comment c on u.name = c.user_name
     WHERE u.id = %(user_id)s
@@ -541,9 +599,10 @@ def get_user_questions(cursor, user_id):
 @connection.connection_handler
 def get_user_answers(cursor, user_id):
     cursor.execute("""
-    SELECT a.*
-    from answer as a
-    join users u on u.name = a.user_name
+    SELECT q.*
+    from question as q
+    left outer join answer a on a.question_id = q.id   
+    join users u on a.user_name = u.name
     WHERE u.id = %(user_id)s;
     """,
                    {'user_id': user_id})
@@ -554,13 +613,16 @@ def get_user_answers(cursor, user_id):
 @connection.connection_handler
 def get_user_comments(cursor, user_id):
     cursor.execute("""
-    SELECT c.*
-    from comment as c
-    join users u on u.name = c.user_name
+    SELECT q.*
+    from question as q
+
+    left outer join comment c on c.question_id = q.id
+    left outer join answer a on c.answer_id = a.id
+    join users u on a.user_name = u.name OR q.user_name = u.name
     WHERE u.id = %(user_id)s;
     """,
                    {'user_id': user_id})
-    user_comments = cursor.fetchone()
+    user_comments = cursor.fetchall()
     return user_comments
 
 
@@ -574,6 +636,7 @@ def get_user_id_by_name(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
 
 @connection.connection_handler
 def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
