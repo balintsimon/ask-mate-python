@@ -10,9 +10,12 @@ from datetime import datetime
 
 
 @connection.connection_handler
-def get_all_questions(cursor):
-    cursor.execute("""
-                    SELECT * FROM question;""")
+def get_all_questions(cursor, sortby, order):
+    order = 'DESC' if order == 'DESC' else 'ASC'
+    cursor.execute(sql.SQL("""
+                    SELECT * from question
+                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
+                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
     data = cursor.fetchall()
     return data
 
@@ -42,7 +45,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
-                   {'answer_id': answer_id});
+       {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -198,9 +201,20 @@ def get_question_by_id(cursor, question_id):
 @connection.connection_handler
 def get_answers_by_question_id(cursor, question_id):
     cursor.execute("""
-                    SELECT * FROM answer
-                    WHERE question_id = %(question_id)s
-                    ORDER BY vote_number DESC, submission_time ASC;
+                    SELECT 
+                        CASE
+                        WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
+                        END as accepted,
+                    answer.id,
+                    answer.submission_time, 
+                    answer.vote_number, 
+                    answer.message, 
+                    answer.question_id, 
+                    answer.image 
+                    FROM answer
+                    LEFT JOIN question ON answer.question_id = question.id
+                    WHERE answer.question_id = %(question_id)s
+                    ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,
                    {'question_id': question_id})
 
@@ -419,7 +433,7 @@ def get_user(cursor, username):
     SELECT name, password FROM users
     WHERE name = %(username)s
     """,
-                   {'username': username})
+    {'username': username})
 
     user = cursor.fetchone()
     return user
@@ -519,3 +533,13 @@ def get_user_id_by_name(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+
+@connection.connection_handler
+def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
+    cursor.execute("""
+        UPDATE question
+        SET accepted_answer = %(answer)s
+        WHERE id = %(qid)s;
+        """,
+       {"answer":accepted_answer_id, "qid": question_id}
+       )
