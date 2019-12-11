@@ -21,7 +21,7 @@
     </header>
     <div class="navigator-container">
         <nav>
-            <p>Hello {{ session['user'] }}</p>
+            <a class="user-greet" id="greet-user" href="{{ url_for('index') }}"><p id="hi">Hi</p> {{ session['user'] }}</a>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="last-nav" href="{{url_for('sort') }}">Show all questions</a>
             <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>

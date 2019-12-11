@@ -7,12 +7,21 @@ body{
     background-color: #0B2329;
 }
 
-p{
-    text-align: center;
-    margin-top: 10%;
+#hi{
+    color: #DC5947;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 25px;
+    background-clip: content-box;
+    display: inline;
+}
+
+#greet-user{
+    padding-right: 150px;
+    color: #DC5947;
+    display: inline-block;
     font-size: 30px;
-    font-weight: bold;
-    color: #f7f7f7f7;
+    background-clip: border-box;
+    box-sizing: content-box;
 }
 
 .last-nav-link{
@@ -22,7 +31,9 @@ p{
 .sorting-container{
     display: flex;
     justify-content: center;
+    border: none;
 }
+
 
 .btn-group button{
     border: none;
