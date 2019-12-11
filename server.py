@@ -288,10 +288,18 @@ def search_question():
                            file_labels=labels)
 
 
-@app.route('/user')
+@app.route('/user', methods=['GET', 'POST'])
 def list_users():
-    all_users = data_manager.get_user_attributes()
-    return render_template('users.html', all_users=all_users)
+    if request.method == 'GET':
+        all_users = data_manager.get_user_list()
+        return render_template('users.html', all_users=all_users)
+
+
+@app.route('/user/<user_id>')
+def get_user_attributes(user_id):
+    user_attributes = data_manager.get_user_attributes(user_id)
+    return render_template('user_info.html', user_attributes=user_attributes)
+
 
 
 if __name__ == '__main__':

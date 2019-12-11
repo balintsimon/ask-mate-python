@@ -38,6 +38,7 @@
                     <th>Member since</th>
                     <th>Questions asked</th>
                     <th>Answers given</th>
+                    <th>Comments given</th>
 
                 </tr>
             </thead>
@@ -45,11 +46,11 @@
                 {% for user in all_users %}
                 <tr>
                     <td>{{ user['reputation'] }}</td>
-                    <td>{{ user['name'] }}</td>
+                    <td><a href="/user/{{ user['id'] }}">{{ user['name'] }}</a></td>
                     <td>{{ user['member_since'] }}</td>
                     <td>{{ user['question'] }}</td>
                     <td>{{ user['answer'] }}</td>
-
+                    <td>{{ user['comment'] }}</td>
 
                 </tr>
                 {% endfor %}
