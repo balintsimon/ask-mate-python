@@ -279,13 +279,6 @@ def list_users():
     all_users = data_manager.get_user_attributes()
     return render_template('users.html', all_users=all_users)
 
-'''
-@app.route('user/<user_id>')
-def user_page(user_id):
-    pass
-    
-'''
-
 
 if __name__ == '__main__':
     app.run(

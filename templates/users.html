@@ -23,7 +23,7 @@
             <p>Hello {{ session['user'] }}</p>
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
-            <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
+
         <div class="navigator-float">
             <form action="/user" method="GET">
                 <label for="sorting"></label>
