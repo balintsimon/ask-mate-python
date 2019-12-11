@@ -206,6 +206,7 @@ def get_answers_by_question_id(cursor, question_id):
                         WHEN question.accepted_answer = answer.id THEN 1 ELSE 0 
                         END as accepted,
                     answer.id,
+                    answer.user_name,
                     answer.submission_time, 
                     answer.vote_number, 
                     answer.message, 
