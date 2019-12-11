@@ -15,7 +15,7 @@ def get_author_by_question_id(cursor, question_id):
         SELECT user_name FROM question
         WHERE id = %(q_id)s
     """,
-                   {"qid": question_id})
+                   {"q_id": question_id})
     return cursor.fetchone()
 
 
