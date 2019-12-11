@@ -27,7 +27,7 @@
 {% block answer %}
     <div class="answerblock">
         <a class="acceptbtn"
-           id="{{accepted}}"
+           id="{{ 'accepted' if question['accepted_answer'] == answer['id'] else '' }}"
            style="visibility:hidden"
            href="{{ url_for('accept_answer', accepted_answer_id=answer['id'], question_id=question['id']) }}">Accept</a>
         <div class="block">

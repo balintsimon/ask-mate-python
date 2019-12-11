@@ -169,6 +169,7 @@ def manage_questions(question_id):
         addinganswer = False
 
     current_question = data_manager.get_question_by_id(question_id)
+    print(current_question)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
 
     comments = data_manager.find_comments(question_id)
