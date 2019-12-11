@@ -10,12 +10,9 @@ from datetime import datetime
 
 
 @connection.connection_handler
-def get_all_questions(cursor, sortby, order):
-    order = 'DESC' if order == 'DESC' else 'ASC'
-    cursor.execute(sql.SQL("""
-                    SELECT * from question
-                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
-                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
+def get_all_questions(cursor):
+    cursor.execute("""
+                    SELECT * FROM question;""")
     data = cursor.fetchall()
     return data
 

@@ -15,6 +15,10 @@ p{
     color: #f7f7f7f7;
 }
 
+.last-nav-link{
+    padding: 0 30px;
+}
+
 .sorting-container{
     display: flex;
     justify-content: center;
@@ -163,6 +167,7 @@ p{
     font-size: 25px;
     background-clip: content-box;
     display: inline;
+    margin: 0 40px;
 
 }
 
@@ -181,13 +186,4 @@ p{
     margin-left: 20px;
     margin-right: 50px;
     padding: 0;
-}
-
-
-#last-nav{
-    margin-left: 100px;
-    margin-right: 25px;
-}
-
-#first-nav{
 }

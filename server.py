@@ -22,7 +22,10 @@ def index():
 
 @app.route('/list')
 def sort():
-    data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
+    if request.args.get('order_by') is None:
+        data = data_manager.get_all_questions()
+    else:
+        data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
     return render_template('list.html',
                            all_questions=data)
 
@@ -58,7 +61,6 @@ def write_new_comment(question_id, answer_id=None):
     if request.method == 'POST':
         comment = request.form.to_dict()
         comment.update({"question_id": question_id})
-        print(comment)
         data_manager.write_new_comment_to_database(comment)
         return redirect(url_for("manage_questions", question_id=question_id))
 
@@ -193,29 +195,6 @@ def delete_comment(question_id, comment_id):
 def delete_question(question_id):
     data_manager.delete_question(question_id)
     return redirect('/list')
-
-
-'''@app.route('/upload-image', methods=['GET', 'POST'])
-def upload_image():
-    if request.method == "POST":
-        if request.files:
-            image = request.files["image"]
-
-            if image.filename == "":
-                return redirect(request.referrer)
-
-            if data_manager.allowed_image(image.filename, app.config["ALLOWED_IMAGE_EXTENSIONS"]):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                question_id = request.form.get("question_id")
-                data_manager.upload_image_to_question(question_id, filename)
-                print("Image saved")
-                return redirect(request.referrer)
-
-            else:
-                print("not allowed image")
-                return redirect(request.referrer)
-'''
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
