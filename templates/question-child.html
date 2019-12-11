@@ -1,28 +1,5 @@
 {% extends "question.html" %}
 
-    <!--
-    <style>
-        div p { text-align: center}
-        .block {border: 2px solid grey; overflow: hidden;}
-        .column { width: 230px; float: left; background: lightgrey; margin: 5px;}
-        .questioncontent {overflow: hidden; margin: 5px; white-space: pre-line;}
-        .imgblock {width: 150px; height: auto; display: block; margin-left: auto; margin-right: auto; padding: 15px;}
-
-        .message {margin-bottom: 15px; border: 1px solid black;}
-        .image {float:left; margin-right: 10px;}
-        .user {float:left; font-weight:bold; color:#009; margin-bottom: 5px; margin-left: 5px; }
-        .content { margin-left: 30px;font-style:italic; color:#; }
-        .date { padding-left: 15px; padding-right: 15px; float: left;}
-        .votes { float: right; padding-rigt: 15px;}
-        .button { float: right; padding-right: 20px; padding-left: 25px}
-        .head {background: lightgrey; width: fit-content}
-        .delbtn, .editbtn, .combtn {float:right; padding-right: 5px;}
-        .comments {margin-top: 30px; margin-left: 30px; margin-right:30px; margin-bottom: 5px; color: black;}
-
-
-
-    </style> -->
-
 
 {% block answer %}
     <div class="answerblock">
@@ -56,8 +33,10 @@
                             </a>
                             <a href="{{ url_for('edit_answer', answer_id = answer['id']) }}">Edit</a>
                         </div>
-                <a href="{{ url_for('write_new_comment', question_id=question['id'], answer_id=answer['id']) }}">Comment</a>
+                        <a href="{{ url_for('write_new_comment', question_id=question['id'], answer_id=answer['id']) }}">Comment</a>
+                    </div>
                     {% endif %}
+
                 </div>
             </div>
         </div>
