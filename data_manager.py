@@ -380,24 +380,25 @@ def get_user(cursor, username):
 def get_user_attributes(cursor, username=None):
     if username:
         cursor.execute("""
-                SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
-                   a.message as answer, c.message as comment
-            FROM users as u
-            left outer join question as q on q.user_name =  u.name
-            left outer join answer as a on a.user_name = u.name
-            left outer join comment as c on c.user_name=u.name
-            WHERE name = %(username)s;
-                """,
+            SELECT u.reputation, u.name, date(u.registration_date) as member_since,
+       count(DISTINCT q.id) as question,
+count(DISTINCT a.id) as answer
+from users as u
+left outer join question q on u.name = q.user_name
+left outer join answer a on u.name = a.user_name
+WHERE name = %(username)s
+GROUP BY u.id;
+""",
                        {'username': username})
     else:
         cursor.execute("""
-        SELECT u.name as username, u.registration_date, u.reputation, q.title as question_title, q.message as question,
-           a.message as answer, c.message as comment
-    FROM users as u
-    left outer join question as q on q.user_name =  u.name
-    left outer join answer as a on a.user_name = u.name
-    left outer join comment as c on c.user_name=u.name;
-        """)
+SELECT u.reputation, u.name, date(u.registration_date) as member_since,
+       count(DISTINCT q.id) as question,
+count(DISTINCT a.id) as answer
+from users as u
+left outer join question q on u.name = q.user_name
+left outer join answer a on u.name = a.user_name
+GROUP BY u.id""")
 
     all_user_attribute = cursor.fetchall()
     return all_user_attribute

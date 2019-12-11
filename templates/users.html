@@ -20,35 +20,12 @@
     </header>
     <div class="navigator-container">
         <nav>
+            {% if session['user'] %}
             <p>Hello {{ session['user'] }}</p>
-            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
-            <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
+            {% endif %}
 
-        <div class="navigator-float">
-            <form action="/user" method="GET">
-                <label for="sorting"></label>
-                <select class="sorting" name="sorting" id="sorting">
-                    {% for label in file_labels %}
-                        <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
-                    {% endfor %}
-                </select>
-                <select name="sorting">
-                    {%for bool in order %}
-                        <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Sort</button>
-            </form>
-        </div>
-        <form action="/search" method="get">
-            <div class="search-box">
-                <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
-                <label for="search-bar"></label>
-                <button class="search-btn" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
-        </form>
+            <a id="user-nav" href="{{url_for('index') }}">Home</a>
+
         </nav>
     </div>
     <main>
@@ -56,6 +33,7 @@
         <table class="table-container">
             <thead>
                 <tr>
+                    <th>Reputation</th>
                     <th>Username</th>
                     <th>Member since</th>
                     <th>Questions asked</th>
@@ -66,10 +44,11 @@
             <tbody>
                 {% for user in all_users %}
                 <tr>
-                    <td>{{ user['username'] }}</td>
-                    <td>{{ user['registration_date'] }}</td>
-                    <td>{{ user['questions'] }}</td>
-                    <td>{{ user['answers'] }}</td>
+                    <td>{{ user['reputation'] }}</td>
+                    <td>{{ user['name'] }}</td>
+                    <td>{{ user['member_since'] }}</td>
+                    <td>{{ user['question'] }}</td>
+                    <td>{{ user['answer'] }}</td>
 
 
                 </tr>
