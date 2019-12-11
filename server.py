@@ -29,7 +29,8 @@ def login():
         return render_template('login.html')
     session.pop('user', None)
     hashed_password = data_manager.get_user_password(request.form.get('username'))
-    check_password = util.verify_password(request.form.get('password'), hashed_password['password'] if hashed_password else None)
+    check_password = util.verify_password(request.form.get('password'),
+                                          hashed_password['password'] if hashed_password else None)
     if hashed_password is None or check_password is False:
         return render_template('login.html', error=True)
     session['user'] = request.form.get('username')
@@ -226,11 +227,11 @@ def edit_comment(comment_id):
 
     return render_template("comment.html",
                            id_type="question_id",
-                           id=commentdata["question_id"], # need this for the post request redirection
+                           id=commentdata["question_id"],  # need this for the post request redirection
                            sending_route=f'/comment/{comment_id}/edit',
                            labelaction='Edit comment',
                            method="POST",
-                           message=commentdata["message"],)
+                           message=commentdata["message"], )
 
 
 @app.route('/question/<question_id>/<vote_method>')
@@ -342,6 +343,19 @@ def search_question():
                            userpick_label=label_to_sortby,
                            userpick_order=order,
                            )
+
+
+@app.route('/user')
+def list_users():
+    all_users = data_manager.get_user_attributes()
+    return render_template('users.html', all_users=all_users)
+
+'''
+@app.route('user/<user_id>')
+def user_page(user_id):
+    pass
+    
+'''
 
 
 if __name__ == '__main__':

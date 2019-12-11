@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to AskMate!</title>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</head>
+<body>
+    <header>
+        <div class="img-container">
+            <div class="inner-container">
+                <a href="{{ url_for('index') }}">AskMate</a>
+            </div>
+        </div>
+    </header>
+    <div class="navigator-container">
+        <nav>
+            <p>Hello {{ session['user'] }}</p>
+            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
+            <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
+            <a id="last-nav" href="{{url_for('show_questions') }}">Show all questions</a>
+        <div class="navigator-float">
+            <form action="/user" method="GET">
+                <label for="sorting"></label>
+                <select class="sorting" name="sorting" id="sorting">
+                    {% for label in file_labels %}
+                        <option value="{{ label }}" {% if label == userpick_label %} SELECTED {% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <select name="sorting">
+                    {%for bool in order %}
+                        <option value="{{ bool }}" {% if userpick_order == bool %} SELECTED {% endif %}>{{ order[bool] }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+        </div>
+        <form action="/search" method="get">
+            <div class="search-box">
+                <input class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
+                <label for="search-bar"></label>
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+        </nav>
+    </div>
+    <main>
+        {% if all_users %}
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Member since</th>
+                    <th>Questions asked</th>
+                    <th>Answers given</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in all_users %}
+                <tr>
+                    <td>{{ user['username'] }}</td>
+                    <td>{{ user['registration_date'] }}</td>
+                    <td>{{ user['questions'] }}</td>
+                    <td>{{ user['answers'] }}</td>
+
+
+                </tr>
+                {% endfor %}
+            {% else %}
+                <p>No users found</p>
+            {% endif %}
+
+            </tbody>
+        </table>
+    </main>
+    <footer class="footer-container"></footer>
+</body>
+</html>

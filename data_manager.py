@@ -385,3 +385,15 @@ def get_user_attributes(cursor, username=None):
 
     all_user_attribute = cursor.fetchall()
     return all_user_attribute
+
+
+@connection.connection_handler
+def get_user_id(cursor, username):
+    cursor.execute("""
+    SELECT id from users
+    WHERE name = %(username)s;
+    """,
+                   {'username': username})
+
+    user_id = cursor.fetchone()
+    return user_id
