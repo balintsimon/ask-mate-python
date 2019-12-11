@@ -252,7 +252,7 @@ def delete_comment(question_id, comment_id):
 @app.route('/question/<question_id>/delete')
 def delete_question(question_id):
     data_manager.delete_question(question_id)
-    return redirect('/list')
+    return redirect(url_for('index'))
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
