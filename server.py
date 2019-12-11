@@ -244,8 +244,14 @@ def edit_comment(comment_id):
 
 @app.route('/question/<question_id>/<vote_method>')
 def vote_questions(vote_method, question_id):
-    data_manager.vote_question(vote_method, question_id)
-    return redirect('/list')
+    user_name = session["user"]
+    user_id = data_manager.get_user_id_by_name(user_name)
+    user = {"user_id": user_id, "user_name": user_name}
+    if data_manager.check_if_user_voted_on_question(user_name, question_id):
+        pass
+    else:
+        data_manager.vote_question(vote_method, question_id, user)
+        return redirect('/list')
 
 
 @app.route('/answer/<answer_id>/<vote_method>')

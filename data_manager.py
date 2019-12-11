@@ -227,8 +227,34 @@ def update_question(cursor, question_id, updated_question):
 
 
 @connection.connection_handler
-def vote_question(cursor, direction, question_id):
+def check_if_user_voted_on_question(cursor, user, question):
+    cursor.execute("""
+                SELECT * FROM votes
+                WHERE user_name = %(user)s && question_id = %(question)d;
+                """,
+                   {
+                   "user": user,
+                   "question": question
+                   })
+
+    result = cursor.fetchone()
+    return result
+
+@connection.connection_handler
+def vote_question(cursor, direction, question_id, user):
     if direction == "vote_up":
+        cursor.execute("""
+                        INSERT INTO votes (user_id, user_name, question_id)
+                        VALUES (%(user_id)s, %(user_name)s, %(question_id)s);
+                        """,
+                       {
+                           "question_id": question_id,
+                           "user_id": user['user_id'],
+                           "user_name": user['user_name']
+                       }
+        )
+
+
         cursor.execute("""
                         UPDATE question
                         SET vote_number = vote_number + 1
@@ -367,3 +393,11 @@ def get_user(cursor, username):
 
     user = cursor.fetchone()
     return user
+
+@connection.connection_handler
+def get_user_id_by_name(cursor, username):
+    cursor.execute("""
+    SELECT id FROM users
+    WHERE name = %(username)s
+    """,
+                   {"username": username})

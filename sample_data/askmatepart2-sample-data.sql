@@ -84,8 +84,7 @@ CREATE TABLE votes (
     user_id integer NOT NULL,
     user_name varchar(50) NOT NULL,
     question_id integer,
-    answer_id integer,
-    comment_id integer
+    answer_id integer
 );
 
 ALTER TABLE ONLY users
@@ -141,9 +140,6 @@ ALTER TABLE ONLY votes
 
 ALTER TABLE ONLY votes
     ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
-
-ALTER TABLE ONLY votes
-    ADD CONSTRAINT fk_comment_id FOREIGN KEY (comment_id) REFERENCES comment(id);
 
 ALTER TABLE ONLY users
 ALTER COLUMN reputation
