@@ -10,12 +10,9 @@ from datetime import datetime
 
 
 @connection.connection_handler
-def get_all_questions(cursor, sortby, order):
-    order = 'DESC' if order == 'DESC' else 'ASC'
-    cursor.execute(sql.SQL("""
-                    SELECT * from question
-                    ORDER BY {0} {1}""").format(sql.Identifier(sortby),
-                                               sql.SQL(order)))  # careful with this, no userinput allowed to go into here
+def get_all_questions(cursor):
+    cursor.execute("""
+                    SELECT * FROM question;""")
     data = cursor.fetchall()
     return data
 
@@ -356,6 +353,17 @@ def get_user_password(cursor, username):
                     """, {'username': username})
     password = cursor.fetchone()
     return password
+
+
+@connection.connection_handler
+def sort_questions(cursor, order_by, order_direction):
+    cursor.execute(sql.SQL("""
+                    SELECT * FROM question
+                    ORDER BY {0} {1};""").format(sql.Identifier(order_by), sql.SQL(order_direction)))
+
+    data = cursor.fetchall()
+    return data
+
 
 @connection.connection_handler
 def get_user(cursor, username):
