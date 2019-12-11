@@ -297,8 +297,10 @@ def list_users():
 
 @app.route('/user/<user_id>')
 def get_user_attributes(user_id):
-    user_attributes = data_manager.get_user_attributes(user_id)
-    return render_template('user_info.html', user_attributes=user_attributes)
+    user_questions = data_manager.get_user_questions(user_id)
+    user_answers = data_manager.get_user_answers(user_id)
+    user_comments = data_manager.get_user_comments(user_id)
+    return render_template('user_info.html', user_questions=user_questions,user_answers=user_answers,user_comments=user_comments)
 
 
 

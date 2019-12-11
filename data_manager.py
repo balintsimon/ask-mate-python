@@ -42,7 +42,7 @@ def delete_answer(cursor, answer_id):
     cursor.execute("""
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
-       {'answer_id': answer_id});
+                   {'answer_id': answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -230,8 +230,8 @@ def check_if_user_voted_on_question(cursor, user, question):
                 WHERE user_name = %(user)s AND question_id = %(question)s;
                 """,
                    {
-                   "user": user,
-                   "question": question
+                       "user": user,
+                       "question": question
                    })
 
     result = cursor.fetchone()
@@ -243,11 +243,11 @@ def vote_question(cursor, direction, question_id, user):
     cursor.execute("""
                     INSERT INTO votes (user_id, user_name, question_id)
                     VALUES (%(user_id)s, %(user_name)s, %(question_id)s);
-                    """,{
-                       "question_id": question_id,
-                       "user_id": user['id'],
-                       "user_name": user['user_name']
-                   })
+                    """, {
+        "question_id": question_id,
+        "user_id": user['id'],
+        "user_name": user['user_name']
+    })
     if direction == "vote_up":
         cursor.execute("""
                         UPDATE question
@@ -296,23 +296,24 @@ def check_if_user_voted_on_answer(cursor, user, answer):
                 WHERE user_name = %(user)s AND answer_id = %(answer)s;
                 """,
                    {
-                   "user": user,
-                   "answer": answer
+                       "user": user,
+                       "answer": answer
                    })
 
     result = cursor.fetchone()
     return result
+
 
 @connection.connection_handler
 def vote_answer(cursor, direction, answer_id, user):
     cursor.execute("""
                     INSERT INTO votes (user_id, user_name, answer_id)
                     VALUES (%(user_id)s, %(user_name)s, %(answer_id)s);
-                    """,{
-                       "answer_id": answer_id,
-                       "user_id": user['id'],
-                       "user_name": user['user_name']
-                   })
+                    """, {
+        "answer_id": answer_id,
+        "user_id": user['id'],
+        "user_name": user['user_name']
+    })
 
     if direction == "vote_up":
         cursor.execute("""
@@ -364,13 +365,14 @@ def update_answer(cursor, answer_id, update_answer):
                     'new_image': update_answer['image'],
                     'answer_id': answer_id})
 
+
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
                      SELECT * FROM comment
                      WHERE question_id = %(question_id)s
                      ORDER BY id;""",
-                    {'question_id': question_id})
+                   {'question_id': question_id})
 
     comments = cursor.fetchall()
     return comments
@@ -417,7 +419,7 @@ def get_user(cursor, username):
     SELECT name, password FROM users
     WHERE name = %(username)s
     """,
-    {'username': username})
+                   {'username': username})
 
     user = cursor.fetchone()
     return user
@@ -425,7 +427,6 @@ def get_user(cursor, username):
 
 @connection.connection_handler
 def get_user_list(cursor):
-
     cursor.execute("""
 SELECT u.id, u.reputation, u.name, date(u.registration_date) as member_since,
        count(DISTINCT q.id) as question,
@@ -465,8 +466,48 @@ def get_user_attributes(cursor, user_id):
     GROUP BY u.id, a.id, q.id, c.id;
     """,
                    {'user_id': user_id})
-    user_attributes = cursor.fetchone()
+    user_attributes = cursor.fetchall()
     return user_attributes
+
+
+@connection.connection_handler
+def get_user_questions(cursor, user_id):
+    cursor.execute("""
+    SELECT q.*
+    from question as q
+    join users u on u.name = q.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_questions = cursor.fetchall()
+    return user_questions
+
+
+@connection.connection_handler
+def get_user_answers(cursor, user_id):
+    cursor.execute("""
+    SELECT a.*
+    from answer as a
+    join users u on u.name = a.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_answers = cursor.fetchall()
+    return user_answers
+
+
+@connection.connection_handler
+def get_user_comments(cursor, user_id):
+    cursor.execute("""
+    SELECT c.*
+    from comment as c
+    join users u on u.name = c.user_name
+    WHERE u.id = %(user_id)s;
+    """,
+                   {'user_id': user_id})
+    user_comments = cursor.fetchone()
+    return user_comments
+
 
 @connection.connection_handler
 def get_user_id_by_name(cursor, username):

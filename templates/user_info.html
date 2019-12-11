@@ -29,33 +29,32 @@
         </nav>
     </div>
     <main>
-        {% if all_users %}
+        {% if user_questions %}
         <table class="table-container">
             <thead>
                 <tr>
-                    <th>Reputation</th>
-                    <th>Username</th>
-                    <th>Member since</th>
-                    <th>Questions asked</th>
-                    <th>Answers given</th>
-                    <th>Comments given</th>
+                    <th>Submitted</th>
+                    <th>Viewed</th>
+                    <th>Voted</th>
+                    <th>Title</th>
+                    <th>Message</th>
 
                 </tr>
             </thead>
             <tbody>
-                {% for user in all_users %}
+                {% for question in user_questions %}
                 <tr>
-                    <td>{{ user['reputation'] }}</td>
-                    <td><a href="/user/{{ user['id'] }}">{{ user['name'] }}</a></td>
-                    <td>{{ user['member_since'] }}</td>
-                    <td>{{ user['question'] }}</td>
-                    <td>{{ user['answer'] }}</td>
-                    <td>{{ user['comment'] }}</td>
+                    <td>{{ question['submission_time'] }}</td>
+                    <td>{{ question['view_number'] }}</td>
+                    <td>{{ question['vote_number'] }}</td>
+                    <td><a href={{ url_for('modify_view', question_id = question['id']) }}>{{ question['title'] }}</a></td>
+                    <td style="white-space: pre-line">{{ (question['message'][:200] + '...') if question['message'] | length > 200 else question['message'] }}</td>
+                    <td><img src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}" alt="No image" height="128" width="128"></td>
 
                 </tr>
                 {% endfor %}
             {% else %}
-                <p>No users found</p>
+                <p>No questions found</p>
             {% endif %}
 
             </tbody>
