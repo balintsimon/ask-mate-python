@@ -2,9 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome to AskMate!</title>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body>
+    <header>
+        <div class="img-container">
+            <div class="inner-container">
+                <a href="{{ url_for('index') }}">AskMate</a>
+            </div>
+        </div>
+    </header>
+    <div class="navigator-container">
+        <nav>
+            {% if session['user'] %}
+            <p>Hello {{ session['user'] }}</p>
+            {% endif %}
 
+            <a id="user-nav" href="{{url_for('index') }}">Home</a>
+
+        </nav>
+    </div>
+    <main>
+        {% if all_users %}
+        <table class="table-container">
+            <thead>
+                <tr>
+                    <th>Reputation</th>
+                    <th>Username</th>
+                    <th>Member since</th>
+                    <th>Questions asked</th>
+                    <th>Answers given</th>
+                    <th>Comments given</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in all_users %}
+                <tr>
+                    <td>{{ user['reputation'] }}</td>
+                    <td><a href="/user/{{ user['id'] }}">{{ user['name'] }}</a></td>
+                    <td>{{ user['member_since'] }}</td>
+                    <td>{{ user['question'] }}</td>
+                    <td>{{ user['answer'] }}</td>
+                    <td>{{ user['comment'] }}</td>
+
+                </tr>
+                {% endfor %}
+            {% else %}
+                <p>No users found</p>
+            {% endif %}
+
+            </tbody>
+        </table>
+    </main>
+    <footer class="footer-container"></footer>
 </body>
 </html>

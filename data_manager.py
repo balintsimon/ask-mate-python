@@ -424,21 +424,9 @@ def get_user(cursor, username):
 
 
 @connection.connection_handler
-def get_user_list(cursor, username=None):
-    if username:
-        cursor.execute("""
-            SELECT u.reputation, u.name, date(u.registration_date) as member_since,
-       count(DISTINCT q.id) as question,
-count(DISTINCT a.id) as answer
-from users as u
-left outer join question q on u.name = q.user_name
-left outer join answer a on u.name = a.user_name
-WHERE name = %(username)s
-GROUP BY u.id;
-""",
-                       {'username': username})
-    else:
-        cursor.execute("""
+def get_user_list(cursor):
+
+    cursor.execute("""
 SELECT u.id, u.reputation, u.name, date(u.registration_date) as member_since,
        count(DISTINCT q.id) as question,
 count(DISTINCT a.id) as answer,
@@ -446,6 +434,7 @@ count(DISTINCT c.id) as comment
 from users as u
 left outer join question q on u.name = q.user_name
 left outer join answer a on u.name = a.user_name
+left outer join comment c on u.name = c.user_name
 GROUP BY u.id""")
 
     all_user_attribute = cursor.fetchall()
