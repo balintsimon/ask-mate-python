@@ -1,71 +1,53 @@
 *{
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
-body{
-
+.form-container{
     height: 60vh;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
-    background-color: #0B2329;
-}
-
-h1{
+    background-color: #285369;
     text-align: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    color: white;
+
+
+}
+
+#form-title{
+    color: #f7f7f7;
     font-family: 'Permanent Marker', cursive;
-    font-size: 50px;
-}
-
-button{
-    margin-top: 20px;
-    padding: 10px 30px;
-    font-size: 15px;
-    border-radius: 3px;
-    cursor: pointer;
-    background-color: white;
-    font-weight: bold;
-    transition: 0.8s;
-    border: none;
-}
-
-button:hover{
-    background-color: black;
-    color: white;
 }
 
 .text-container{
-    width: 100%;
+    width: 690px;
     position: relative;
     height: 50px;
+    padding-top: 30px;
+    margin-left: 130px;
 }
 
 .text-container input{
     height: 100%;
-    padding-top: 20px;
-    width: 100%;
+    padding-top: 10px;
+    width: 80%;
     border: none;
-    background-color: #0B2329;
-    color: white;
+    background-color: #285369;
+    color: #f7f7f7;
+    display: block;
 }
 
 .text-container label{
-    color: white;
     font-weight: bold;
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
     height: 100%;
     pointer-events: none;
     outline: none;
-    border-bottom: #f7f7f7f7 2px solid;
+    border-bottom: #f7f7f7 2px solid;
 }
 
 .text-container label::after{
@@ -89,11 +71,10 @@ button:hover{
 }
 
 .textarea-container{
-    padding-top: 30px;
+    padding-top: 15px;
 }
 
 .textarea-container label{
-    color: white;
     font-weight: bold;
     display: block;
     padding-bottom: 10px;
@@ -105,7 +86,7 @@ button:hover{
 }
 
 .image-container{
-    color: white;
+    color: #f7f7f7;
     font-weight: bold;
     padding-bottom: 20px;
 }

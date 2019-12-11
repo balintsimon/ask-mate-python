@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ 'Edit question' if question_id else 'Add new question' }}</title>
-    <link rel="stylesheet" type="text/css" href="/static/form.css">
     <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/form.css">
 </head>
 <body>
     <header>
-        <h1>{{ 'Edit question' if question_id else 'Add new question' }}</h1>
+        <h1 id="form-title">{{ 'Edit question' if question_id else 'Add new question' }}</h1>
     </header>
     <main>
-        <form method="POST" enctype="multipart/form-data">
+        <form action="{{ url_for('add_new_question') }}" method="POST" enctype="multipart/form-data">
             <div class="form-container">
                 <div class="text-container">
                     <input type="text" name="title" title="question-title" autocomplete="off" value="{{ question['title'] if question }}" required/>
