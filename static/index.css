@@ -90,7 +90,9 @@ p{
     font-size: 100px;
     display: inline-block;
     font-weight: bolder;
+
 }
+
 
 .navigator-container{
     padding: 10px 0;
@@ -175,6 +177,10 @@ p{
     display: inline;
     margin: 0 40px;
 
+}
+
+.navigator-container nav a:hover{
+    color: #DC5947
 }
 
 .navigator-container form label{
