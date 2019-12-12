@@ -211,12 +211,30 @@ def accept_answer(question_id, accepted_answer_id):
 def vote_questions(vote_method, question_id):
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
-    user.update({"user_name": user_name})
+    user.update({"user_name": user_name, "vote_method": vote_method})
+
+
+
     if data_manager.check_if_user_voted_on_question(user_name, question_id):
+        result = data_manager.check_if_user_voted_on_question(user_name, question_id)
+        voted = data_manager.delete_vote_on_question_from_votes_db(result, vote_method)
+        if voted:
+            data_manager.vote_question(vote_method, question_id)
+
+            author = data_manager.get_author_by_question_id(question_id)["user_name"]
+            author_repu = data_manager.get_reputation(author)
+            new_repu = data_manager.annul_calc_reputation("question", vote_method, author_repu)
+            data_manager.update_user_reputation(author, new_repu)
         return redirect(url_for("manage_questions", question_id=question_id))
     else:
-        data_manager.vote_question(vote_method, question_id, user)
-        return redirect('/list')
+        author = data_manager.get_author_by_question_id(question_id)["user_name"]
+        author_repu = data_manager.get_reputation(author)
+        new_repu = data_manager.calculate_reputation("question", vote_method, author_repu)
+        data_manager.update_user_reputation(author, new_repu)
+
+        data_manager.create_vote_on_question_in_votes_db(question_id, user)
+        data_manager.vote_question(vote_method, question_id)
+        return redirect(url_for("manage_questions", question_id=question_id))
 
 
 @app.route('/answer/<answer_id>/<vote_method>')
@@ -226,12 +244,27 @@ def vote_answers(vote_method, answer_id):
 
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
-    user.update({"user_name": user_name})
+    user.update({"user_name": user_name, "vote_method": vote_method})
 
-    if data_manager.check_if_user_voted_on_answer(user_name, answer_id):
+    if data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method):
+        result = data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method)
+        voted = data_manager.delete_vote_on_answer_from_votes_db(result, vote_method)
+        if voted:
+            data_manager.vote_answer(vote_method, answer_id)
+
+            author = data_manager.get_author_by_answer_id(answer_id)["user_name"]
+            author_repu = data_manager.get_reputation(author)
+            new_repu = data_manager.annul_calc_reputation("answer", vote_method, author_repu)
+            data_manager.update_user_reputation(author, new_repu)
         return redirect(f'/questions/{question_id}')
     else:
-        data_manager.vote_answer(vote_method, answer_id, user)
+        author = data_manager.get_author_by_answer_id(answer_id)["user_name"]
+        author_repu = data_manager.get_reputation(author)
+        new_repu = data_manager.calculate_reputation("answer", vote_method, author_repu)
+        data_manager.update_user_reputation(author, new_repu)
+
+        data_manager.create_vote_on_answer_in_votes_db(answer_id, user)
+        data_manager.vote_answer(vote_method, answer_id)
         return redirect(url_for("manage_questions", question_id=question_id))
 
 

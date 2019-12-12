@@ -24,6 +24,7 @@
                 </div>
                 <div class="navbar">
                     <span>{{ answer["user_name"] }}</span>
+                    <span>({{ answer["reputation"] }})</span>
                     <span class="date">Posted: {{ answer["submission_time"] }}</span>
                     {% if not addinganswer %}
                     <div class="loginrequired">
@@ -47,6 +48,7 @@
                         <div class="msg">{{ comment["message"] }}</div>
                         <div class="navbar">
                             <span>{{ comment["user_name"] }}</span>
+                            <span>({{ comment["reputation"] }})</span>
                             <span>{{ comment["submission_time"] }}</span>
                             {% if comment["edited_count"] == 1 %}
                                 <span>(Edited {{ comment["edited_count"] }} time.)</span>
@@ -74,19 +76,32 @@
 {% endblock %}
 
 {% block givinganswer %}
-    <h2>Add new answer</h2>
-    <div class="block">
-        <pre>
-        <form action="/question/{{ question['id'] }}/new-answer" method="POST" enctype="multipart/form-data">
-            <label title="answer">Answer:</label>
-            <textarea title="answer" name="message" rows="8" cols="50" required></textarea>
+<div class="block" >
+
+        <form class="content"
+              id="newanswer_block"
+              action="/question/{{ question['id'] }}/new-answer"
+              method="POST"
+              enctype="multipart/form-data">
+            <label title="answer">Adding new answer:</label>
+            <textarea id="newanswer" title="answer" name="message" rows="8" cols="50" required style="resize:vertical"></textarea>
 
             <label for="image" title="add-image">Image:</label>
             <input type="file" title="image" name="image" id="image" accept=".jpg,.png"/>
-            <br><br>
 
-            <button type="submit" title="submit_answer">Answer</button>
+            <button type="submit" title="submit_answer">Post answer</button>
         </form>
-        </pre>
-    </div>
+
+</div>
+
+    <script>
+        let ansblock = document.getElementById("newanswer_block");
+        ansblock.style.borderLeftColor = "darkgoldenrod";
+        ansblock.style.borderWidth = "20px";
+        ansblock.style.borderBottomLeftRadius = "10px";
+        ansblock.style.borderTopLeftRadius = "10px";
+        ansblock.style.padding = "20px";
+        document.getElementById("newanswer").focus();
+        document.activeElement.parentNode.scrollIntoView();
+    </script>
 {% endblock %}
