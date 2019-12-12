@@ -10,6 +10,68 @@ from datetime import datetime
 
 
 @connection.connection_handler
+def get_author_by_question_id(cursor, question_id):
+    cursor.execute("""
+        SELECT user_name FROM question
+        WHERE id = %(q_id)s
+    """,
+                   {"q_id": question_id})
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def get_author_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+        SELECT user_name FROM answer
+        WHERE id = %(answer_id)s;
+    """,
+                   {"answer_id": answer_id})
+
+    return cursor.fetchone()
+
+
+def calculate_reputation(type, direction, original):
+    repchart_up = {"question": 5, "answer": 10, "accepted": 15}
+    repchart_down = {"question": -2, "answer": -2, "accepted": 0}
+    if direction == "vote_up":
+        rep = repchart_up
+    else:
+        rep = repchart_down
+    original = original['reputation'] + int(rep[type])
+    return original
+
+
+def annul_calc_reputation(type, direction, original):
+    repchart_up = {"question": -5, "answer": -10, "accepted": -15}
+    repchart_down = {"question": 2, "answer": 2, "accepted": 0}
+    if direction == "vote_up":
+        rep = repchart_down
+    else:
+        rep = repchart_up
+    original = original['reputation'] + rep[type]
+    return original
+
+@connection.connection_handler
+def get_reputation(cursor, username):
+    cursor.execute("""
+        SELECT reputation FROM users
+        WHERE name = %(user)s;
+        """,
+        {"user": username})
+    return cursor.fetchone()
+
+
+@connection.connection_handler
+def update_user_reputation(cursor, username, value):
+    cursor.execute("""
+        UPDATE users
+        SET reputation = %(reputation)s
+        WHERE name = %(user)s
+        """,
+        {"user": username, "reputation": value})
+
+
+@connection.connection_handler
 def get_all_questions(cursor, sortby, order):
     order = 'DESC' if order == 'DESC' else 'ASC'
     cursor.execute(sql.SQL("""
@@ -46,6 +108,12 @@ def delete_answer(cursor, answer_id):
         DELETE FROM comment
         WHERE answer_id = %(answer_id)s""",
        {'answer_id': answer_id});
+
+    cursor.execute("""
+        UPDATE question
+        SET accepted_answer = NULL
+        WHERE accepted_answer = %(answer_id)s""",
+       {"answer_id": answer_id});
 
     cursor.execute("""
                     DELETE FROM answer
@@ -512,6 +580,7 @@ GROUP BY u.id""")
     return all_user_attribute
 
 
+'''
 @connection.connection_handler
 def get_user_id(cursor, username):
     cursor.execute("""
@@ -522,6 +591,8 @@ def get_user_id(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+'''
+
 
 @connection.connection_handler
 def get_user_name(cursor, user_id):
@@ -533,7 +604,6 @@ def get_user_name(cursor, user_id):
 
     user_name = cursor.fetchone()
     return user_name
-
 
 
 @connection.connection_handler
