@@ -279,8 +279,19 @@ def delete_comment(cursor, comment_id):
 @connection.connection_handler
 def get_question_by_id(cursor, question_id):
     cursor.execute("""
-                    SELECT * FROM question
-                    WHERE id = %(question_id)s;
+                    SELECT question.id,
+                     question.submission_time,
+                     question.view_number,
+                     question.vote_number,
+                     question.title,
+                     question.message,
+                     question.image,
+                     question.user_name,
+                     question.accepted_answer,
+                     users.id as user_id
+                     FROM question
+                    LEFT JOIN users ON question.user_name = users.name
+                    WHERE question.id = %(question_id)s;
                     """,
                    {'question_id': question_id})
 

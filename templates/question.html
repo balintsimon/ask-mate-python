@@ -36,14 +36,14 @@
         <div class="content">
             <div class="msg">{{ question['message'] | safe }}</div>
             <div class="navbar">
-                <span>{{ question["user_name"] }}</span>
-                <span> ({{ question["reputation"] }}) </span>
+                <span><a href="{{ url_for('get_user_attributes', user_id=question['user_id']) }}">{{ question["user_name"] }}</a></span>
+
                 <span>{{ question['submission_time'] }}</span>
 
                 {% if not addinganswer %}
                 <div class=" {{ question['user_name'] }} admin">
                     <form action="{{ url_for('delete_question', question_id=question['id']) }}" method="get">
-                        <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
+                        <a onclick="return confirm('Are you sure you want to delete this question?')" href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
                     </form>
                     <a id="first-nav"
                        itemid="{{ url_for('edit_question', question_id=question['id']) }}"
@@ -91,7 +91,9 @@
                                onclick="return confirm('Are you sure, you want to delete this comment?')">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
-                            <a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a>
+                            <!-- <a href="{{ url_for('edit_comment', comment_id=comment['id']) }}">Edit</a>-->
+                            <a onclick='editme("/comment/"+ {{ comment["id"] }} +"/"+"edit", {{question["id"]}}, {{comment["message"]|tojson}})'>Edit</a>
+
                         </div>
                     </div>
                     {% endif %}
@@ -107,12 +109,15 @@
         {% block givinganswer %}{% endblock %}
     {% else %}
         <div class="loginrequired">
-            <a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button id="comment-btn">Add comment</button></a>
+            <!--<a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button">Add comment</button></a> -->
+            <button id="comment-btn" onclick="firecomment('/question/' + {{ question['id'] }} + '/new-comment',{{question['id']}})">Add comment</button>
             <form action="/questions/{{ question['id'] }}" method="GET">
             <button id="answer-btn" type="submit" name="addinganswer">Add Answer</button>
             </form>
         </div>
     {% endif %}
+
+    {% include 'comment.html' %}
 
     <p></p>
     <h3>Answers:</h3>
@@ -131,7 +136,7 @@
 </body>
 </html>
 
-<script>
+<script defer>
     function showNavButtons(tag){
         tag.style.visibility = "visible"
     }
@@ -151,10 +156,35 @@
         let acceptbtns = document.getElementsByClassName("acceptbtn");
         for (item of acceptbtns){
             item.style.visibility = "visible"
-
         }
     {% endif%}
-     document.getElementById("accepted").style.visibility = "hidden";
+    document.getElementById("accepted").style.visibility = "hidden";
+    function firecomment(route, question_id, answer_id){
+        document.getElementById("flame").style.display = "block";
+        let cm = document.getElementById("newcomment_block");
+        cm.action = route;
+        cm.method = "POST";
+        let id_input = document.getElementById("comm_qid");
 
+        if (answer_id == null){
+            id_input.value = question_id;
+            id_input.name = "question_id";
+        } else {
+            id_input.value = answer_id;
+            id_input.name = "answer_id";
+        }
+    }
+    function editme(route, question_id, message){
+        document.getElementById("flame").style.display = "block";
+        let cm = document.getElementById("newcomment_block");
+        cm.action = route;
+        cm.method = "POST";
+        let textarea = document.getElementById("commtext");
+        textarea.value = message;
 
+        let id_input = document.getElementById("comm_qid");
+        id_input.value = question_id;
+        id_input.name = "question_id";
+
+    }
 </script>
