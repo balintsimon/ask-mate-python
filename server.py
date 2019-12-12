@@ -59,9 +59,9 @@ def registration():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # if g.user:
-    data = data_manager.get_latest_questions()
-    return render_template("list.html", all_questions=data)
+    if g.user:
+        data = data_manager.get_latest_questions()
+        return render_template("list.html", all_questions=data)
     return redirect(url_for('login'))
 
 

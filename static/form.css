@@ -102,3 +102,43 @@
     padding-top: 25px;
     padding-bottom: 10px;
 }
+
+#image{
+    font-family: "Open Sans";
+}
+
+#post-form{
+    background-color: #f7f7f7f7;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: 0.2s;
+    font-family: "Open Sans";
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.image-container {
+    display: inline-block;
+    border-radius: 4px;
+}
+
+#image-btn{
+    cursor: pointer;
+    background-color: #f7f7f7f7;
+    padding: 10px 20px;
+    color: #222;
+    font-family: "Open Sans";
+    font-size: 15px;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+#image-btn:hover,
+#post-form:hover{
+    background-color: #DC5947;
+}
