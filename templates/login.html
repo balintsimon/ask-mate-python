@@ -17,9 +17,10 @@
         <label for="password"></label>
         <input type="password" name="password" id="password" placeholder="Password" required autocomplete="off">
         <button type="submit">Login</button>
+        <br>
         <p>Don't have an AskMate account?</p>
-        <a href="{{ url_for('registration') }}">Sign Up</a>
-        <p></p>
+        <a id="sign-up" href="{{ url_for('registration') }}">Sign Up</a>
+        <br><br><br>
         <p>Don't want to register?</p>
         <a href="{{ url_for('sort') }}">Continue without Logging In</a>
     </form>
