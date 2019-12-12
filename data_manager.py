@@ -275,6 +275,7 @@ def get_answers_by_question_id(cursor, question_id):
                         END as accepted,
                     answer.id,
                     answer.user_name,
+                    users.reputation,
                     answer.submission_time, 
                     answer.vote_number, 
                     answer.message, 
@@ -282,6 +283,7 @@ def get_answers_by_question_id(cursor, question_id):
                     answer.image 
                     FROM answer
                     LEFT JOIN question ON answer.question_id = question.id
+                    LEFT JOIN users ON answer.user_name = users.name
                     WHERE answer.question_id = %(question_id)s
                     ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,
@@ -497,9 +499,17 @@ def update_answer(cursor, answer_id, update_answer):
 @connection.connection_handler
 def find_comments(cursor, question_id):
     cursor.execute("""
-                     SELECT * FROM comment
-                     WHERE question_id = %(question_id)s
-                     ORDER BY id;""",
+                     SELECT comment.id,
+                        comment.question_id,
+                        comment.answer_id,
+                        comment.message,
+                        comment.submission_time,
+                        comment.edited_count,
+                        comment.user_name,
+                        users.reputation FROM comment
+                     LEFT JOIN users ON comment.user_name = users.name
+                     WHERE comment.question_id = %(question_id)s
+                     ORDER BY comment.id;""",
                    {'question_id': question_id})
 
     comments = cursor.fetchall()
