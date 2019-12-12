@@ -19,6 +19,7 @@ def before_request():
     g.user = None
     if 'user' in session:
         g.user = session['user']
+        g.user_id = session['user_id']
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -32,6 +33,8 @@ def login():
     if hashed_password is None or check_password is False:
         return render_template('login.html', error=True)
     session['user'] = request.form.get('username')
+    session['user_id'] = data_manager.get_user_id(session['user'])
+ 
     return redirect(url_for('index'))
 
 
@@ -200,6 +203,7 @@ def edit_comment(comment_id):
                            method="POST",
                            message=commentdata["message"], )
 
+
 @app.route('/accept/<question_id>/<accepted_answer_id>')
 def accept_answer(question_id, accepted_answer_id):
     data_manager.set_new_accepted_answer(question_id, accepted_answer_id)
@@ -211,8 +215,6 @@ def vote_questions(vote_method, question_id):
     user_name = session["user"]
     user = data_manager.get_user_id_by_name(user_name)
     user.update({"user_name": user_name, "vote_method": vote_method})
-
-
 
     if data_manager.check_if_user_voted_on_question(user_name, question_id):
         result = data_manager.check_if_user_voted_on_question(user_name, question_id)
@@ -337,8 +339,8 @@ def get_user_attributes(user_id):
     user_questions = data_manager.get_user_questions(user_id)
     user_answers = data_manager.get_user_answers(user_id)
     user_comments = data_manager.get_user_comments(user_id)
-    return render_template('user_info.html', user_questions=user_questions,user_answers=user_answers,user_comments=user_comments)
-
+    return render_template('user_info.html', user_questions=user_questions, user_answers=user_answers,
+                           user_comments=user_comments)
 
 
 if __name__ == '__main__':

@@ -23,13 +23,17 @@
     <div class="navigator-container">
         <nav>
             {% if session['user'] %}
-            <p>Hello {{ session['user'] }}</p>
+                <p><a href="/user/{{ session['user_id'] }}">Hello {{ session['user'] }}</a></p>
             {% endif %}
 
             <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
             <a id="last-nav" href="{{url_for('sort') }}">Show all questions</a>
             <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
+            {% if session['user'] %}
             <a id="user_logout" href="{{ url_for('logout') }}">Log out</a>
+            {% else %}
+            <a id="user_login" href="{{ url_for('login') }}">Login</a>
+            {% endif %}
         <form action="/search" method="get">
             <div class="search-box">
                 <input  class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">

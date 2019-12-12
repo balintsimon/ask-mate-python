@@ -93,6 +93,11 @@ p{
 
 }
 
+.inner-container a:hover{
+    color: #DC5947;
+    opacity: 90%;
+}
+
 
 .navigator-container{
     padding: 10px 0;

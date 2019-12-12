@@ -597,7 +597,7 @@ GROUP BY u.id""")
     return all_user_attribute
 
 
-'''
+
 @connection.connection_handler
 def get_user_id(cursor, username):
     cursor.execute("""
@@ -606,9 +606,10 @@ def get_user_id(cursor, username):
     """,
                    {'username': username})
 
-    user_id = cursor.fetchone()
-    return user_id
-'''
+    user = cursor.fetchone()
+
+    return user['id']
+
 
 
 @connection.connection_handler
