@@ -297,10 +297,15 @@ def get_answers_by_question_id(cursor, question_id):
                     answer.vote_number, 
                     answer.message, 
                     answer.question_id, 
-                    answer.image 
+                    answer.image,
+                        CASE
+                        when votes.vote_method = -1 THEN -1 
+                        when votes.vote_method = 1 then 1 ELSE 0
+                        END as vote_method
                     FROM answer
                     LEFT JOIN question ON answer.question_id = question.id
                     LEFT JOIN users ON answer.user_name = users.name
+                    LEFT JOIN votes ON answer.id = votes.answer_id
                     WHERE answer.question_id = %(question_id)s
                     ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,
@@ -414,15 +419,14 @@ def search_question(cursor, search_phrase):
 
 
 @connection.connection_handler
-def check_if_user_voted_on_answer(cursor, user, answer, vote_method):
+def check_if_user_voted_on_answer(cursor, user, answer):
     cursor.execute("""
                 SELECT * FROM votes
                 WHERE user_name = %(user)s AND answer_id = %(answer)s;
                 """,
                    {
                    "user": user,
-                   "answer": answer,
-                   "vote_method": vote_method
+                   "answer": answer
                    })
 
     result = cursor.fetchone()
@@ -698,10 +702,11 @@ def get_user_id_by_name(cursor, username):
 @connection.connection_handler
 def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
     author_id = get_accepted_author_id(question_id)
-    author = get_author_by_answer_id(author_id)["user_name"]
-    author_repu = get_reputation(author)
-    new_repu = annul_calc_reputation("accepted", "vote_down", author_repu)
-    update_user_reputation(author, new_repu)
+    if get_author_by_answer_id(author_id) is not None:
+        author = get_author_by_answer_id(author_id)["user_name"]
+        author_repu = get_reputation(author)
+        new_repu = annul_calc_reputation("accepted", "vote_down", author_repu)
+        update_user_reputation(author, new_repu)
 
     cursor.execute("""
         UPDATE question

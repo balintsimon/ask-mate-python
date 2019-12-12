@@ -132,11 +132,14 @@ def manage_questions(question_id):
 
     current_question = data_manager.get_question_by_id(question_id)
     answers_to_question = data_manager.get_answers_by_question_id(question_id)
-
-    comments = data_manager.find_comments(question_id)
-
     reputation = data_manager.get_reputation(current_question['user_name'])
     current_question['reputation'] = reputation['reputation']
+    comments = data_manager.find_comments(question_id)
+
+    if 'user' in session:
+        question_vote = data_manager.check_if_user_voted_on_question(session['user'], question_id)
+    else:
+        question_vote = []
 
     return render_template("question-child.html",
                            question_id=int(question_id),
@@ -145,7 +148,8 @@ def manage_questions(question_id):
                            answers=answers_to_question,
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
-                           answer_headers=ANSWER_HEADERS)
+                           answer_headers=ANSWER_HEADERS,
+                           question_vote=question_vote)
 
 
 @app.route('/modify_view/<question_id>')
@@ -250,8 +254,8 @@ def vote_answers(vote_method, answer_id):
     user = data_manager.get_user_id_by_name(user_name)
     user.update({"user_name": user_name, "vote_method": vote_method})
 
-    if data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method):
-        result = data_manager.check_if_user_voted_on_answer(user_name, answer_id, vote_method)
+    if data_manager.check_if_user_voted_on_answer(user_name, answer_id):
+        result = data_manager.check_if_user_voted_on_answer(user_name, answer_id)
         voted = data_manager.delete_vote_on_answer_from_votes_db(result, vote_method)
         if voted:
             data_manager.vote_answer(vote_method, answer_id)
