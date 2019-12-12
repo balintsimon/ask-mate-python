@@ -97,6 +97,7 @@ def add_new_question():
 def write_new_comment(question_id, answer_id=None):
     if request.method == 'POST':
         comment = request.form.to_dict()
+        print(comment)
         username = session['user']
         comment.update({"question_id": question_id, "user_name": username})
         data_manager.write_new_comment_to_database(comment)

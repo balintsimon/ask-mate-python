@@ -95,12 +95,14 @@
 
     </div>
 
+    {% include 'comment.html' %}
 
     {% if addinganswer %}
         {% block givinganswer %}{% endblock %}
     {% else %}
         <div class="loginrequired">
-            <a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button>Add comment</button></a>
+            <!--<a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button">Add comment</button></a> -->
+            <button onclick="firecomment('/question/' + {{ question['id'] }} + '/new-comment',{{question['id']}})">Add comment</button>
             <form action="/questions/{{ question['id'] }}" method="GET">
             <button type="submit" name="addinganswer">Add Answer</button>
             </form>
@@ -147,7 +149,28 @@
 
         }
     {% endif%}
-     document.getElementById("accepted").style.visibility = "hidden";
+    document.getElementById("accepted").style.visibility = "hidden";
+    function firecomment(route, question_id, answer_id){
+        alert(question_id);
+        alert('a:'+ answer_id);
+        document.getElementById("flame").style.display = "block";
+        let cm = document.getElementById("newcomment_block");
+        cm.action = route;
+        cm.method = "POST";
+        let b = document.getElementById("newcomment_block").getAttribute("method");
+        alert(b);
+        let a = document.getElementById("newcomment_block").getAttribute("action");
+        alert(a);
+        let id_input = document.getElementById("comm_qid");
+
+        if (answer_id == null){
+            id_input.value = question_id;
+            id_input.name = "question_id";
+        } else {
+            id_input.value = answer_id;
+            id_input.name = "answer_id";
+        }
+    }
 
 
 </script>

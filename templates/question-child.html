@@ -34,13 +34,17 @@
                             </a>
                             <a href="{{ url_for('edit_answer', answer_id = answer['id']) }}">Edit</a>
                         </div>
-                        <a href="{{ url_for('write_new_comment', question_id=question['id'], answer_id=answer['id']) }}">Comment</a>
+
+                            <!--<a href="{{ url_for('write_new_comment', question_id=question['id'], answer_id=answer['id']) }}">Comment</a>-->
+                        <button onclick="firecomment('/answer/' + {{ question['id'] }} +'/'+ {{answer['id']}} +'/new-comment', {{ question['id'] }},{{answer['id']}})">Add comment</button>
+
                     </div>
                     {% endif %}
 
                 </div>
             </div>
         </div>
+
         <div class="comments">
             {% for comment in comments %}
                 {% if comment["answer_id"] == answer["id"] %}
