@@ -252,13 +252,13 @@ def vote_answers(vote_method, answer_id):
         if voted:
             data_manager.vote_answer(vote_method, answer_id)
 
-            author = data_manager.get_author_by_question_id(question_id)["user_name"]
+            author = data_manager.get_author_by_answer_id(answer_id)["user_name"]
             author_repu = data_manager.get_reputation(author)
             new_repu = data_manager.annul_calc_reputation("answer", vote_method, author_repu)
             data_manager.update_user_reputation(author, new_repu)
         return redirect(f'/questions/{question_id}')
     else:
-        author = data_manager.get_author_by_question_id(question_id)["user_name"]
+        author = data_manager.get_author_by_answer_id(answer_id)["user_name"]
         author_repu = data_manager.get_reputation(author)
         new_repu = data_manager.calculate_reputation("answer", vote_method, author_repu)
         data_manager.update_user_reputation(author, new_repu)

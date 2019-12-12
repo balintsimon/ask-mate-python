@@ -19,6 +19,17 @@ def get_author_by_question_id(cursor, question_id):
     return cursor.fetchone()
 
 
+@connection.connection_handler
+def get_author_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+        SELECT user_name FROM answer
+        WHERE id = %(answer_id)s;
+    """,
+                   {"answer_id": answer_id})
+
+    return cursor.fetchone()
+
+
 def calculate_reputation(type, direction, original):
     repchart_up = {"question": 5, "answer": 10, "accepted": 15}
     repchart_down = {"question": -2, "answer": -2, "accepted": 0}
@@ -553,6 +564,7 @@ GROUP BY u.id""")
     return all_user_attribute
 
 
+'''
 @connection.connection_handler
 def get_user_id(cursor, username):
     cursor.execute("""
@@ -563,6 +575,8 @@ def get_user_id(cursor, username):
 
     user_id = cursor.fetchone()
     return user_id
+'''
+
 
 @connection.connection_handler
 def get_user_name(cursor, user_id):
@@ -574,7 +588,6 @@ def get_user_name(cursor, user_id):
 
     user_name = cursor.fetchone()
     return user_name
-
 
 
 @connection.connection_handler
