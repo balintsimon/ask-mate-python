@@ -116,6 +116,11 @@ def delete_answer(cursor, answer_id):
        {"answer_id": answer_id});
 
     cursor.execute("""
+        DELETE FROM votes
+        WHERE answer_id = %(answer_id)s""",
+        {'answer_id': answer_id})
+
+    cursor.execute("""
                     DELETE FROM answer
                     WHERE id = %(answer_id)s""",
                    {'answer_id': answer_id});
@@ -129,6 +134,18 @@ def delete_question(cursor, question_id):
                     """,
                    {'question_id': question_id}
                    );
+
+    cursor.execute("""
+                    UPDATE question
+                    SET accepted_answer = NULL
+                    WHERE id = %(question_id)s""",
+                   {"question_id": question_id});
+
+    cursor.execute("""
+                    DELETE FROM votes
+                    WHERE question_id = %(question_id)s
+                    """,
+                   {'question_id': question_id})
 
     cursor.execute("""
                         DELETE FROM answer
