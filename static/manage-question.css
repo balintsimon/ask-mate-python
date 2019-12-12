@@ -80,13 +80,32 @@ h3{
     padding: 2px 0;
 }
 
+#upvote-btn{
+    color: #222;
+    font-size: 40px;
+    margin-bottom: -10px;
+    transition: 0.2s;
+}
+
+#downvote-btn{
+    color: #222;
+    font-size: 40px;
+    margin-top: -10px;
+    transition: 0.2s;
+}
+
+#upvote-btn:hover,
+#downvote-btn:hover{
+    color: #DC5947;
+}
+
 .navbar > * {margin-right: 10px;}
 
 .comments {padding-left: 25vh; margin-top: 10px;}
 .comments > * {margin: 10px;}
 .answerblock {margin: 20px;}
 .comments > .content > .msg{
-    background-color: #dedede;
+    background: #dededede;
 }
 
 /**.message:nth-of-type(odd) {
@@ -136,6 +155,12 @@ h3{
     font-weight: bold;
     transition: 0.2s;
     cursor: pointer;
+}
+
+#back-to-questions{
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 #comment-btn:hover,

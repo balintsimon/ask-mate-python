@@ -12,13 +12,13 @@
                 {% if answer['vote_method'] == 1 %}
                     <a></a>
                 {% else %}
-                    <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a>
+                    <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_up'><i id="upvote-btn" class="fas fa-sort-up"></i></a>
                 {% endif %}
                 <p>{{ answer["vote_number"] }}</p>
                 {% if answer['vote_method'] == -1 %}
                     <a></a>
                 {% else %}
-                    <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_down'><img src="/static/images/downvote.png" height="20" width="20"></a>
+                    <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_down'><i id="downvote-btn" class="fas fa-sort-down"></i></a>
                 {% endif %}
             </div>
             <div style="clear:both;"></div>
