@@ -30,15 +30,19 @@
             <div class="msg">{{ question['message'] | safe }}</div>
             <div class="navbar">
                 <span>{{ question["user_name"] }}</span>
+                <span> ({{ question["reputation"] }}) </span>
                 <span>{{ question['submission_time'] }}</span>
 
                 {% if not addinganswer %}
                 <div class=" {{ question['user_name'] }} admin" style="display:none;">
                     <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
                         <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
-                        </form>
-                        <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
-                    <a id="first-nav" itemid="{{ url_for('edit_question', question_id=question['id']) }}" href="#{{ url_for('edit_question', question_id=question['id']) }}">Edit Question</a>
+                        <a id="first-nav"
+                           itemid="{{ url_for('edit_question', question_id=question['id']) }}"
+                           href="#{{ url_for('edit_question', question_id=question['id']) }}"><button>Edit Question</button></a>
+                    </form>
+                    <!--<button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>-->
+
                     <div class="modal" id="{{ url_for('edit_question', question_id=question['id']) }}">
                         <div class="modal-container">
                             <a href="{{ url_for('manage_questions', question_id=question['id']) }}">
@@ -48,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}<div class=" {{ question['user_name'] }} admin" style="display:none;">
+                {% endif %}
             </div>
         </div>
     </div>

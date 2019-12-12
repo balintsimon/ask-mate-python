@@ -55,7 +55,7 @@ a {text-decoration: none; color: white;}
 .comments > .content > .navbar {background: #327594}
 .answerblock {margin: 20px;}
 .comments > .content > .msg{
-    background-color: #327594;
+    background-color: #dedede;
 }
 
 /**.message:nth-of-type(odd) {
