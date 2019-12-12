@@ -147,6 +147,11 @@ def delete_question(cursor, question_id):
                     """,
                    {'question_id': question_id})
 
+    answers = get_answers_by_question_id(question_id)
+    print(answers)
+    for answer in answers:
+        delete_answer(answer['id'])
+
     cursor.execute("""
                         DELETE FROM answer
                         WHERE question_id = %(question_id)s

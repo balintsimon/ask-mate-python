@@ -25,17 +25,16 @@
         <nav>
             {% if session['user'] %}
                 <p><a href="/user/{{ session['user_id'] }}">Hello {{ session['user'] }}</a></p>
-            {% endif %}
-
-            <a id="first-nav" itemid="{{ url_for('add_new_question') }}" href="#{{ url_for('add_new_question') }}">Ask a question</a>
-            <div class="modal" id="{{ url_for('add_new_question') }}">
-                <div class="modal-container">
-                    <a href="{{ url_for('index') }}">
-                        <i class="fas fa-times"></i>
-                    </a>
-                    {% include 'add_question_or_answer.html' %}
+                <a id="first-nav" itemid="{{ url_for('add_new_question') }}" href="#{{ url_for('add_new_question') }}">Ask a question</a>
+                <div class="modal" id="{{ url_for('add_new_question') }}">
+                    <div class="modal-container">
+                        <a href="{{ url_for('index') }}">
+                            <i class="fas fa-times"></i>
+                        </a>
+                        {% include 'add_question_or_answer.html' %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <a id="last-nav" href="{{url_for('sort') }}">Show all questions</a>
             <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
             {% if session['user'] %}
