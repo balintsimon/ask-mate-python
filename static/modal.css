@@ -2,9 +2,9 @@
     position: fixed;
     background-color: #285369;
     left: 50%;
-    transform: translate(-50%, -200%);
-    -ms-transform: translate(-50%, -200%);
-    -webkit-transform: translate(-50%, -200%);
+    transform: translate(-50%, -300%);
+    -ms-transform: translate(-50%, -300%);
+    -webkit-transform: translate(-50%, -300%);
     padding: 20px;
     border-radius: 5px;
     width: 70%;
