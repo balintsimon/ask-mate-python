@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to AskMate!</title>
+    <script src="../static/JS/ui.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/static/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/questions-table.css">
+    <link href="https://fonts.googleapis.com/css?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</head>
+<body>
+    <header>
+        <div class="img-container">
+            <div class="inner-container">
+                <a href="{{ url_for('index') }}">AskMate</a>
+            </div>
+        </div>
+    </header>
+    <div class="navigator-container">
+        <nav>
+            {% if session['user'] %}
+            <p>Hello {{ session['user'] }}</p>
+            {% endif %}
+
+            <a id="first-nav" href={{ url_for('add_new_question') }}>Ask a question</a>
+            <a id="last-nav" href="{{url_for('sort') }}">Show all questions</a>
+            <a id="user-nav" href="{{url_for('list_users') }}">Show all users</a>
+            <a id="user_logout" href="{{ url_for('logout') }}">Log out</a>
+        <form action="/search" method="get">
+            <div class="search-box">
+                <input  class="search-txt" type="text" name="q" id="search-bar" autocomplete="off" placeholder="Search">
+                <label for="search-bar"></label>
+                <button class="search-btn" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            </form>
+        </nav>
+    </div>
+
+<main>
+    {% block main %} {% endblock %}
+</main>
+</body>
+</html>
