@@ -69,7 +69,7 @@ def index():
 @app.route('/list')
 def sort():
     if request.args.get('order_by') is None:
-        data = data_manager.get_all_questions()
+        data = data_manager.get_all_questions("submission_time", "DESC")
     else:
         data = data_manager.sort_questions(request.args.get('order_by'), request.args.get('order_direction'))
     return render_template('list.html',
