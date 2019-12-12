@@ -697,6 +697,12 @@ def get_user_id_by_name(cursor, username):
 
 @connection.connection_handler
 def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
+    author_id = get_accepted_author_id(question_id)
+    author = get_author_by_answer_id(author_id)["user_name"]
+    author_repu = get_reputation(author)
+    new_repu = annul_calc_reputation("accepted", "vote_down", author_repu)
+    update_user_reputation(author, new_repu)
+
     cursor.execute("""
         UPDATE question
         SET accepted_answer = %(answer)s
@@ -704,3 +710,21 @@ def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
         """,
        {"answer":accepted_answer_id, "qid": question_id}
        )
+
+    author_id = get_accepted_author_id(question_id)
+    author = get_author_by_answer_id(author_id)["user_name"]
+    author_repu = get_reputation(author)
+    new_repu = calculate_reputation("accepted", "vote_up", author_repu)
+    update_user_reputation(author, new_repu)
+
+
+@connection.connection_handler
+def get_accepted_author_id(cursor, question_id):
+    cursor.execute("""
+        SELECT accepted_answer
+        FROM question
+        WHERE id = %(qid)s""",
+                   {'qid': question_id})
+    author_id = cursor.fetchone()
+
+    return author_id['accepted_answer']
