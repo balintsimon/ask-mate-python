@@ -2,22 +2,50 @@ html {
     max-width: 1024px;
     margin: 0 auto;
 }
-body {
-    background-color: #285369;
-    font-family: sans-serif
-    }
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    background: #285369;
+    font-family: sans-serif;
+}
 
 ul {list-style-type: none;}
-h1, h3, #no_answer {color: white;}
-a {text-decoration: none; color: white;}
+h1, h3, #no_answer {color: #f7f7f7;}
+a {text-decoration: none; color: #f7f7f7;}
 #bignum {font-size: 2em; color: #0B2329;}
 
-.title {display: flex; min-height: 200px; align-items: baseline;}
+.title {display: flex; min-height: 200px; align-items: baseline; text-align: center; flex-direction: column;}
+
+.question-title{
+    margin: 40px auto;
+}
+
+h1{
+    font-size: 45px;
+}
+
+h3{
+    margin-top: 40px;
+    font-size: 25px;
+}
+
+#no_answer{
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+    margin: 30px 0;
+}
 
 .block {
     border-radius: 10px;
     background-color: #F7F7F7F7;
-    border: 2px solid #0B2329;
+    box-shadow: 0 5px 25px 0 rgba(0,0,0, .25);
     /* overflow: hidden; */
     display:flex;
     flex-direction:row;
@@ -26,7 +54,8 @@ a {text-decoration: none; color: white;}
     display: flex;
     flex-direction: column;
     max-width: 25vh; align-items: center;
-    padding: 10px; border-radius: 10px
+    padding: 10px;
+    border-radius: 10px;
 }
 .content {
     display: flex;
@@ -35,7 +64,7 @@ a {text-decoration: none; color: white;}
     border-left: 4px solid #285369;
 }
 .msg {
-    background: white; flex: 1 1 auto;
+    background: #f7f7f7; flex: 1 1 auto;
     border-radius: 0 10px 0 0;
     padding: 10px;
     white-space: pre-line;
@@ -47,12 +76,14 @@ a {text-decoration: none; color: white;}
     background-color: #0B2329;
     height: min-content;
     border-radius: 0 0 10px 0;
-    color: white;}
+    color: white;
+    padding: 2px 0;
+}
+
 .navbar > * {margin-right: 10px;}
 
 .comments {padding-left: 25vh; margin-top: 10px;}
 .comments > * {margin: 10px;}
-.comments > .content > .navbar {background: #327594}
 .answerblock {margin: 20px;}
 .comments > .content > .msg{
     background-color: #dedede;
@@ -80,7 +111,7 @@ a {text-decoration: none; color: white;}
 
 .imgblock:hover {
     position: absolute;
-    transform: scale(3) translate(+35%, +35%);
+    transform: scale(3) translate(+50%, +40%);
     transition: transform .25s ease;
     z-index: 1;
 }
@@ -92,6 +123,26 @@ a {text-decoration: none; color: white;}
 .loginrequired > a {
     margin-left: 10px;
 }
+
+#comment-btn,
+#answer-btn{
+    margin-left: 60px;
+    margin-top: 30px;
+    border: none;
+    background: #f7f7f7;
+    border-radius: 4px;
+    padding: 10px 30px;
+    color: #222;
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+#comment-btn:hover,
+#answer-btn:hover{
+    background: #DC5947;
+}
+
 .accepted {
     border: 4px solid darkgoldenrod;
 }

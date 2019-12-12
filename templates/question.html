@@ -13,8 +13,8 @@
     <div class="title">
         <img class="imgblock"
              src="{{ url_for('static', filename=('images/' + question['image'])) if question['image'] else '/static/images/basic.png' }}"
-             alt="No image">
-        <h1>{{ question['title'] }}</h1>
+             alt="No image" height="250" width="250">
+        <h1 class="question-title">{{ question['title'] }}</h1>
     </div>
 
     <div class="block">
@@ -107,9 +107,9 @@
         {% block givinganswer %}{% endblock %}
     {% else %}
         <div class="loginrequired">
-            <a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button>Add comment</button></a>
+            <a href="{{ url_for('write_new_comment', question_id=question['id']) }}"><button id="comment-btn">Add comment</button></a>
             <form action="/questions/{{ question['id'] }}" method="GET">
-            <button type="submit" name="addinganswer">Add Answer</button>
+            <button id="answer-btn" type="submit" name="addinganswer">Add Answer</button>
             </form>
         </div>
     {% endif %}
