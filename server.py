@@ -135,6 +135,9 @@ def manage_questions(question_id):
 
     comments = data_manager.find_comments(question_id)
 
+    reputation = data_manager.get_reputation(current_question['user_name'])
+    current_question['reputation'] = reputation['reputation']
+
     return render_template("question-child.html",
                            question_id=int(question_id),
                            comments=comments,
