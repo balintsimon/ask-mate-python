@@ -136,7 +136,10 @@ def manage_questions(question_id):
     current_question['reputation'] = reputation['reputation']
     comments = data_manager.find_comments(question_id)
 
-    question_vote = data_manager.check_if_user_voted_on_question(session['user'], question_id)
+    if 'user' in session:
+        question_vote = data_manager.check_if_user_voted_on_question(session['user'], question_id)
+    else:
+        question_vote = []
 
     return render_template("question-child.html",
                            question_id=int(question_id),

@@ -702,10 +702,11 @@ def get_user_id_by_name(cursor, username):
 @connection.connection_handler
 def set_new_accepted_answer(cursor, question_id, accepted_answer_id):
     author_id = get_accepted_author_id(question_id)
-    author = get_author_by_answer_id(author_id)["user_name"]
-    author_repu = get_reputation(author)
-    new_repu = annul_calc_reputation("accepted", "vote_down", author_repu)
-    update_user_reputation(author, new_repu)
+    if get_author_by_answer_id(author_id) is not None:
+        author = get_author_by_answer_id(author_id)["user_name"]
+        author_repu = get_reputation(author)
+        new_repu = annul_calc_reputation("accepted", "vote_down", author_repu)
+        update_user_reputation(author, new_repu)
 
     cursor.execute("""
         UPDATE question
