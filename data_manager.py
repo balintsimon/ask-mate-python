@@ -414,15 +414,14 @@ def search_question(cursor, search_phrase):
 
 
 @connection.connection_handler
-def check_if_user_voted_on_answer(cursor, user, answer, vote_method):
+def check_if_user_voted_on_answer(cursor, user, answer):
     cursor.execute("""
                 SELECT * FROM votes
                 WHERE user_name = %(user)s AND answer_id = %(answer)s;
                 """,
                    {
                    "user": user,
-                   "answer": answer,
-                   "vote_method": vote_method
+                   "answer": answer
                    })
 
     result = cursor.fetchone()
