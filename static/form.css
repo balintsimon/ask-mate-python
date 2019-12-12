@@ -15,13 +15,35 @@
 
 }
 
+#go-back{
+    text-align: center;
+    display: flex;
+    float: right;
+    color: #f7f7f7f7;
+    font-size: 25px;
+}
+
+#go-back:hover{
+    opacity: 0.8;
+}
+
 #form-title{
     color: #f7f7f7;
     font-family: 'Permanent Marker', cursive;
-    margin-right: 210px;
     font-size: 30px;
-    margin-left: 106px;
+    text-align: center;
+    padding: 0;
 }
+
+#add-question-title{
+    color: #f7f7f7;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 30px;
+    text-align: center;
+    padding: 0;
+    margin-right: 200px;
+}
+
 
 .text-container{
     width: 690px;
@@ -73,22 +95,27 @@
     opacity: 0.3;
 }
 
+#message-label,
 .textarea-container{
     padding-top: 15px;
 }
 
+#message-label,
 .textarea-container label{
     font-weight: bold;
     display: block;
     padding-bottom: 10px;
 }
 
+#message,
 .textarea-container textarea{
     border-radius: 3px;
     box-shadow: 0 5px 25px 0 rgba(0,0,0, .25);
     background-color: #285369;
     color: #f7f7f7;
     border: 2px solid #f7f7f7f7;
+    width: 550px;
+    height: 200px;
 }
 
 .image-container{

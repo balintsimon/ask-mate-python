@@ -54,7 +54,7 @@
                     <div class="modal" id="{{ url_for('edit_question', question_id=question['id']) }}">
                         <div class="modal-container">
                             <a href="{{ url_for('manage_questions', question_id=question['id']) }}">
-                                <i class="fas fa-times"></i>
+                                <i id="go-back" class="fas fa-times"></i>
                             </a>
                             {% include 'add_question_or_answer.html' %}
                         </div>
