@@ -57,12 +57,11 @@ def registration():
     return redirect(url_for('login'))
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if g.user:
         data = data_manager.get_latest_questions()
-        return render_template("list.html",
-                               all_questions=data)
+        return render_template("list.html", all_questions=data)
     return redirect(url_for('login'))
 
 
@@ -90,7 +89,7 @@ def add_new_question():
         new_question.update({"user_name": username})
         data_manager.write_new_question_to_database(new_question)
         return redirect('/')
-    return render_template('add_question_or_answer.html')
+    return render_template('list.html')
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])

@@ -50,11 +50,13 @@ a {text-decoration: none; color: white;}
     color: white;}
 .navbar > * {margin-right: 10px;}
 
-.comments {padding-left: 25vh; margin-top: 10px; opacity: 0.8;}
+.comments {padding-left: 25vh; margin-top: 10px;}
 .comments > * {margin: 10px;}
 .comments > .content > .navbar {background: #327594}
 .answerblock {margin: 20px;}
-
+.comments > .content > .msg{
+    background-color: #327594;
+}
 
 /**.message:nth-of-type(odd) {
     background-color: #285369;

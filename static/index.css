@@ -15,6 +15,12 @@ p{
     color: #f7f7f7f7;
 }
 
+.fa-times{
+    color: #f7f7f7f7;
+    margin: 0 auto;
+    float: right;
+}
+
 .last-nav-link{
     padding: 0 30px;
 }
