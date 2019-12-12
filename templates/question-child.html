@@ -24,6 +24,7 @@
                 </div>
                 <div class="navbar">
                     <span>{{ answer["user_name"] }}</span>
+                    <span>({{ answer["reputation"] }})</span>
                     <span class="date">Posted: {{ answer["submission_time"] }}</span>
                     {% if not addinganswer %}
                     <div class="loginrequired">
@@ -47,6 +48,7 @@
                         <div class="msg">{{ comment["message"] }}</div>
                         <div class="navbar">
                             <span>{{ comment["user_name"] }}</span>
+                            <span>({{ comment["reputation"] }})</span>
                             <span>{{ comment["submission_time"] }}</span>
                             {% if comment["edited_count"] == 1 %}
                                 <span>(Edited {{ comment["edited_count"] }} time.)</span>
