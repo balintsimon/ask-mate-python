@@ -297,10 +297,15 @@ def get_answers_by_question_id(cursor, question_id):
                     answer.vote_number, 
                     answer.message, 
                     answer.question_id, 
-                    answer.image 
+                    answer.image,
+                        CASE
+                        when votes.vote_method = -1 THEN -1 
+                        when votes.vote_method = 1 then 1 ELSE 0
+                        END as vote_method
                     FROM answer
                     LEFT JOIN question ON answer.question_id = question.id
                     LEFT JOIN users ON answer.user_name = users.name
+                    LEFT JOIN votes ON answer.id = votes.answer_id
                     WHERE answer.question_id = %(question_id)s
                     ORDER BY accepted DESC, vote_number DESC, submission_time ASC;
                     """,

@@ -135,7 +135,7 @@ def manage_questions(question_id):
     reputation = data_manager.get_reputation(current_question['user_name'])
     current_question['reputation'] = reputation['reputation']
     comments = data_manager.find_comments(question_id)
-    answer_vote = data_manager.check_if_user_voted_on_answer(session["user"], answers_to_question[0]['id'])
+
     question_vote = data_manager.check_if_user_voted_on_question(session['user'], question_id)
 
     return render_template("question-child.html",
@@ -146,7 +146,6 @@ def manage_questions(question_id):
                            addinganswer=addinganswer,
                            question_headers=QUESTION_HEADERS,
                            answer_headers=ANSWER_HEADERS,
-                           answer_vote=answer_vote,
                            question_vote=question_vote)
 
 

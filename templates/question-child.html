@@ -9,13 +9,13 @@
            href="{{ url_for('accept_answer', accepted_answer_id=answer['id'], question_id=question['id']) }}">Accept</a>
         <div class="block {{ 'accepted' if question['accepted_answer'] == answer['id'] else '' }}">
             <div class="column">
-                {% if answer_vote['vote_method'] == 1 %}
+                {% if answer['vote_method'] == 1 %}
                     <a></a>
                 {% else %}
                     <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_up'><img src="/static/images/upvote.png" height="20" width="20"></a>
                 {% endif %}
                 <p>{{ answer["vote_number"] }}</p>
-                {% if answer_vote['vote_method'] == -1 %}
+                {% if answer['vote_method'] == -1 %}
                     <a></a>
                 {% else %}
                     <a class="loginrequired" href='/answer/{{ answer["id"] }}/vote_down'><img src="/static/images/downvote.png" height="20" width="20"></a>
