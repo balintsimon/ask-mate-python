@@ -2,21 +2,9 @@
 <html lang="en">
 <head>
     <link type="text/css" href="/static/manage-question.css" rel="stylesheet">
-<!-- <style>
-    ul {list-style-type: none;}
-    #bignum {font-size: 2em; color: blue;}
-
-    .title {display: flex; align-items: baseline}
-    .block {border: 2px solid grey; overflow: hidden; display:flex; flex-direction:row;}
-    .column {display: flex; flex-direction: column; max-width: 25vh; align-items: center; padding: 10px;}
-    .content {display: flex; flex: 1 1 auto; flex-direction: column; background: grey; margin: 5px;  }
-    .msg {background: white; flex: 1 1 auto;}
-    .navbar {display: flex; justify-content: right; align-items: center; background: red; height: min-content;}
-    .navbar > * {margin-right: 10px;}
-    .comments {padding-left: 25vh; background: yellow;}
-    .answerblock {margin: 20px;}
-
-</style> -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/modal.css">
+    <link href="https://fonts.googleapis.com/css?family=Permanent+Marker&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <title>{{ question['title'] }}</title>
     {% block head %} {% endblock %}
@@ -45,13 +33,22 @@
                 <span>{{ question['submission_time'] }}</span>
 
                 {% if not addinganswer %}
-                    <div class=" {{ question['user_name'] }} admin" style="display:none;">
-                        <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
-                        <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
-                        </form>
+                <div class=" {{ question['user_name'] }} admin" style="display:none;">
+                    <form action="{{ url_for('edit_question', question_id=question['id']) }}" method="get">
                         <a href="/question/{{ question['id'] }}/delete"><button>Delete question</button></a>
+                        </form>
+                        <button type="submit" name="edit_question" id="edit_question" value="Edit question">Edit question</button>
+                    <a id="first-nav" itemid="{{ url_for('edit_question', question_id=question['id']) }}" href="#{{ url_for('edit_question', question_id=question['id']) }}">Edit Question</a>
+                    <div class="modal" id="{{ url_for('edit_question', question_id=question['id']) }}">
+                        <div class="modal-container">
+                            <a href="{{ url_for('manage_questions', question_id=question['id']) }}">
+                                <i class="fas fa-times"></i>
+                            </a>
+                            {% include 'add_question_or_answer.html' %}
+                        </div>
                     </div>
-                {% endif %}
+                </div>
+                {% endif %}<div class=" {{ question['user_name'] }} admin" style="display:none;">
             </div>
         </div>
     </div>
